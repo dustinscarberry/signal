@@ -1,0 +1,50 @@
+{% extends 'mail/base.html.twig' %}
+{% import 'mail/macros.html.twig' as macros %}
+
+{% block contentblocks %}
+
+<table {{ blockWhiteStyles|raw }}>
+  <tr>
+    <td>
+      <a href="#" title="">
+        <img src="https://codeclouds.net/wireless-banner.png" height="229" width="600" style="display: block; padding: 0px; text-align: center; height: 229px; width: 600px; border: 0px;">
+      </a>
+    </td>
+  </tr>
+</table>
+{{ macros.spacer('25px', '#FFFFFF') }}
+<table {{ blockWhiteStyles|raw }}>
+  <tr>
+    <td>
+      <h2 style="color: #444444; font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 400; line-height: 1.3; margin: 0px 0px 10px; padding: 0px; overflow-wrap: normal; text-align: center;">
+        Your subscribed to updates!</h2>
+    </td>
+  </tr>
+</table>
+{{ macros.spacer('15px', '#FFFFFF') }}
+<table {{ blockWhiteStyles|raw }}>
+  <tr>
+    <td style="padding: 0px 20px 5px 20px;">
+      <p>You may manage your subscription preferences in the future from the link below</p>
+    </td>
+  </tr>
+</table>
+{{ macros.spacer('25px', '#FFFFFF') }}
+<table {{ blockWhiteStyles|raw }}>
+  <tr>
+    <td>
+      <table align="center" cellspacing="0" cellpadding="0" style="padding:0;vertical-align:top;width:auto;">
+        <tr style="padding:0;text-align:left;vertical-align:top">
+          <td style="-moz-hyphens:auto;-webkit-hyphens:auto;Margin:0;background:#6441A4;border:2px solid #6441A4;border-collapse:collapse!important;color:#fff;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;hyphens:auto;line-height:1.3;margin:0;padding:0;text-align:left;vertical-align:top;word-wrap:break-word">
+            <a href="{{ config.siteURL }}/subscription/{{ subscriber.guid }}" style="Margin:0;border:0 solid #6441A4;border-radius:3px;color:#fff;display:inline-block;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:regular;line-height:1.3;margin:0;padding:10px 55px 10px 55px;text-align:left;text-decoration:none">
+              Manage Your Subscription
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+{{ macros.spacer('25px', '#FFFFFF') }}
+
+{% endblock %}

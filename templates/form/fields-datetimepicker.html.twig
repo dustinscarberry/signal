@@ -1,0 +1,7 @@
+{# templates/form/fields-datetimepicker.html.twig #}
+{%- block form_widget_simple -%}
+  <div class="datetimepicker-wrapper">
+    <input type="text" class="form-control datetimepicker" autocomplete="off" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <i class="form-control-icon fas fa-calendar-alt"></i> 
+  </div>
+{%- endblock form_widget_simple -%}

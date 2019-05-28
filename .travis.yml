@@ -1,0 +1,16 @@
+language: php
+php:
+  - '7.3'
+sudo: false
+addons:
+  - mariadb: '10.0'
+before_install:
+  - mysql -e 'CREATE SCHEMA IF NOT EXISTS demo;'
+  - mysql -e 'USE mysql;'
+  - mysql -e 'CREATE USER "vagrant"@"localhost" IDENTIFIED BY "vagrant";'
+  - mysql -e 'GRANT ALL PRIVILEGES ON demo.* TO "vagrant"@"localhost";'
+  - mysql -e 'FLUSH PRIVILEGES;'
+install:
+  - composer install
+  - php bin/console --no-interaction doctrine:migrations:migrate
+  - php bin/console --no-interaction doctrine:fixtures:load

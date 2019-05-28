@@ -1,0 +1,52 @@
+//status classes
+.status-bubble{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: block;
+
+  &.status-bubble-ok{
+    background: green;
+  }
+
+  &.status-bubble-error{
+    background: red;
+  }
+
+  &.status-bubble-issue{
+    background: orange;
+  }
+
+  &.status-bubble-offline{
+    background: gray;
+  }
+}
+
+.status-icon{
+  &::before{
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+  }
+
+  &.status-icon-ok::before{
+    content: "\f058";
+    color: #136207;
+  }
+
+  &.status-icon-error::before{
+    content: "\f071";
+    color: #aa0114;
+  }
+
+  &.status-icon-issue::before{
+    content: "\f071";
+    color: #cc8100;
+  }
+}

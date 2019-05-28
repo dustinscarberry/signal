@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="{{ config.siteAbout }}">
+    <title>{% block title %}Signal{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" rel="stylesheet" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    {{ encore_entry_link_tags('app') }}
+    {{ include('app/_cssoverrides.html.twig') }}
+  </head>
+  <body class="theme-{{ config.appTheme }}">
+    <div class="app-wrapper">
+      <div class="app-content">
+        <div class="app-header">
+          <div class="app-header-inner clearfix">
+            <a class="app-logo" href="/">
+
+              {% if config.logo is not empty %}
+                <img class="logo-custom" src="{{ base_url ~ config.logo }}">
+              {% else %}
+                <i class="fas fa-wifi"></i>
+                <h3>SIGNAL</h3>
+              {% endif %}
+
+            </a>
+            {% block subscriptionblock %}{% endblock %}
+          </div>
+        </div>
+        {% block contentblocks %}{% endblock %}
+      </div>
+      <div class="app-footer">
+        <div class="app-footer-inner">
+          <div class="app-footer-left">
+            <a href="https://github.com/dman25560/signal/issues">Report Issue</a>
+          </div>
+          <div class="app-footer-right">
+            <a href="https://github.com/dman25560/signal">Powered By Signal</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    {{ encore_entry_script_tags('app') }}
+    {{ include('app/_analytics.html.twig') }}
+  </body>
+</html>

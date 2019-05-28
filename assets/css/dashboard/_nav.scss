@@ -1,0 +1,148 @@
+.dashboard-menu ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+.dashboard-menu > ul > li{
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.dashboard-menu ul a.has-submenu:before{
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1.6rem;
+  font-weight: 900;
+  font-family: "Font Awesome 5 Free";
+  padding-right: 2rem;
+  position: absolute;
+  right: 7rem;
+  color: #9999a1;
+  content: "\f053";
+  font-size: 1.2rem;
+}
+
+.dashboard-menu .has-submenu.is-open{
+  color: #fff;
+}
+
+.dashboard-menu ul a.has-submenu.is-open:before{
+  content: "\f078";
+  color: #fff;
+}
+
+.dashboard-menu ul a{
+  padding: 2rem 3rem;
+  color: #9999a1;
+  display: block;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.dashboard-menu ul a:hover{
+  color: #fff;
+}
+
+.dashboard-menu ul li > a.has-submenu:hover:before{
+  color: #fff;
+}
+
+.dashboard-menu .sub-menu{
+  background: #27272a;
+  margin-top: 0;
+  max-height: 0;
+  height: auto;
+  padding-left: 1rem;
+  transition: max-height .25s cubic-bezier(0, 1.05, 0, 1);
+  overflow: hidden;
+}
+
+.dashboard-menu .has-submenu.is-open + .sub-menu{
+  max-height: 999px;
+}
+
+.menu-icon{
+  position: relative;
+}
+
+.menu-icon::after{
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  font-weight: 900;
+  font-family: "Font Awesome 5 Free";
+  padding-right: 2rem;
+  position: absolute;
+  right: .5rem;
+  transition: right .15s linear;
+}
+
+.nav-pin .menu-icon::after{
+  right: 1.5rem;
+}
+
+.menu-icon-grid:after{
+  content: "\f0db";
+}
+
+.menu-icon-service:after{
+  content: "\f24d";
+}
+
+.menu-icon-services:after{
+  content: "\f5fd";
+}
+
+.menu-icon-status:after{
+  content: "\f012";
+}
+
+.menu-icon-maintenance::after{
+  content: "\f0ad";
+}
+
+.menu-icon-users:after{
+  content: "\f500";
+}
+
+.menu-icon-user:after{
+  content: "\f007";
+}
+
+.menu-icon-issues::after{
+  content: "\f071";
+}
+
+.menu-icon-settings:after{
+  content: "\f013";
+}
+
+.menu-icon-subscription::after{
+  content: "\f0e0";
+}
+
+.menu-icon-servicestatus::after{
+  content: "Se";
+  font-family: 'Lato', sans-serif;
+}
+
+.menu-icon-maintenancestatus::after{
+  content: "Ma";
+  font-family: 'Lato', sans-serif;
+}
+
+.menu-icon-incidentstatus::after{
+  content: "In";
+  font-family: 'Lato', sans-serif;
+}

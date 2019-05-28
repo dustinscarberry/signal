@@ -1,0 +1,28 @@
+{% extends 'dashboard/dashboardbase.html.twig' %}
+
+{% block panel %}
+
+<div class="dashboard-subheader">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb-container">
+          <span class="breadcrumb">Dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dashboard-panels">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="dashboard-panel-block">
+          <div id="app-widget-customizer-root"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

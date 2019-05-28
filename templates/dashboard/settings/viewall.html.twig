@@ -1,0 +1,65 @@
+{% extends 'dashboard/dashboardbase.html.twig' %}
+{% form_theme form 'form/fields.html.twig' %}
+
+{% block panel %}
+
+{{ form_start(form) }}
+<div class="dashboard-subheader">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb-container">
+          <span class="breadcrumb">Settings</span>
+        </div>
+        <button class="action-btn btn btn-primary pull-right" type="submit">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dashboard-panels">
+  <div class="container-fluid container-fixed-lg">
+    <div class="columns-2">
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">General</h3>
+        {{ form_row(form.siteName) }}
+        {{ form_row(form.siteUrl) }}
+        {{ form_row(form.siteAbout) }}
+        {{ form_row(form.allowSubscriptions) }}
+        {{ form_row(form.siteTimezone) }}
+      </div>
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">Theme</h3>
+        <div class="form-group">
+          {{ form_label(form.logo) }}
+          {% if config.logo is not empty %}
+            <div class="logo-preview-container">
+              <img class="logo-preview" src="{{ base_url ~ config.logo }}">
+              <span class="logo-remove-btn"></span>
+            </div>
+          {% endif %}
+          {{ form_widget(form.logo) }}
+        </div>
+        {{ form_row(form.dashboardTheme) }}
+        {{ form_row(form.appTheme) }}
+        {{ form_row(form.cssOverrides) }}
+      </div>
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">Analytics</h3>
+        {{ form_row(form.analyticsGoogleID) }}
+      </div>
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">Localization</h3>
+        {{ form_row(form.locale) }}
+        {{ form_row(form.language) }}
+      </div>
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">Email</h3>
+        {{ form_row(form.mailFromAddress) }}
+        {{ form_row(form.mailFromName) }}
+      </div>
+    </div>
+  </div>
+</div>
+{{ form_end(form) }}
+
+{% endblock %}

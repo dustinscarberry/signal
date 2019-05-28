@@ -1,0 +1,54 @@
+{% extends 'dashboard/dashboardbase.html.twig' %}
+{% form_theme form 'form/fields.html.twig' %}
+{% form_theme form.scheduledFor 'form/fields-datetimepicker.html.twig' %}
+{% form_theme form.anticipatedEnd 'form/fields-datetimepicker.html.twig' %}
+
+{% block panel %}
+
+<div class="dashboard-subheader">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb-container">
+          <a class="breadcrumb-link" href="/dashboard/maintenance">Maintenance</a>
+          <span class="breadcrumb">Add</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dashboard-panels">
+  <div class="container-fluid container-fixed-lg t-2">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="dashboard-panel-block">
+          {{ form_start(form) }}
+          {{ form_row(form.name) }}
+          {{ form_row(form.purpose) }}
+          {{ form_row(form.visibility) }}
+          {{ form_row(form.scheduledFor) }}
+          {{ form_row(form.anticipatedEnd) }}
+          {{ form_row(form.status) }}
+          {{ form_row(form.updateServiceStatuses) }}
+          <fieldset id="maintenance-services-group" class="form-group collection-group">
+            <legend>
+              Affected Services
+              <button type="button" class="collection-add-btn">Add New</button>
+            </legend>
+            <div class="collection-subform container-fluid" data-prototype="{{ form_widget(form.maintenanceServices.vars.prototype)|e('html_attr') }}">
+              <div class="row collection-header">
+                <label class="col-sm-6">Service</label>
+                <label class="col-sm-6">Status</label>
+              </div>
+            </div>
+          </fieldset>
+          <button class="btn btn-primary" type="submit">Create Maintenance</button>
+          {{ form_widget(form._token) }}
+          {{ form_end(form, {'render_rest': false}) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

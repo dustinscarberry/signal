@@ -1,0 +1,16 @@
+//purple theme default, no specific overrides
+
+.theme-blue{
+  .dashboard-header{
+    background: #517fa4;
+    background: linear-gradient(to right, #243949 0%, #517fa4 100%);
+  }
+
+  .widget-selector-item-inner{
+    color: #00578a;
+  }
+
+  .widget-selector-item-inner:hover{
+    color: #243949;
+  }
+}

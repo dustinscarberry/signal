@@ -1,0 +1,22 @@
+{% for message in app.flashes('success') %}
+<div class="feedback-wrapper">
+  <div class="feedback success">
+    {{ message }}
+    <span class="feedback-close-btn fas fa-times"></span>
+  </div>
+</div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+  <div class="feedback error">
+    {{ message }}
+    <span class="feedback-close-btn fas fa-times"></span>
+  </div>
+{% endfor %}
+
+{% for message in app.flashes('warning') %}
+  <div class="feedback warning">
+    {{ message }}
+    <span class="feedback-close-btn fas fa-times"></span>
+  </div>
+{% endfor %}

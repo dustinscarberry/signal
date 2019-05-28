@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ config.siteName }} - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" rel="stylesheet" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css" rel="stylesheet">
+    <link href="/js/date-time-picker-bootstrap4/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    {{ encore_entry_link_tags('dashboard') }}
+  </head>
+  <body class="preload dashboard theme-{{ config.dashboardTheme }} {% if app.request.cookies.get('navPin') == 'true' %}nav-pin{% endif %}">
+    {{ include('dashboard/_feedback.html.twig') }}
+
+    <div class="dashboard-wrapper">
+
+      {{ include('dashboard/_header.html.twig') }}
+      {{ include('dashboard/_nav.html.twig') }}
+
+      <div class="dashboard-content-container">
+        {% block panel %}{% endblock %}
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+    <script src="/static/js/date-time-picker-bootstrap4/build/js/bootstrap-datetimepicker.min.js"></script>
+    {{ encore_entry_script_tags('dashboard') }}
+
+  </body>
+</html>

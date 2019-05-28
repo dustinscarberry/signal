@@ -1,0 +1,94 @@
+.app-wrapper{
+  min-width: 600px;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-wrapper .container-fluid{
+  padding: 0;
+}
+
+.app-content{
+  flex: 1 0 auto;
+}
+
+.content-block{
+  overflow: auto;
+}
+
+.content-block-inner{
+  max-width: 1040px;
+  width: 100%;
+  height: auto;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.app-header-inner{
+  max-width: 1040px;
+  width: 100%;
+  height: auto;
+  margin: 1rem auto;
+  padding: 0 2rem;
+}
+
+.app-logo{
+  display: inline-block;
+}
+
+.app-logo i{
+  color: #333;
+  font-size: 2.5rem;
+  margin-right: 1rem;
+}
+
+.app-logo h3{
+  display: inline-block;
+  color: #333;
+  margin: 2rem 0 0 0;
+  font-size: 2.5rem;
+}
+
+.app-logo img{
+  height: 50px;
+  margin-top: 2rem;
+  width: auto;
+}
+
+.app-subscribe-btn{
+  float: right;
+  margin: 2rem 0 0;
+}
+
+.app-footer{
+  flex-shrink: 0;
+}
+
+.app-footer-inner{
+  max-width: 1040px;
+  width: 100%;
+  height: auto;
+  margin: 1rem auto 3rem auto;
+  padding: 0 2rem;
+}
+
+.app-footer-left{
+  float: left;
+  font-size: 1.4rem;
+}
+
+.app-footer-right{
+  float: right;
+  font-size: 1.4rem;
+}
+
+.app-footer-inner:before,
+.app-footer-inner:after{
+  content: "";
+  display: table;
+}
+.app-footer-inner:after{
+  clear: both;
+}

@@ -1,0 +1,70 @@
+{% extends 'dashboard/dashboardbase.html.twig' %}
+{% form_theme form 'form/fields.html.twig' %}
+{% form_theme form.incidentServices 'form/fields-collections-two-column.html.twig' %}
+{% form_theme form.occurred 'form/fields-datetimepicker.html.twig' %}
+{% form_theme form.anticipatedResolution 'form/fields-datetimepicker.html.twig' %}
+{% form_theme form.incidentUpdates 'form/fields-incident-updates.html.twig' %}
+
+{% block panel %}
+
+<div class="dashboard-subheader">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb-container">
+          <a class="breadcrumb-link" href="/dashboard/incidents">Incidents</a>
+          <span class="breadcrumb">Edit / Update</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dashboard-panels">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="dashboard-panel-block">
+          {{ form_start(form) }}
+          {{ form_row(form.name) }}
+          {{ form_row(form.message) }}
+          <fieldset id="incident-updates-group" class="form-group collection-group">
+            <legend>
+              Updates
+              <button type="button" class="collection-add-btn">Add New</button>
+            </legend>
+            <div class="collection-subform container-fluid" data-prototype="{{ form_widget(form.incidentUpdates.vars.prototype)|e('html_attr') }}">
+              {% for update in form.incidentUpdates %}
+                {{ form_widget(update, {'attr': {'class': 'row'}}) }}
+              {% endfor %}
+            </div>
+          </fieldset>
+          {{ form_row(form.visibility) }}
+          {{ form_row(form.occurred) }}
+          {{ form_row(form.anticipatedResolution) }}
+          {{ form_row(form.status) }}
+          {{ form_row(form.type) }}
+          <fieldset id="incident-services-group" class="form-group collection-group">
+            <legend>
+              Affected Services
+              <button type="button" class="collection-add-btn">Add New</button>
+            </legend>
+            <div class="collection-subform container-fluid" data-prototype="{{ form_widget(form.incidentServices.vars.prototype)|e('html_attr') }}">
+              <div class="row collection-header">
+                <label class="col-sm-6">Service</label>
+                <label class="col-sm-6">Status</label>
+              </div>
+              {% for service in form.incidentServices %}
+                  {{ form_widget(service, {'attr': {'class': 'row'}}) }}
+              {% endfor %}
+            </div>
+          </fieldset>
+          <button class="btn btn-primary" type="submit">Save Incident</button>
+          {{ form_widget(form._token) }}
+          {{ form_end(form, {'render_rest': false}) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

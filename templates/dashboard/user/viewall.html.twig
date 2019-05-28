@@ -1,0 +1,50 @@
+{% extends 'dashboard/dashboardbase.html.twig' %}
+
+{% block panel %}
+
+<div class="dashboard-subheader">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb-container">
+          <span class="breadcrumb">Users</span>
+        </div>
+        <a class="action-btn btn btn-primary pull-right" href="/dashboard/users/add">Add User</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dashboard-panels">
+  <div class="container-fluid container-fixed-lg">
+    <div class="row">
+      <div class="col-lg-12">
+        <table id="user-view-table" class="stripe hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {% for user in users %}
+            <tr data-id="{{ user.guid }}">
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>{{ user.username }}</td>
+              <td>
+                <button class="btn btn-error pull-right btn-delete">Delete</button>
+                <a href="/dashboard/users/{{ user.guid }}" class="btn btn-primary pull-right">Edit</a>
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

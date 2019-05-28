@@ -1,0 +1,9 @@
+{# templates/form/fields.html.twig #}
+{%- block form_row -%}
+  <div class="form-group col-sm-6">
+    {{ form_label(form) }}
+    {{ form_errors(form) }}
+    {{ form_widget(form, {'attr': {'class': 'form-control'}}) }}
+    {{ form_help(form) }}
+  </div>
+{%- endblock -%}

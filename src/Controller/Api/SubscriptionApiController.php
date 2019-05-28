@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Controller\Api;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use App\Entity\Subscription;
+
+class SubscriptionApiController extends ApiController
+{
+  /**
+   * @Route("/api/v1/subscriptions", name="getSubscriptions", methods={"GET"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+   */
+  public function getSubscriptions()
+  {
+    //get subscriptions
+    $subscriptions = $this->getDoctrine()
+      ->getRepository(Subscription::class)
+      ->findAll();
+
+    //respond with object
+    return $this->respond($subscriptions);
+  }
+
+  /**
+   * @Route("/api/v1/subscriptions/{guid}", name="getSubscription", methods={"GET"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+   */
+  public function getSubscription($guid)
+  {
+    //get subscription
+    $subscription = $this->getDoctrine()
+      ->getRepository(Subscription::class)
+      ->findByGuid($guid);
+
+    //check for valid subscription
+    if (!$subscription)
+      return $this->respondWithErrors(['Invalid data']);
+
+    //respond with object
+    return $this->respond($subscription);
+  }
+
+  /**
+   * @Route("/api/v1/subscriptions/{guid}", name="deleteSubscription", methods={"DELETE"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+   */
+  public function deleteSubscription($guid)
+  {
+    //get subscription
+    $subscription = $this->getDoctrine()
+      ->getRepository(Subscription::class)
+      ->findByGuid($guid);
+
+    //check for valid subscription
+    if (!$subscription)
+      return $this->respondWithErrors(['Invalid data']);
+
+    //delete subscription
+    $em = $this->getDoctrine()->getManager();
+    $em->remove($subscription);
+    $em->flush();
+
+    //respond with object
+    return $this->respond($subscription);
+  }
+}

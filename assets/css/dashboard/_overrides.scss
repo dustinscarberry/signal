@@ -1,0 +1,81 @@
+//base overrides
+body.dashboard{
+  font-family: Open Sans Bold,Helvetica Neue,Helvetica,Arial,sans-serif;
+}
+
+//bootstrap grid overrides
+.container-fluid {
+  padding-left: 30px;
+  padding-right: 30px;
+  position: relative;
+}
+
+@media (min-width: 1824px) {
+  .container-fluid.container-fixed-lg {
+    width: 1700px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .nav-pin .container-fluid.container-fixed-lg {
+    width: 1450px;
+  }
+}
+
+//datatables overides
+.dataTable{
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.dataTable th{
+  text-align: left;
+}
+
+table.dataTable thead th{
+  border-bottom: 1px solid #eee;
+}
+
+table.dataTable thead th{
+  padding: 2rem;
+  font-size: 1.7rem;
+  font-weight: normal;
+}
+
+table.dataTable tbody td{
+  padding: 1.5rem;
+}
+
+table.dataTable.no-footer{
+  border-bottom: inherit;
+}
+
+.dataTables_filter label{
+  margin-bottom: 2rem;
+}
+
+.dataTables_filter input{
+  padding: .5rem;
+  border: 1px solid #eee;
+}
+
+table.dataTable tbody td{
+  transition: .2s all ease-in-out;
+}
+
+table.dataTable tr.is-deleting td{
+  padding: 0;
+  line-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  height: 0;
+}
+
+.dataTable tr.is-deleting button{
+  display: none;
+}
+
+//tippy-tooltip
+.tippy-tooltip {
+  font-size: 1.3rem;
+  padding: 0.3rem 0.6rem;
+}

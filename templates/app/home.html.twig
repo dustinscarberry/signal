@@ -1,0 +1,54 @@
+{% extends 'app/appbase.html.twig' %}
+{% form_theme subscriptionForm 'form/fields.html.twig' %}
+
+{% block contentblocks %}
+
+{% for widget in widgets %}
+  {% if widget.type == 'video-embed' %}
+    <div class="video-embed-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'services-list' %}
+    <div class="services-list-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'incidents-list' %}
+    <div class="incidents-list-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'maintenance-list' %}
+    <div class="maintenance-list-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'service-status-overview' %}
+    <div class="service-status-overview-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'metrics-overview' %}
+    <div class="metrics-overview-widget-root" data-id="{{ widget.id }}"></div>
+  {% elseif widget.type == 'service-uptime-chart' %}
+    <div class="service-uptime-chart-widget-root" data-id="{{ widget.id }}"></div>
+  {% endif %}
+
+{% endfor %}
+
+{% endblock %}
+
+{% block subscriptionblock %}
+
+{% if config.allowSubscriptions %}
+<button type="button" class="btn btn-primary app-subscribe-btn" data-toggle="modal" data-target="#subscribe-modal">Subscribe To Updates</button>
+<div class="modal fade" id="subscribe-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {{ form_start(subscriptionForm) }}
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Subscribe To Updates</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {{ form_row(subscriptionForm.email) }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+        {{ form_widget(subscriptionForm._token) }}
+      {{ form_end(subscriptionForm) }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

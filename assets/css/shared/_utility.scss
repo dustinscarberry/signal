@@ -1,0 +1,41 @@
+.sr-only{
+  display: none;
+}
+
+.pull-right{
+  float: right;
+}
+
+.pull-left{
+  float: left;
+}
+
+.is-hidden{
+  display: none;
+}
+
+.clearfix::after{
+  content: ".";
+  visibility: hidden;
+  display: block;
+  height: 0;
+  clear: both;
+}
+
+.preload *{
+  -webkit-transition: none!important;
+  -moz-transition: none!important;
+  -ms-transition: none!important;
+  -o-transition: none!important;
+  transition: none!important;
+}
+
+.ellipsis-3 {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box!important;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 3; /* number of lines to show */
+   line-height: 2.2rem; /* fallback */
+   max-height: 6.6rem; /* fallback */
+}
