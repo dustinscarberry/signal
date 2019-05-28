@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
 #install needed packages
-wget -qO- https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add
-sudo bash -c "echo deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse > /etc/apt/sources.list.d/mongodb-org.list"
 apt-get update
 apt-get install -y php-fpm
-apt-get install -y nginx php php-mysql php-gd php-imagick php-xml mariadb-server mariadb-client mongodb-org
+apt-get install -y nginx php php-mysql php-gd php-imagick php-xml php-curl php-mbstring mariadb-server mariadb-client
 apt-get upgrade -y
 
 service mongod start
@@ -87,11 +85,14 @@ mysql -e "CREATE USER 'vagrant'@'localhost' IDENTIFIED BY 'vagrant';"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 
-#configure wordpress installation dependencies
-
-#setup database "wordpress"
+#setup database
 mysql -e "CREATE DATABASE demo;"
 
+#change user accounts for web stack
+sed -i 's/www-data/vagrant/g' /etc/nginx/nginx.conf
+sed -i 's/www-data/vagrant/g' /etc/php/7.2/fpm/pool.d/www.conf
+
+#restart services
 systemctl restart php7.2-fpm
 systemctl restart nginx
 
