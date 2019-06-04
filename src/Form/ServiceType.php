@@ -31,7 +31,8 @@ class ServiceType extends AbstractType
   public function configureOptions(OptionsResolver $resolver)
   {
     $resolver->setDefaults([
-      'data_class' => Service::class
+      'data_class' => Service::class,
+      'csrf_protection' => false
     ]);
   }
 }
