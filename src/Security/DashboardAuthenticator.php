@@ -58,7 +58,7 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
     if ($this->isAPICall)
     {
       return [
-        'apiToken' => $request->headers->get('X-AUTH-TOKEN')
+        'apiToken' => $request->headers->get('X-API-TOKEN')
       ];
     }
     else
