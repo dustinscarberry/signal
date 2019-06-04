@@ -29,7 +29,7 @@ class ServiceApiController extends ApiController
     catch (\Exception $e)
     {
       return $this->respondWithErrors([$e->getMessage()]);
-    }    
+    }
   }
 
   /**
@@ -70,7 +70,7 @@ class ServiceApiController extends ApiController
       $service = new Service();
 
       //create form object for service
-      $form = $this->createForm(ServiceType::class, $service);
+      $form = $this->createForm(ServiceType::class, $service, ['csrf_protection' => false]);
 
       //submit form
       $data = json_decode($request->getContent(), true);
@@ -128,7 +128,7 @@ class ServiceApiController extends ApiController
       $serviceStatus = $service->getStatus();
 
       //create form object for service
-      $form = $this->createForm(ServiceType::class, $service);
+      $form = $this->createForm(ServiceType::class, $service, ['csrf_protection' => false]);
 
       //submit form
       $data = json_decode($request->getContent(), true);
