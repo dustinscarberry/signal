@@ -181,7 +181,7 @@ class ServiceApiController extends ApiController
 
       //check for valid service
       if (!$service)
-        return $this->respondWithErrors(['Invalid data']);
+        return $this->respondWithErrors(['Invalid service']);
 
       //delete service
       $service->setDeletedOn(time());

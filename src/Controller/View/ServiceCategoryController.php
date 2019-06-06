@@ -58,14 +58,14 @@ class ServiceCategoryController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/servicecategories/{serviceCategoryGuid}", name="editServiceCategory")
+   * @Route("/dashboard/servicecategories/{guid}", name="editServiceCategory")
    */
-  public function edit($serviceCategoryGuid, Request $request)
+  public function edit($guid, Request $request)
   {
     //get service from database
     $serviceCategory = $this->getDoctrine()
       ->getRepository(ServiceCategory::class)
-      ->findByGuid($serviceCategoryGuid);
+      ->findByGuid($guid);
 
     //create form object for service
     $form = $this->createForm(ServiceCategoryType::class, $serviceCategory);
@@ -76,7 +76,7 @@ class ServiceCategoryController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $service = $form->getData();
+      $serviceCategory = $form->getData();
 
       $this->getDoctrine()->getManager()->flush();
 

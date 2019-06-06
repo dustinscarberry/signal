@@ -93,8 +93,12 @@ class IncidentController extends AbstractController
   )
   {
     //get incident from database
-    $repository = $this->getDoctrine()->getRepository(Incident::class);
-    $incident = $repository->findByGuid($incidentGuid);
+    $incident = $this->getDoctrine()
+      ->getRepository(Incident::class)
+      ->findByGuid($incidentGuid);
+
+    if (!$incident)
+      throw new \Exception('Incident not found');
 
     //get array copy of original services
     $originalServices = new ArrayCollection();

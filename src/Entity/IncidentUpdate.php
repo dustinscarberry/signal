@@ -144,7 +144,8 @@ class IncidentUpdate implements JsonSerializable
       'statusName' => $this->status->getName(),
       'statusType' => $this->status->getType(),
       'created' => $this->created,
-      'updated' => $this->updated
+      'updated' => $this->updated,
+      'createdBy' => $this->createdBy->getFullName()
     ];
   }
 }
