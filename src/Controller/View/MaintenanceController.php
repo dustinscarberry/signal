@@ -96,8 +96,9 @@ class MaintenanceController extends AbstractController
   )
   {
     //get maintenance from database
-    $repository = $this->getDoctrine()->getRepository(Maintenance::class);
-    $maintenance = $repository->findByGuid($maintenanceGuid);
+    $maintenance = $this->getDoctrine()
+      ->getRepository(Maintenance::class)
+      ->findByGuid($maintenanceGuid);
 
     //get array copy of original services
     $originalServices = new ArrayCollection();

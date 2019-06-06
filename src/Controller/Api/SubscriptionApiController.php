@@ -15,13 +15,20 @@ class SubscriptionApiController extends ApiController
    */
   public function getSubscriptions()
   {
-    //get subscriptions
-    $subscriptions = $this->getDoctrine()
-      ->getRepository(Subscription::class)
-      ->findAll();
+    try
+    {
+      //get subscriptions
+      $subscriptions = $this->getDoctrine()
+        ->getRepository(Subscription::class)
+        ->findAll();
 
-    //respond with object
-    return $this->respond($subscriptions);
+      //respond with object
+      return $this->respond($subscriptions);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }  
   }
 
   /**
@@ -30,17 +37,24 @@ class SubscriptionApiController extends ApiController
    */
   public function getSubscription($guid)
   {
-    //get subscription
-    $subscription = $this->getDoctrine()
-      ->getRepository(Subscription::class)
-      ->findByGuid($guid);
+    try
+    {
+      //get subscription
+      $subscription = $this->getDoctrine()
+        ->getRepository(Subscription::class)
+        ->findByGuid($guid);
 
-    //check for valid subscription
-    if (!$subscription)
-      return $this->respondWithErrors(['Invalid data']);
+      //check for valid subscription
+      if (!$subscription)
+        return $this->respondWithErrors(['Invalid data']);
 
-    //respond with object
-    return $this->respond($subscription);
+      //respond with object
+      return $this->respond($subscription);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 
   /**
@@ -49,21 +63,28 @@ class SubscriptionApiController extends ApiController
    */
   public function deleteSubscription($guid)
   {
-    //get subscription
-    $subscription = $this->getDoctrine()
-      ->getRepository(Subscription::class)
-      ->findByGuid($guid);
+    try
+    {
+      //get subscription
+      $subscription = $this->getDoctrine()
+        ->getRepository(Subscription::class)
+        ->findByGuid($guid);
 
-    //check for valid subscription
-    if (!$subscription)
-      return $this->respondWithErrors(['Invalid data']);
+      //check for valid subscription
+      if (!$subscription)
+        return $this->respondWithErrors(['Invalid data']);
 
-    //delete subscription
-    $em = $this->getDoctrine()->getManager();
-    $em->remove($subscription);
-    $em->flush();
+      //delete subscription
+      $em = $this->getDoctrine()->getManager();
+      $em->remove($subscription);
+      $em->flush();
 
-    //respond with object
-    return $this->respond($subscription);
+      //respond with object
+      return $this->respond($subscription);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 }

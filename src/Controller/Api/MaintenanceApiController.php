@@ -2,9 +2,14 @@
 
 namespace App\Controller\Api;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Maintenance;
+use App\Form\MaintenanceType;
+use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
+use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
 
 class MaintenanceApiController extends ApiController
 {
@@ -14,13 +19,20 @@ class MaintenanceApiController extends ApiController
    */
   public function getMaintenances()
   {
-    //get maintenance
-    $maintenances = $this->getDoctrine()
-      ->getRepository(Maintenance::class)
-      ->findAllNotDeleted();
+    try
+    {
+      //get maintenance
+      $maintenances = $this->getDoctrine()
+        ->getRepository(Maintenance::class)
+        ->findAllNotDeleted();
 
-    //respond with object
-    return $this->respond($maintenances);
+      //respond with object
+      return $this->respond($maintenances);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 
   /**
@@ -29,17 +41,212 @@ class MaintenanceApiController extends ApiController
    */
   public function getMaintenance($guid)
   {
-    //get maintenance
-    $maintenance = $this->getDoctrine()
-      ->getRepository(Maintenance::class)
-      ->findByGuid($guid);
+    try
+    {
+      //get maintenance
+      $maintenance = $this->getDoctrine()
+        ->getRepository(Maintenance::class)
+        ->findByGuid($guid);
 
-    //check for valid maintenance
-    if (!$maintenance)
+      //check for valid maintenance
+      if (!$maintenance)
+        return $this->respondWithErrors(['Invalid data']);
+
+      //respond with object
+      return $this->respond($maintenance);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
+  }
+
+  /**
+   * @Route("/api/v1/maintenance", name="createMaintenance", methods={"POST"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+  */
+  public function createMaintenance(
+    Request $req,
+    MaintenanceCreatedMailer $maintenanceCreatedMailer
+  )
+  {
+    try
+    {
+      //create maintenance object
+      $maintenance = new Maintenance();
+
+      //create form object for maintenance
+      $form = $this->createForm(
+        MaintenanceType::class,
+        $maintenance,
+        ['csrf_protection' => false]
+      );
+
+      //submit form
+      $data = json_decode($req->getContent(), true);
+      $form->submit($data);
+
+      //save form data to database if posted and validated
+      if ($form->isSubmitted() && $form->isValid())
+      {
+        $maintenance = $form->getData();
+        $em = $this->getDoctrine()->getManager();
+
+        //set created by
+        $maintenance->setCreatedBy($this->getUser());
+
+        //check for status update check
+        if ($form->get('updateServiceStatuses'))
+        {
+          //update maintenance statuses and store histories
+          foreach ($maintenance->getMaintenanceServices() as $service)
+          {
+            if ($service->getStatus() != $service->getService()->getStatus())
+            {
+              $service->getService()->setStatus($service->getStatus());
+
+              $serviceStatusHistory = new ServiceStatusHistory();
+              $serviceStatusHistory->setService($service->getService());
+              $serviceStatusHistory->setStatus($service->getStatus());
+              $em->persist($serviceStatusHistory);
+            }
+          }
+        }
+
+        //set status and user of any updates
+        foreach ($maintenance->getMaintenanceUpdates() as $update)
+        {
+          $update->setStatus($maintenance->getStatus());
+          $update->setCreatedBy($this->getUser());
+        }
+
+        //persist maintenance
+        $em->persist($maintenance);
+        $em->flush();
+
+        //send email if services included
+        if ($maintenance->getMaintenanceServices())
+          $maintenanceCreatedMailer->send($maintenance);
+
+        return $this->respond($maintenance);
+      }
+
       return $this->respondWithErrors(['Invalid data']);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
+  }
 
-    //respond with object
-    return $this->respond($maintenance);
+  /**
+   * @Route("/api/v1/maintenance/{guid}", name="updateMaintenance", methods={"PATCH"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+  */
+  public function updateMaintenance(
+    $guid,
+    Request $req,
+    MaintenanceUpdatedMailer $maintenanceUpdatedMailer
+  )
+  {
+    try
+    {
+      //get maintenance from database
+      $maintenance = $this->getDoctrine()
+        ->getRepository(Maintenance::class)
+        ->findByGuid($guid);
+
+      if (!$maintenance)
+        throw new \Exception('Item not found');
+
+      //get array copy of original services
+      $originalServices = new ArrayCollection();
+
+      foreach ($maintenance->getMaintenanceServices() as $service)
+        $originalServices->add($service);
+
+      //get array copy of original updates
+      $originalUpdates = new ArrayCollection();
+
+      foreach ($maintenance->getMaintenanceUpdates() as $update)
+        $originalUpdates->add($update);
+
+      //create form object for maintenance
+      $form = $this->createForm(
+        MaintenanceType::class,
+        $maintenance,
+        ['csrf_protection' => false]
+      );
+
+      //submit form
+      $data = json_decode($req->getContent(), true);
+      $form->submit($data, false);
+
+      //save form data to database if posted and validated
+      if ($form->isSubmitted() && $form->isValid())
+      {
+        //get latest maintenance data
+        $maintenance = $form->getData();
+
+        $em = $this->getDoctrine()->getManager();
+
+        //remove deleted services from database
+        foreach ($originalServices as $service)
+        {
+          if ($maintenance->getMaintenanceServices()->contains($service) === false)
+            $em->remove($service);
+        }
+
+        //check for status update check
+        if ($form->get('updateServiceStatuses'))
+        {
+          //update maintenance statuses and store histories
+          foreach ($maintenance->getMaintenanceServices() as $service)
+          {
+            if ($service->getStatus() != $service->getService()->getStatus())
+            {
+              $service->getService()->setStatus($service->getStatus());
+
+              $serviceStatusHistory = new ServiceStatusHistory();
+              $serviceStatusHistory->setService($service->getService());
+              $serviceStatusHistory->setStatus($service->getStatus());
+              $em->persist($serviceStatusHistory);
+            }
+          }
+        }
+
+        //remove deleted updates from database
+        foreach ($originalUpdates as $update)
+        {
+          if ($maintenance->getMaintenanceUpdates()->contains($update) === false)
+            $em->remove($update);
+        }
+
+        //set status and user of new updates
+        foreach ($maintenance->getMaintenanceUpdates() as $update)
+        {
+          if ($originalUpdates->contains($update) === false)
+          {
+            $update->setStatus($maintenance->getStatus());
+            $update->setCreatedBy($this->getUser());
+          }
+        }
+
+        $em->flush();
+
+        //send email if services included
+        if ($maintenance->getMaintenanceServices())
+          $maintenanceUpdatedMailer->send($maintenance);
+
+        return $this->respond($maintenance);
+      }
+
+      return $this->respondWithErrors(['Invalid data']);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 
   /**
@@ -48,21 +255,28 @@ class MaintenanceApiController extends ApiController
    */
   public function deleteMaintenance($guid)
   {
-    //get maintenance
-    $maintenance = $this->getDoctrine()
-      ->getRepository(Maintenance::class)
-      ->findByGuid($guid);
+    try
+    {
+      //get maintenance
+      $maintenance = $this->getDoctrine()
+        ->getRepository(Maintenance::class)
+        ->findByGuid($guid);
 
-    //check for valid maintenance
-    if (!$maintenance)
-      return $this->respondWithErrors(['Invalid data']);
+      //check for valid maintenance
+      if (!$maintenance)
+        return $this->respondWithErrors(['Invalid data']);
 
-    //delete maintenance
-    $maintenance->setDeletedOn(time());
-    $maintenance->setDeletedBy($this->getUser());
-    $this->getDoctrine()->getManager()->flush();
+      //delete maintenance
+      $maintenance->setDeletedOn(time());
+      $maintenance->setDeletedBy($this->getUser());
+      $this->getDoctrine()->getManager()->flush();
 
-    //respond with object
-    return $this->respond($maintenance);
+      //respond with object
+      return $this->respond($maintenance);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 }

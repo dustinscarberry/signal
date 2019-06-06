@@ -54,7 +54,11 @@ class ServiceCategoryApiController extends ApiController
       $serviceCategory = new ServiceCategory();
 
       //create form object for service category
-      $form = $this->createForm(ServiceCategoryType::class, $serviceCategory, ['csrf_protection' => false]);
+      $form = $this->createForm(
+        ServiceCategoryType::class,
+        $serviceCategory,
+        ['csrf_protection' => false]
+      );
 
       //submit form
       $data = json_decode($req->getContent(), true);
