@@ -28,6 +28,6 @@ class SubscriptionRepository extends ServiceEntityRepository
         ->andWhere('s.guid = :guid')
         ->setParameter('guid', $guid)
         ->getQuery()
-        ->getSingleResult();
+        ->getOneOrNullResult();
     }
 }

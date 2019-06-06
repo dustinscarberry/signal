@@ -29,7 +29,7 @@ class ServiceStatusRepository extends ServiceEntityRepository
       ->setParameter('guid', $guid)
       ->andWhere('s.deletedOn is NULL')
       ->getQuery()
-      ->getSingleResult();
+      ->getOneOrNullResult();
   }
 
   /**

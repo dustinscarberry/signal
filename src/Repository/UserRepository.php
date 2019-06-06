@@ -29,7 +29,7 @@ class UserRepository extends ServiceEntityRepository
         ->setParameter('guid', $guid)
         ->andWhere('u.deletedOn is NULL')
         ->getQuery()
-        ->getSingleResult();
+        ->getOneOrNullResult();
     }
 
     /**

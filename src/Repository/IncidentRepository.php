@@ -29,7 +29,7 @@ class IncidentRepository extends ServiceEntityRepository
       ->andWhere('i.deletedOn is NULL')
       ->setParameter('guid', $guid)
       ->getQuery()
-      ->getSingleResult();
+      ->getOneOrNullResult();
   }
 
   /**
@@ -67,6 +67,6 @@ class IncidentRepository extends ServiceEntityRepository
       ->orderBy('i.occurred', 'DESC')
       ->setMaxResults(1)
       ->getQuery()
-      ->getSingleResult();
+      ->getOneOrNullResult();
   }
 }

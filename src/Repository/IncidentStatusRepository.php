@@ -29,7 +29,7 @@ class IncidentStatusRepository extends ServiceEntityRepository
         ->andWhere('i.deletedOn is NULL')
         ->setParameter('guid', $guid)
         ->getQuery()
-        ->getSingleResult();
+        ->getOneOrNullResult();
     }
 
     /**

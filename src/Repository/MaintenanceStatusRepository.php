@@ -29,7 +29,7 @@ class MaintenanceStatusRepository extends ServiceEntityRepository
         ->setParameter('guid', $guid)
         ->andWhere('m.deletedOn is NULL')
         ->getQuery()
-        ->getSingleResult();
+        ->getOneOrNullResult();
     }
 
     /**
