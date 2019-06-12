@@ -37,12 +37,13 @@ table.dataTable thead th{
 
 table.dataTable thead th{
   padding: 2rem;
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   font-weight: normal;
 }
 
 table.dataTable tbody td{
-  padding: 1.5rem;
+  //padding: 1.5rem;
+  vertical-align: middle;
 }
 
 table.dataTable.no-footer{
@@ -72,6 +73,10 @@ table.dataTable tr.is-deleting td{
 
 .dataTable tr.is-deleting button{
   display: none;
+}
+
+.uk-table{
+  margin-top: 0;
 }
 
 //tippy-tooltip

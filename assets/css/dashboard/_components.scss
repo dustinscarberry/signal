@@ -345,6 +345,43 @@
   }
 }
 
+//datatable item lists
+.list-item{
+  position: relative;
+}
+
+.list-item-content{
+  margin-left: 40px;
+}
+
+.list-item-decoration{
+  position: absolute;
+  left: 0;
+  width: 30px;
+  text-align: center;
+}
+
+.list-item-title{
+  display: block;
+  padding-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.list-item-createdby{
+  font-style: italic;
+  padding-bottom: 1rem;
+  display: block;
+}
+
+.list-item-description{
+  display: block;
+  padding-bottom: 1rem;
+}
+
+.list-item-icon::before{
+  font-size: 2rem;
+}
+
 //header profile menu
 .dashboard-profile{
   float: right;

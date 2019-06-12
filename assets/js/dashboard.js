@@ -161,6 +161,9 @@ $(document).ready(function(){
     }],
     language: {
       emptyTable: 'No one has subscribed yet'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
     }
   });
 
@@ -173,6 +176,41 @@ $(document).ready(function(){
     }],
     language: {
       emptyTable: 'Div by 0 ... not possible'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const serviceStatusDataTable = $('#service-status-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [{
+      targets: 1,
+      orderable: false
+    }],
+    order: [],
+    language: {
+      emptyTable: 'Div by 0 ... not possible'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const incidentViewDataTable = $('#incident-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [{
+      targets: 2,
+      orderable: false
+    }],
+    order: [],
+    language: {
+      emptyTable: 'No incidents reported'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
     }
   });
 
