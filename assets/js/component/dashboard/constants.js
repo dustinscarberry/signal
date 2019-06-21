@@ -5,7 +5,8 @@ export const WIDGET_BLOCK_TYPE = {
   MAINTENANCE_LIST: 'maintenance-list',
   SERVICE_STATUS_OVERVIEW: 'service-status-overview',
   METRICS_OVERVIEW: 'metrics-overview',
-  SERVICE_UPTIME_CHART: 'service-uptime-chart'
+  SERVICE_UPTIME_CHART: 'service-uptime-chart',
+  CUSTOM_METRIC_CHART: 'custom-metric-chart'
 }
 
 export const WIDGET_BLOCK_ATTRIBUTES = {
@@ -35,6 +36,10 @@ export const WIDGET_BLOCK_ATTRIBUTES = {
   },
   [WIDGET_BLOCK_TYPE.SERVICE_UPTIME_CHART]: {
     title: 'Service Uptime Chart',
+    iconClass: 'fas fa-hourglass-start'
+  },
+  [WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART]: {
+    title: 'Custom Metric Chart',
     iconClass: 'fas fa-hourglass-start'
   }
 }
@@ -103,6 +108,17 @@ export const WIDGET_BLOCK_DATA = {
       scale: undefined,
       service: undefined,
       useAllServices: undefined,
+      refreshInterval: 60
+    }
+  },
+  [WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART]: {
+    id: undefined,
+    type: WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART,
+    sortOrder: undefined,
+    attributes: {
+      title: undefined,
+      scale: undefined,
+      metric: undefined,
       refreshInterval: 60
     }
   }
