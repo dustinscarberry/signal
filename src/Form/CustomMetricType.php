@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\CustomMetric;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CustomMetricType extends AbstractType
@@ -17,7 +18,9 @@ class CustomMetricType extends AbstractType
       ->add('name', TextType::class)
       ->add('description', TextareaType::class, [
         'required' => false
-      ]);
+      ])
+      ->add('scaleStart', IntegerType::class)
+      ->add('scaleEnd', IntegerType::class);
   }
 
   public function configureOptions(OptionsResolver $resolver)

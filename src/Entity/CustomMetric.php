@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -44,6 +46,26 @@ class CustomMetric
    * @ORM\Column(type="uuid")
    */
   private $guid;
+
+  /**
+   * @ORM\OneToMany(targetEntity="App\Entity\CustomMetricDatapoint", mappedBy="metric", orphanRemoval=true)
+   */
+  private $customMetricDatapoints;
+
+  /**
+   * @ORM\Column(type="integer")
+   */
+  private $scaleStart;
+
+  /**
+   * @ORM\Column(type="integer")
+   */
+  private $scaleEnd;
+
+  public function __construct()
+  {
+      $this->customMetricDatapoints = new ArrayCollection();
+  }
 
   /**
    * @ORM\PrePersist
@@ -125,5 +147,60 @@ class CustomMetric
   {
     $this->guid = $guid;
     return $this;
+  }
+
+  /**
+   * @return Collection|CustomMetricDatapoint[]
+   */
+  public function getCustomMetricDatapoints(): Collection
+  {
+      return $this->customMetricDatapoints;
+  }
+
+  public function addCustomMetricDatapoint(CustomMetricDatapoint $customMetricDatapoint): self
+  {
+      if (!$this->customMetricDatapoints->contains($customMetricDatapoint)) {
+          $this->customMetricDatapoints[] = $customMetricDatapoint;
+          $customMetricDatapoint->setMetric($this);
+      }
+
+      return $this;
+  }
+
+  public function removeCustomMetricDatapoint(CustomMetricDatapoint $customMetricDatapoint): self
+  {
+      if ($this->customMetricDatapoints->contains($customMetricDatapoint)) {
+          $this->customMetricDatapoints->removeElement($customMetricDatapoint);
+          // set the owning side to null (unless already changed)
+          if ($customMetricDatapoint->getMetric() === $this) {
+              $customMetricDatapoint->setMetric(null);
+          }
+      }
+
+      return $this;
+  }
+
+  public function getScaleStart(): ?int
+  {
+      return $this->scaleStart;
+  }
+
+  public function setScaleStart(int $scaleStart): self
+  {
+      $this->scaleStart = $scaleStart;
+
+      return $this;
+  }
+
+  public function getScaleEnd(): ?int
+  {
+      return $this->scaleEnd;
+  }
+
+  public function setScaleEnd(int $scaleEnd): self
+  {
+      $this->scaleEnd = $scaleEnd;
+
+      return $this;
   }
 }
