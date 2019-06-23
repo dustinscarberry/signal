@@ -13,7 +13,7 @@ use JsonSerializable;
  * @ORM\Table(indexes={@ORM\Index(name="custommetric_guid_idx", columns={"guid"})})
  * @ORM\HasLifecycleCallbacks
  */
-class CustomMetric
+class CustomMetric implements JsonSerializable
 {
   /**
    * @ORM\Id()
@@ -202,5 +202,18 @@ class CustomMetric
       $this->scaleEnd = $scaleEnd;
 
       return $this;
+  }
+
+  public function jsonSerialize()
+  {
+    return [
+      'guid' => $this->guid,
+      'name' => $this->name,
+      'description' => $this->description,
+      'created' => $this->created,
+      'updated' => $this->updated,
+      'scaleStart' => $this->scaleStart,
+      'scaleEnd' => $this->scaleEnd
+    ];
   }
 }

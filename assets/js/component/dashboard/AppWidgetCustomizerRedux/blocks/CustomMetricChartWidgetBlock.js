@@ -35,7 +35,9 @@ class CustomMetricChartWidgetBlock extends React.Component
 
     if (rsp.status == 200 && !rsp.data.error)
     {
-      let metrics = rsp.data.data.map(item => {return {key: item.id, value: item.name}});
+      let metrics = rsp.data.data.map(item => {return {key: item.guid, value: item.name}});
+      metrics.unshift({key: '', value: ''});
+
       this.setState({metrics: metrics});
     }
   }
@@ -70,7 +72,7 @@ class CustomMetricChartWidgetBlock extends React.Component
   changeMetric(e)
   {
     this.props.updateAttributes({
-      service: e.target.value
+      metric: e.target.value
     });
 
     this.props.toggleIsSaved(false);
@@ -80,7 +82,7 @@ class CustomMetricChartWidgetBlock extends React.Component
   {
     if (!this.state.metrics)
       return <Loader/>;
-
+      
     return (
       <div>
         <FormGroup>

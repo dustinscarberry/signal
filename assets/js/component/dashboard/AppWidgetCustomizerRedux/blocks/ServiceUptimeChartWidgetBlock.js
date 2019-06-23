@@ -35,7 +35,7 @@ class ServiceUptimeChartWidgetBlock extends React.Component
 
     if (rsp.status == 200 && !rsp.data.error)
     {
-      let services = rsp.data.data.map(item => {return {key: item.id, value: item.name}});
+      let services = rsp.data.data.map(item => {return {key: item.guid, value: item.name}});
       services.unshift({key: 'all', value: 'All Services'});
 
       this.setState({services: services});
