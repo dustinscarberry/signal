@@ -207,6 +207,7 @@ class CustomMetric implements JsonSerializable
   public function jsonSerialize()
   {
     return [
+      'id' => $this->id,
       'guid' => $this->guid,
       'name' => $this->name,
       'description' => $this->description,

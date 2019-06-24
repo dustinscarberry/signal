@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\CustomMetric;
 use App\Entity\CustomMetricDatapoint;
 use App\Form\CustomMetricType;
+use App\Form\CustomMetricDatapointType;
 
 class CustomMetricApiController extends ApiController
 {
@@ -96,25 +97,25 @@ class CustomMetricApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicestatuses/{guid}", name="updateServiceStatus", methods={"PATCH"})
+   * @Route("/api/v1/custommetrics/{guid}", name="updateCustomMetric", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateServiceStatus($guid, Request $req)
+  public function updateCustomMetric($guid, Request $req)
   {
     try
     {
-      //get status from database
-      $status = $this->getDoctrine()
-        ->getRepository(ServiceStatus::class)
+      //get metric from database
+      $metric = $this->getDoctrine()
+        ->getRepository(CustomMetric::class)
         ->findByGuid($guid);
 
-      if (!$status)
+      if (!$metric)
         throw new \Exception('Object not found');
 
-      //create form object for status
+      //create form object
       $form = $this->createForm(
-        ServiceStatusType::class,
-        $status,
+        CustomMetricType::class,
+        $metric,
         ['csrf_protection' => false]
       );
 
@@ -125,10 +126,10 @@ class CustomMetricApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $status = $form->getData();
+        $metric = $form->getData();
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->respond($status);
+        return $this->respond($metric);
       }
 
       return $this->respondWithErrors(['Invalid data']);
@@ -140,33 +141,83 @@ class CustomMetricApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicestatuses/{guid}", name="deleteServiceStatus", methods={"DELETE"})
+   * @Route("/api/v1/custommetrics/{guid}", name="deleteCustomMetric", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteServiceStatus($guid)
+  public function deleteCustomMetric($guid)
   {
     try
     {
-      //get service status
-      $serviceStatus = $this->getDoctrine()
-        ->getRepository(ServiceStatus::class)
+      //get metric
+      $metric = $this->getDoctrine()
+        ->getRepository(CustomMetric::class)
         ->findByGuid($guid);
 
-      //check for valid service status
-      if (!$serviceStatus)
+      //check for valid metric
+      if (!$metric)
         return $this->respondWithErrors(['Invalid data']);
 
-      //delete service status
-      $serviceStatus->setDeletedOn(time());
-      $serviceStatus->setDeletedBy($this->getUser());
-      $this->getDoctrine()->getManager()->flush();
+      //delete metric
+      $em = $this->getDoctrine()->getManager();
+      $em->remove($metric);
+      $em->flush();
+
+
+
 
       //respond with object
-      return $this->respond($serviceStatus);
+      return $this->respond($metric);
     }
     catch (\Exception $e)
     {
       return $this->respondWithErrors([$e->getMessage()]);
     }
+  }
+
+  /**
+   * @Route("/api/v1/custommetricdatapoints", name="createCustomMetricDatapoint", methods={"POST"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+   */
+  public function createCustomMetricDatapoint(Request $req)
+  {
+    try
+    {
+      $datapoint = new CustomMetricDatapoint();
+      $form = $this->createForm(
+        CustomMetricDatapointType::class,
+        $datapoint,
+        ['csrf_protection' => false]
+      );
+
+      //submit form
+      $data = json_decode($req->getContent(), true);
+      $form->submit($data);
+
+      //save new widget to database if valid
+      if ($form->isSubmitted() && $form->isValid())
+      {
+        $datapoint = $form->getData();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($datapoint);
+        $entityManager->flush();
+
+        return $this->respond($datapoint);
+      }
+
+      return $this->respondWithErrors(['Invalid Data']);
+    }
+    catch (\Exception $e)
+    {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
+  }
+
+  /**
+   * @Route("/api/v1/custommetricdatapoints/{guid}", name="deleteCustomMetricDatapoint", methods={"DELETE"})
+   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
+   */
+  public function deleteCustomMetricDatapoint($guid, Request $req)
+  {
+
   }
 }
