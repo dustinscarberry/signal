@@ -24,15 +24,15 @@ class ServiceCategoryApiController extends ApiController
   }
 
   /**
-  * @Route("/api/v1/servicecategories/{guid}", name="getServiceCategory", methods={"GET"})
+  * @Route("/api/v1/servicecategories/{hashId}", name="getServiceCategory", methods={"GET"})
   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getServiceCategory($guid)
+  public function getServiceCategory($hashId)
   {
     //get service category
     $serviceCategory = $this->getDoctrine()
       ->getRepository(ServiceCategory::class)
-      ->findByGuid($guid);
+      ->findByHashId($hashId);
 
     //check for valid service category
     if (!$serviceCategory)
@@ -86,11 +86,11 @@ class ServiceCategoryApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicecategories/{guid}", name="updateServiceCategory", methods={"PATCH"})
+   * @Route("/api/v1/servicecategories/{hashId}", name="updateServiceCategory", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
   public function updateServiceCategory(
-    $guid,
+    $hashId,
     Request $request
   )
   {
@@ -99,7 +99,7 @@ class ServiceCategoryApiController extends ApiController
       //get service from database
       $serviceCategory = $this->getDoctrine()
         ->getRepository(ServiceCategory::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$serviceCategory)
         throw new \Exception('No service category found');
@@ -131,17 +131,17 @@ class ServiceCategoryApiController extends ApiController
   }
 
   /**
-  * @Route("/api/v1/servicecategories/{guid}", name="deleteServiceCategory", methods={"DELETE"})
+  * @Route("/api/v1/servicecategories/{hashId}", name="deleteServiceCategory", methods={"DELETE"})
   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteServiceCategory($guid)
+  public function deleteServiceCategory($hashId)
   {
     try
     {
       //get service category
       $serviceCategory = $this->getDoctrine()
         ->getRepository(ServiceCategory::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid service category
       if (!$serviceCategory)

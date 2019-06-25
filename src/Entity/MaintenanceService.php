@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
 * @ORM\Entity(repositoryClass="App\Repository\MaintenanceServiceRepository")
+* @ORM\Table(indexes={@ORM\Index(name="maintenanceservice_hashid_idx", columns={"hash_id"})})
 * @ORM\HasLifecycleCallbacks
 */
 class MaintenanceService implements JsonSerializable
@@ -17,6 +19,11 @@ class MaintenanceService implements JsonSerializable
   * @ORM\Column(type="integer")
   */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
   * @ORM\ManyToOne(targetEntity="App\Entity\Service")
@@ -56,12 +63,25 @@ class MaintenanceService implements JsonSerializable
     $this->setUpdated($currentTime);
 
     if ($this->getCreated() == null)
-    $this->setCreated($currentTime);
+      $this->setCreated($currentTime);
+  }
+
+  /**
+   * @ORM\PrePersist
+   */
+  public function createHashId()
+  {
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getService(): ?Service
@@ -122,7 +142,7 @@ class MaintenanceService implements JsonSerializable
   public function jsonSerialize()
   {
     return [
-      'id' => $this->id,
+      'id' => $this->hashId,
       'serviceName' => $this->service->getName(),
       'statusName' => $this->status->getName(),
       'created' => $this->created,

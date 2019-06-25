@@ -33,17 +33,17 @@ class MaintenanceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenancestatuses/{guid}", name="getMaintenanceStatus", methods={"GET"})
+   * @Route("/api/v1/maintenancestatuses/{hashId}", name="getMaintenanceStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getMaintenanceStatus($guid)
+  public function getMaintenanceStatus($hashId)
   {
     try
     {
       //get maintenance status
       $maintenanceStatus = $this->getDoctrine()
         ->getRepository(MaintenanceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid maintenance status
       if (!$maintenanceStatus)
@@ -102,17 +102,17 @@ class MaintenanceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenancestatuses/{guid}", name="updateMaintenanceStatus", methods={"PATCH"})
+   * @Route("/api/v1/maintenancestatuses/{hashId}", name="updateMaintenanceStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateMaintenanceStatus($guid, Request $req)
+  public function updateMaintenanceStatus($hashId, Request $req)
   {
     try
     {
       //get status from database
       $status = $this->getDoctrine()
         ->getRepository(MaintenanceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$status)
         return $this->respondWithErrors(['Invalid data']);
@@ -147,17 +147,17 @@ class MaintenanceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenancestatuses/{guid}", name="deleteMaintenanceStatus", methods={"DELETE"})
+   * @Route("/api/v1/maintenancestatuses/{hashId}", name="deleteMaintenanceStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteMaintenanceStatus($guid)
+  public function deleteMaintenanceStatus($hashId)
   {
     try
     {
       //get maintenance status
       $maintenanceStatus = $this->getDoctrine()
         ->getRepository(MaintenanceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid maintenance status
       if (!$maintenanceStatus)

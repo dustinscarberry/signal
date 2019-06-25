@@ -22,17 +22,17 @@
           <div id="incident-view-list" class="table-list">
 
             {% for metric in metrics %}
-              <div class="list-item" data-id="{{ metric.guid }}">
+              <div class="list-item" data-id="{{ metric.hashId }}">
                 <div class="list-item-left">
                   <div class="list-item-decoration">
                   </div>
                   <div class="list-item-content">
                     <span class="list-item-title">{{ metric.name }}</span>
-                    <span>{{ metric.guid }}</span>
+                    <span>{{ metric.hashId }}</span>
                   </div>
                 </div>
                 <div class="list-item-right">
-                  <a class="btn btn-primary" href="/dashboard/custommetrics/{{ metric.guid }}">Edit</a>
+                  <a class="btn btn-primary" href="/dashboard/custommetrics/{{ metric.hashId }}">Edit</a>
                   <button class="btn btn-error btn-delete">Delete</button>
                 </div>
               </div>

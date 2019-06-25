@@ -33,17 +33,17 @@ class IncidentStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidentstatuses/{guid}", name="getIncidentStatus", methods={"GET"})
+   * @Route("/api/v1/incidentstatuses/{hashId}", name="getIncidentStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncidentStatus($guid)
+  public function getIncidentStatus($hashId)
   {
     try
     {
       //get incident status
       $incidentStatus = $this->getDoctrine()
         ->getRepository(IncidentStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid incident status
       if (!$incidentStatus)
@@ -102,17 +102,17 @@ class IncidentStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidentstatuses/{guid}", name="updateIncidentStatus", methods={"PATCH"})
+   * @Route("/api/v1/incidentstatuses/{hashId}", name="updateIncidentStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateIncidentStatus($guid, Request $req)
+  public function updateIncidentStatus($hashId, Request $req)
   {
     try
     {
       //get status from database
       $status = $this->getDoctrine()
         ->getRepository(IncidentStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$status)
         throw new \Exception('Invalid object');
@@ -150,17 +150,17 @@ class IncidentStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidentstatuses/{guid}", name="deleteIncidentStatus", methods={"DELETE"})
+   * @Route("/api/v1/incidentstatuses/{hashId}", name="deleteIncidentStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteIncidentStatus($guid)
+  public function deleteIncidentStatus($hashId)
   {
     try
     {
       //get incident status
       $incidentStatus = $this->getDoctrine()
         ->getRepository(IncidentStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid incident status
       if (!$incidentStatus)

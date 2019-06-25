@@ -20,14 +20,14 @@ class MaintenanceRepository extends ServiceEntityRepository
   }
 
   /**
-    * @return Maintenance Returns a Maintenance object by guid
+    * @return Maintenance Returns a Maintenance object by hashId
   */
-  public function findByGuid($guid)
+  public function findByHashId($hashId)
   {
     return $this->createQueryBuilder('m')
-      ->andWhere('m.guid = :guid')
+      ->andWhere('m.hashId = :hashId')
       ->andWhere('m.deletedOn is NULL')
-      ->setParameter('guid', $guid)
+      ->setParameter('hashId', $hashId)
       ->getQuery()
       ->getOneOrNullResult();
   }

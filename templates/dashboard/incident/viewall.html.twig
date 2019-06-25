@@ -36,7 +36,7 @@
           <tbody>
 
             {% for incident in incidents %}
-            <tr data-id="{{ incident.guid }}">
+            <tr data-id="{{ incident.hashId }}">
               <td data-order="{{ incident.name }}">
                 <div class="list-item">
                   <div class="list-item-decoration">
@@ -52,7 +52,7 @@
               <td>{{ incident.created|date("m/d/Y g:ia") }}</td>
               <td>
                 <button class="btn btn-error btn-delete pull-right">Delete</button>
-                <a class="btn btn-primary pull-right" href="/dashboard/incidents/{{ incident.guid }}">Update</a>
+                <a class="btn btn-primary pull-right" href="/dashboard/incidents/{{ incident.hashId }}">Update</a>
               </td>
             </tr>
             {% endfor %}
@@ -68,7 +68,7 @@
           <div id="incident-view-list" class="table-list">
 
             {% for incident in incidents %}
-              <div class="list-item" data-id="{{ incident.guid }}">
+              <div class="list-item" data-id="{{ incident.hashId }}">
                 <div class="list-item-left">
                   <div class="list-item-decoration">
                     <i class="list-item-icon status-icon status-icon-{{ incident.status.type }}"></i>
@@ -80,7 +80,7 @@
                   </div>
                 </div>
                 <div class="list-item-right">
-                  <a class="btn btn-primary" href="/dashboard/incidents/{{ incident.guid }}">Update</a>
+                  <a class="btn btn-primary" href="/dashboard/incidents/{{ incident.hashId }}">Update</a>
                   <button class="btn btn-error btn-delete">Delete</button>
                 </div>
               </div>

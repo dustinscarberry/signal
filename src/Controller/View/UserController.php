@@ -64,10 +64,10 @@ class UserController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/users/{userGuid}", name="editUser")
+   * @Route("/dashboard/users/{hashId}", name="editUser")
    */
   public function edit(
-    $userGuid,
+    $hashId,
     Request $request,
     UserPasswordEncoderInterface $passwordEncoder,
     ApiTokenGenerator $tokenGenerator
@@ -76,7 +76,7 @@ class UserController extends AbstractController
     //get user from database
     $user = $this->getDoctrine()
       ->getRepository(User::class)
-      ->findByGuid($userGuid);
+      ->findByHashId($hashId);
 
     //create form object for user
     $form = $this->createForm(UserType::class, $user);

@@ -29,4 +29,16 @@ class WidgetRepository extends ServiceEntityRepository
       ->getQuery()
       ->getResult();
   }
+
+  /**
+    * @return Widget Returns a Widget object by hashId
+  */
+  public function findByHashId($hashId)
+  {
+    return $this->createQueryBuilder('w')
+      ->andWhere('w.hashId = :hashId')
+      ->setParameter('hashId', $hashId)
+      ->getQuery()
+      ->getOneOrNullResult();
+  }
 }

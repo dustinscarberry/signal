@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomMetricDatapointRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="custommetricdatapoint_hashid_idx", columns={"hash_id"})})
  * @ORM\HasLifecycleCallbacks
  */
-class CustomMetricDatapoint
+class CustomMetricDatapoint implements JsonSerializable
 {
   /**
    * @ORM\Id()
@@ -16,6 +19,11 @@ class CustomMetricDatapoint
    * @ORM\Column(type="integer")
    */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
    * @ORM\Column(type="integer")
@@ -43,20 +51,22 @@ class CustomMetricDatapoint
       $this->setCreated(time());
   }
 
+  /**
+   * @ORM\PrePersist
+   */
+  public function createHashId()
+  {
+    $this->hashId = HashIdGenerator::generate();
+  }
+
   public function getId(): ?int
   {
     return $this->id;
   }
 
-  public function getCreated(): ?int
+  public function getHashId(): ?string
   {
-    return $this->created;
-  }
-
-  public function setCreated(int $created): self
-  {
-    $this->created = $created;
-    return $this;
+    return $this->hashId;
   }
 
   public function getValue(): ?int
@@ -70,6 +80,17 @@ class CustomMetricDatapoint
     return $this;
   }
 
+  public function getCreated(): ?int
+  {
+    return $this->created;
+  }
+
+  public function setCreated(int $created): self
+  {
+    $this->created = $created;
+    return $this;
+  }
+
   public function getMetric(): ?CustomMetric
   {
     return $this->metric;
@@ -79,5 +100,15 @@ class CustomMetricDatapoint
   {
     $this->metric = $metric;
     return $this;
+  }
+
+  public function jsonSerialize()
+  {
+    return [
+      'id' => $this->hashId,
+      'value' => $this->value,
+      'created' => $this->created,
+      'metric' => $this->getMetric()->getHashId()
+    ];
   }
 }

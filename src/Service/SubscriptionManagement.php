@@ -19,7 +19,7 @@ class SubscriptionManagement
 
   public function update($subscriptionID)
   {
-    $subscription = $this->em->getRepository(Subscription::class)->findOneBy(['guid' => $subscriptionID]);
+    $subscription = $this->em->getRepository(Subscription::class)->findOneBy(['hashId' => $subscriptionID]);
 
     //// TODO: THROW EXCEPTION IF Subscription NOT FOUND
 
@@ -78,7 +78,7 @@ class SubscriptionManagement
       ->findAll();
     $subscription = $this->em
       ->getRepository(Subscription::class)
-      ->findOneBy(['guid' => $subscriptionID]);
+      ->findOneBy(['hashId' => $subscriptionID]);
     $blacklistedServices = $subscription->getBlacklistedSubscriptionServices();
 
     foreach ($serviceCategories as $serviceCategory)

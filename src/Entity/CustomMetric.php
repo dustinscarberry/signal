@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Ramsey\Uuid\Uuid;
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomMetricRepository")
- * @ORM\Table(indexes={@ORM\Index(name="custommetric_guid_idx", columns={"guid"})})
+ * @ORM\Table(indexes={@ORM\Index(name="custommetric_hashid_idx", columns={"hash_id"})})
  * @ORM\HasLifecycleCallbacks
  */
 class CustomMetric implements JsonSerializable
@@ -21,6 +21,11 @@ class CustomMetric implements JsonSerializable
    * @ORM\Column(type="integer")
    */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -43,11 +48,6 @@ class CustomMetric implements JsonSerializable
   private $updated;
 
   /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
-
-  /**
    * @ORM\OneToMany(targetEntity="App\Entity\CustomMetricDatapoint", mappedBy="metric", orphanRemoval=true)
    */
   private $customMetricDatapoints;
@@ -64,7 +64,7 @@ class CustomMetric implements JsonSerializable
 
   public function __construct()
   {
-      $this->customMetricDatapoints = new ArrayCollection();
+    $this->customMetricDatapoints = new ArrayCollection();
   }
 
   /**
@@ -83,15 +83,19 @@ class CustomMetric implements JsonSerializable
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getName(): ?string
@@ -113,6 +117,28 @@ class CustomMetric implements JsonSerializable
   public function setDescription(?string $description): self
   {
     $this->description = $description;
+    return $this;
+  }
+
+  public function getScaleStart(): ?int
+  {
+    return $this->scaleStart;
+  }
+
+  public function setScaleStart(int $scaleStart): self
+  {
+    $this->scaleStart = $scaleStart;
+    return $this;
+  }
+
+  public function getScaleEnd(): ?int
+  {
+    return $this->scaleEnd;
+  }
+
+  public function setScaleEnd(int $scaleEnd): self
+  {
+    $this->scaleEnd = $scaleEnd;
     return $this;
   }
 
@@ -138,77 +164,41 @@ class CustomMetric implements JsonSerializable
     return $this;
   }
 
-  public function getGuid()
-  {
-    return $this->guid;
-  }
-
-  public function setGuid($guid): self
-  {
-    $this->guid = $guid;
-    return $this;
-  }
-
   /**
    * @return Collection|CustomMetricDatapoint[]
    */
   public function getCustomMetricDatapoints(): Collection
   {
-      return $this->customMetricDatapoints;
+    return $this->customMetricDatapoints;
   }
 
   public function addCustomMetricDatapoint(CustomMetricDatapoint $customMetricDatapoint): self
   {
-      if (!$this->customMetricDatapoints->contains($customMetricDatapoint)) {
-          $this->customMetricDatapoints[] = $customMetricDatapoint;
-          $customMetricDatapoint->setMetric($this);
-      }
+    if (!$this->customMetricDatapoints->contains($customMetricDatapoint)) {
+      $this->customMetricDatapoints[] = $customMetricDatapoint;
+      $customMetricDatapoint->setMetric($this);
+    }
 
-      return $this;
+    return $this;
   }
 
   public function removeCustomMetricDatapoint(CustomMetricDatapoint $customMetricDatapoint): self
   {
-      if ($this->customMetricDatapoints->contains($customMetricDatapoint)) {
-          $this->customMetricDatapoints->removeElement($customMetricDatapoint);
-          // set the owning side to null (unless already changed)
-          if ($customMetricDatapoint->getMetric() === $this) {
-              $customMetricDatapoint->setMetric(null);
-          }
+    if ($this->customMetricDatapoints->contains($customMetricDatapoint)) {
+      $this->customMetricDatapoints->removeElement($customMetricDatapoint);
+      // set the owning side to null (unless already changed)
+      if ($customMetricDatapoint->getMetric() === $this) {
+        $customMetricDatapoint->setMetric(null);
       }
+    }
 
-      return $this;
-  }
-
-  public function getScaleStart(): ?int
-  {
-      return $this->scaleStart;
-  }
-
-  public function setScaleStart(int $scaleStart): self
-  {
-      $this->scaleStart = $scaleStart;
-
-      return $this;
-  }
-
-  public function getScaleEnd(): ?int
-  {
-      return $this->scaleEnd;
-  }
-
-  public function setScaleEnd(int $scaleEnd): self
-  {
-      $this->scaleEnd = $scaleEnd;
-
-      return $this;
+    return $this;
   }
 
   public function jsonSerialize()
   {
     return [
-      'id' => $this->id,
-      'guid' => $this->guid,
+      'id' => $this->hashId,
       'name' => $this->name,
       'description' => $this->description,
       'created' => $this->created,

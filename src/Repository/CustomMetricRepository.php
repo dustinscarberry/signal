@@ -20,13 +20,13 @@ class CustomMetricRepository extends ServiceEntityRepository
   }
 
   /**
-    * @return CustomMetric Returns a CustomMetric object by guid
+    * @return CustomMetric Returns a CustomMetric object by hashId
   */
-  public function findByGuid($guid)
+  public function findByHashId($hashId)
   {
     return $this->createQueryBuilder('m')
-      ->andWhere('m.guid = :guid')
-      ->setParameter('guid', $guid)
+      ->andWhere('m.hashId = :hashId')
+      ->setParameter('hashId', $hashId)
       ->getQuery()
       ->getOneOrNullResult();
   }

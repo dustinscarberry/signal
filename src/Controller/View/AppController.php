@@ -49,7 +49,7 @@ class AppController extends AbstractController
 
       return $this->redirectToRoute(
         'manageSubscription',
-        ['subscriptionID' => $subscription->getGuid()]
+        ['subscriptionID' => $subscription->getHashId()]
       );
     }
 

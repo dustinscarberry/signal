@@ -6,7 +6,7 @@ apt-get update
 
 #install needed packages
 apt-get install -y php7.3-fpm
-apt-get install -y nginx php7.3 php7.3-cli php7.3-mysql php7.3-gd php7.3-imagick php7.3-xml php7.3-curl php7.3-mbstring mariadb-server mariadb-client
+apt-get install -y nginx php7.3 php7.3-cli php7.3-mysql php7.3-gd php7.3-gmp php7.3-bcmath php7.3-imagick php7.3-xml php7.3-curl php7.3-mbstring mariadb-server mariadb-client
 apt-get upgrade -y
 
 #write out nginx config files

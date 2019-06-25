@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Ramsey\Uuid\Uuid;
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
 * @ORM\Entity(repositoryClass="App\Repository\SubscriptionRepository")
-* @ORM\Table(indexes={@ORM\Index(name="subscription_guid_idx", columns={"guid"})})
+* @ORM\Table(indexes={@ORM\Index(name="subscription_hashid_idx", columns={"hash_id"})})
 * @ORM\HasLifecycleCallbacks
 */
 class Subscription implements JsonSerializable
@@ -21,6 +21,11 @@ class Subscription implements JsonSerializable
   * @ORM\Column(type="integer")
   */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
   * @ORM\Column(type="string", length=255)
@@ -43,11 +48,6 @@ class Subscription implements JsonSerializable
   private $updated;
 
   /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
-
-  /**
    * @ORM\PrePersist
    * @ORM\PreUpdate
    */
@@ -63,10 +63,9 @@ class Subscription implements JsonSerializable
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function __construct()
@@ -77,6 +76,11 @@ class Subscription implements JsonSerializable
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getEmail(): ?string
@@ -109,17 +113,6 @@ class Subscription implements JsonSerializable
   public function setUpdated(int $updated): self
   {
     $this->updated = $updated;
-    return $this;
-  }
-
-  public function getGuid()
-  {
-    return $this->guid;
-  }
-
-  public function setGuid($guid): self
-  {
-    $this->guid = $guid;
     return $this;
   }
 
@@ -157,7 +150,7 @@ class Subscription implements JsonSerializable
   public function jsonSerialize()
   {
     return [
-      'guid' => $this->guid,
+      'id' => $this->hashId,
       'email' => $this->email,
       'created' => $this->created,
       'updated' => $this->updated,

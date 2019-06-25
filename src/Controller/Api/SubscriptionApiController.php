@@ -28,21 +28,21 @@ class SubscriptionApiController extends ApiController
     catch (\Exception $e)
     {
       return $this->respondWithErrors([$e->getMessage()]);
-    }  
+    }
   }
 
   /**
-   * @Route("/api/v1/subscriptions/{guid}", name="getSubscription", methods={"GET"})
+   * @Route("/api/v1/subscriptions/{hashId}", name="getSubscription", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getSubscription($guid)
+  public function getSubscription($hashId)
   {
     try
     {
       //get subscription
       $subscription = $this->getDoctrine()
         ->getRepository(Subscription::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid subscription
       if (!$subscription)
@@ -58,17 +58,17 @@ class SubscriptionApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/subscriptions/{guid}", name="deleteSubscription", methods={"DELETE"})
+   * @Route("/api/v1/subscriptions/{hashId}", name="deleteSubscription", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteSubscription($guid)
+  public function deleteSubscription($hashId)
   {
     try
     {
       //get subscription
       $subscription = $this->getDoctrine()
         ->getRepository(Subscription::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid subscription
       if (!$subscription)

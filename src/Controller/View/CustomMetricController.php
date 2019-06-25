@@ -58,14 +58,14 @@ class CustomMetricController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/custommetrics/{metricGuid}", name="editCustomMetric")
+   * @Route("/dashboard/custommetrics/{hashId}", name="editCustomMetric")
    */
-  public function edit($metricGuid, Request $request)
+  public function edit($hashId, Request $request)
   {
     //get metric from database
     $metric = $this->getDoctrine()
       ->getRepository(CustomMetric::class)
-      ->findByGuid($metricGuid);
+      ->findByHashId($hashId);
 
     //create form object for metric
     $form = $this->createForm(CustomMetricType::class, $metric);

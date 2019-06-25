@@ -20,13 +20,13 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
-      * @return User Returns a User object by guid
+      * @return User Returns a User object by hashId
     */
-    public function findByGuid($guid)
+    public function findByHashId($hashId)
     {
       return $this->createQueryBuilder('u')
-        ->andWhere('u.guid = :guid')
-        ->setParameter('guid', $guid)
+        ->andWhere('u.hashId = :hashId')
+        ->setParameter('hashId', $hashId)
         ->andWhere('u.deletedOn is NULL')
         ->getQuery()
         ->getOneOrNullResult();

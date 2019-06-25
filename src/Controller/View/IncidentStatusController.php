@@ -58,14 +58,14 @@ class IncidentStatusController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/statuses/incident/{statusGuid}", name="editIncidentStatus")
+   * @Route("/dashboard/statuses/incident/{hashId}", name="editIncidentStatus")
    */
-  public function edit($statusGuid, Request $request)
+  public function edit($hashId, Request $request)
   {
     //get status from database
     $status = $this->getDoctrine()
       ->getRepository(IncidentStatus::class)
-      ->findByGuid($statusGuid);
+      ->findByHashId($hashId);
 
     //create form object for status
     $form = $this->createForm(IncidentStatusType::class, $status);

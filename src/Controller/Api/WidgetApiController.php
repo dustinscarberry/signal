@@ -24,31 +24,31 @@ class WidgetApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/widgets/{id}", name="readWidget", requirements={"id"="\d+"}, methods={"GET"})
+   * @Route("/api/v1/widgets/{hashId}", name="readWidget", methods={"GET"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function readWidget($id)
+  public function readWidget($hashId)
   {
     $widget = $this->getDoctrine()
       ->getRepository(Widget::class)
-      ->find($id);
+      ->findByHashId($hashId);
 
     return $this->respond($widget);
   }
 
   /**
-   * @Route("/api/v1/widgets/{id}", name="updateWidget", requirements={"id"="\d+"}, methods={"PATCH"})
+   * @Route("/api/v1/widgets/{hashId}", name="updateWidget", methods={"PATCH"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function updateWidget($id, Request $request)
+  public function updateWidget($hashId, Request $request)
   {
     $widget = $this->getDoctrine()
       ->getRepository(Widget::class)
-      ->find($id);
+      ->findByHashId($hashId);
 
     if (!$widget)
       throw $this->createNotFoundException(
-        'No widget found for id '. $id
+        'No widget found for id '. $hashId
       );
 
     $form = $this->createForm(WidgetAPIType::class, $widget);
@@ -107,18 +107,18 @@ class WidgetApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/widgets/{id}", name="deleteWidget", requirements={"id"="\d+"}, methods={"DELETE"})
+   * @Route("/api/v1/widgets/{hashId}", name="deleteWidget", methods={"DELETE"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function deleteWidget($id)
+  public function deleteWidget($hashId)
   {
     $widget = $this->getDoctrine()
       ->getRepository(Widget::class)
-      ->find($id);
+      ->findByHashId($hashId);
 
     if (!$widget)
       throw $this->createNotFoundException(
-        'No widget found for id '. $id
+        'No widget found for id '. $hashId
       );
 
     $entityManager = $this->getDoctrine()->getManager();

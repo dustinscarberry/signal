@@ -66,10 +66,10 @@ class ServiceController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/services/{serviceGuid}", name="editService")
+   * @Route("/dashboard/services/{hashId}", name="editService")
    */
   public function edit(
-    $serviceGuid,
+    $hashId,
     Request $request,
     ServiceUpdatedMailer $serviceUpdatedMailer
   )
@@ -77,7 +77,7 @@ class ServiceController extends AbstractController
     //get service from database
     $service = $this->getDoctrine()
       ->getRepository(Service::class)
-      ->findByGuid($serviceGuid);
+      ->findByHashId($hashId);
 
     //get previous status
     $serviceStatus = $service->getStatus();

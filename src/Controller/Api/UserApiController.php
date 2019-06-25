@@ -10,15 +10,15 @@ use App\Entity\User;
 class UserApiController extends ApiController
 {
   /**
-   * @Route("/api/v1/users/{guid}", name="deleteUser", methods={"DELETE"})
+   * @Route("/api/v1/users/{hashId}", name="deleteUser", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteUser($guid)
+  public function deleteUser($hashId)
   {
     //get user
     $user = $this->getDoctrine()
       ->getRepository(User::class)
-      ->findByGuid($guid);
+      ->findByHashId($hashId);
 
     //check for valid user
     if (!$user)

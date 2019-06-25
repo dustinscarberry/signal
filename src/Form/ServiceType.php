@@ -20,11 +20,17 @@ class ServiceType extends AbstractType
       ->add('description', TextType::class)
       ->add('serviceCategory', EntityType::class, [
         'class' => ServiceCategory::class,
-        'choice_label' => 'name'
+        'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        }
       ])
       ->add('status', EntityType::class, [
         'class' => ServiceStatus::class,
-        'choice_label' => 'name'
+        'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        }
       ]);
   }
 

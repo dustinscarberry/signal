@@ -23,7 +23,7 @@
 
             {% for service in services %}
 
-            <div class="list-item" data-id="{{ service.guid }}">
+            <div class="list-item" data-id="{{ service.hashId }}">
               <div class="list-item-left">
                 <div class="list-item-decoration">
                   <i class="list-item-bubble status-bubble status-bubble-{{ service.status.type }}"></i>
@@ -34,7 +34,7 @@
                 </div>
               </div>
               <div class="list-item-right">
-                <a class="btn btn-primary" href="/dashboard/services/{{ service.guid }}">Edit</a>
+                <a class="btn btn-primary" href="/dashboard/services/{{ service.hashId }}">Edit</a>
                 <button class="btn btn-error btn-delete">Delete</button>
               </div>
             </div>

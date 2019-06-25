@@ -22,7 +22,7 @@
           <div id="maintenance-view-list" class="table-list">
 
             {% for record in maintenance %}
-              <div class="list-item" data-id="{{ record.guid }}">
+              <div class="list-item" data-id="{{ record.hashId }}">
                 <div class="list-item-left">
                   <div class="list-item-decoration">
                     <i class="list-item-icon status-icon status-icon-{{ record.status.type }}"></i>
@@ -34,7 +34,7 @@
                   </div>
                 </div>
                 <div class="list-item-right">
-                  <a class="btn btn-primary" href="/dashboard/maintenance/{{ record.guid }}">Update</a>
+                  <a class="btn btn-primary" href="/dashboard/maintenance/{{ record.hashId }}">Update</a>
                   <button class="btn btn-error btn-delete">Delete</button>
                 </div>
               </div>

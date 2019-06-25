@@ -58,14 +58,14 @@ class ServiceCategoryController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/servicecategories/{guid}", name="editServiceCategory")
+   * @Route("/dashboard/servicecategories/{hashId}", name="editServiceCategory")
    */
-  public function edit($guid, Request $request)
+  public function edit($hashId, Request $request)
   {
     //get service from database
     $serviceCategory = $this->getDoctrine()
       ->getRepository(ServiceCategory::class)
-      ->findByGuid($guid);
+      ->findByHashId($hashId);
 
     //create form object for service
     $form = $this->createForm(ServiceCategoryType::class, $serviceCategory);

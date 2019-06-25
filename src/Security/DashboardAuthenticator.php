@@ -4,7 +4,9 @@ namespace App\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -90,10 +92,7 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
 
       //check for matched user
       if (!$user)
-      {
-        $data = ['message' => 'Invalid API Token'];
-        return new JsonResponse($data, Response::HTTP_FORBIDDEN);
-      }
+        throw new \Exception('Invalid API Token');
     }
     else
     {
@@ -118,8 +117,13 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
   public function checkCredentials($credentials, UserInterface $user)
   {
     //return valid if user is populated and api call
-    if ($this->isAPICall && $user)
-      return true;
+    if ($this->isAPICall)
+    {
+      if ($user && $user->getApiEnabled())
+        return true;
+
+      return false;
+    }
 
     //return valid if username and password match and not api call
     return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);

@@ -18,12 +18,18 @@ class MaintenanceServiceType extends AbstractType
       ->add('service', EntityType::class, [
         'class' => Service::class,
         'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        },
         'placeholder' => '',
         'label' => false
       ])
       ->add('status', EntityType::class, [
         'class' => ServiceStatus::class,
         'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        },
         'label' => false
       ]);
   }

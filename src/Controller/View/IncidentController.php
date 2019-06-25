@@ -84,10 +84,10 @@ class IncidentController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/incidents/{incidentGuid}", name="editIncident")
+   * @Route("/dashboard/incidents/{hashId}", name="editIncident")
    */
   public function edit(
-    $incidentGuid,
+    $hashId,
     Request $request,
     IncidentUpdatedMailer $incidentUpdatedMailer
   )
@@ -95,7 +95,7 @@ class IncidentController extends AbstractController
     //get incident from database
     $incident = $this->getDoctrine()
       ->getRepository(Incident::class)
-      ->findByGuid($incidentGuid);
+      ->findByHashId($hashId);
 
     if (!$incident)
       throw new \Exception('Incident not found');

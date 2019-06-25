@@ -3,14 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
+use App\Service\HashIdGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
 
 /**
 * @ORM\Entity(repositoryClass="App\Repository\ServiceCategoryRepository")
-* @ORM\Table(indexes={@ORM\Index(name="servicecategory_guid_idx", columns={"guid"})})
+* @ORM\Table(indexes={@ORM\Index(name="servicecategory_hashid_idx", columns={"hash_id"})})
 * @ORM\HasLifecycleCallbacks
 */
 class ServiceCategory implements JsonSerializable
@@ -21,6 +21,11 @@ class ServiceCategory implements JsonSerializable
   * @ORM\Column(type="integer")
   */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
   * @ORM\Column(type="string", length=255)
@@ -51,11 +56,6 @@ class ServiceCategory implements JsonSerializable
   * @ORM\Column(type="boolean")
   */
   private $deletable;
-
-  /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
 
   /**
    * @ORM\Column(type="integer", nullable=true)
@@ -106,15 +106,19 @@ class ServiceCategory implements JsonSerializable
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getName(): ?string
@@ -172,17 +176,6 @@ class ServiceCategory implements JsonSerializable
       return $this;
   }
 
-  public function getGuid()
-  {
-    return $this->guid;
-  }
-
-  public function setGuid($guid): self
-  {
-    $this->guid = $guid;
-      return $this;
-  }
-
   /**
   * @return Collection|Service[]
   */
@@ -227,7 +220,7 @@ class ServiceCategory implements JsonSerializable
   public function jsonSerialize()
   {
     return [
-      'guid' => $this->guid,
+      'id' => $this->hashId,
       'name' => $this->name,
       'hint' => $this->hint,
       'created' => $this->created,

@@ -33,17 +33,17 @@ class ServiceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/services/{guid}", name="getService", methods={"GET"})
+   * @Route("/api/v1/services/{hashId}", name="getService", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getService($guid)
+  public function getService($hashId)
   {
     try
     {
       //get service
       $service = $this->getDoctrine()
         ->getRepository(Service::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid service
       if (!$service)
@@ -105,11 +105,11 @@ class ServiceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/services/{serviceGuid}", name="updateService", methods={"PATCH"})
+   * @Route("/api/v1/services/{hashId}", name="updateService", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
   public function updateService(
-    $serviceGuid,
+    $hashId,
     Request $request,
     ServiceUpdatedMailer $serviceUpdatedMailer
   )
@@ -119,7 +119,7 @@ class ServiceApiController extends ApiController
       //get service from database
       $service = $this->getDoctrine()
         ->getRepository(Service::class)
-        ->findByGuid($serviceGuid);
+        ->findByHashId($hashId);
 
       if (!$service)
         throw new \Exception('No service found');
@@ -167,17 +167,17 @@ class ServiceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/services/{guid}", name="deleteService", methods={"DELETE"})
+   * @Route("/api/v1/services/{hashId}", name="deleteService", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteService($guid)
+  public function deleteService($hashId)
   {
     try
     {
       //get service
       $service = $this->getDoctrine()
         ->getRepository(Service::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid service
       if (!$service)

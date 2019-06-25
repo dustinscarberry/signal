@@ -58,14 +58,14 @@ class MaintenanceStatusController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/statuses/maintenance/{statusGuid}", name="editMaintenanceStatus")
+   * @Route("/dashboard/statuses/maintenance/{hashId}", name="editMaintenanceStatus")
    */
-  public function edit($statusGuid, Request $request)
+  public function edit($hashId, Request $request)
   {
     //get status from database
     $status = $this->getDoctrine()
       ->getRepository(MaintenanceStatus::class)
-      ->findByGuid($statusGuid);
+      ->findByHashId($hashId);
 
     //create form object for status
     $form = $this->createForm(MaintenanceStatusType::class, $status);

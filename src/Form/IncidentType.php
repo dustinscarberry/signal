@@ -35,11 +35,15 @@ class IncidentType extends AbstractType
       ])
       ->add('status', EntityType::class, [
         'class' => IncidentStatus::class,
-        'choice_label' => 'name'
+        'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        }
       ])
       ->add('type', EntityType::class, [
         'class' => IncidentEntityType::class,
         'choice_label' => 'name'
+        //// TODO: does not have a hashid as is only a small hidden list in db, maybe change later to static?
       ])
       ->add('incidentServices', CollectionType::class, [
         'entry_type' => IncidentServiceType::class,

@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\WidgetRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="widget_hashid_idx", columns={"hash_id"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class Widget implements JsonSerializable
 {
@@ -16,6 +19,11 @@ class Widget implements JsonSerializable
    * @ORM\Column(type="integer")
    */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -32,9 +40,22 @@ class Widget implements JsonSerializable
    */
   private $attributes;
 
+  /**
+   * @ORM\PrePersist
+   */
+  public function createHashId()
+  {
+    $this->hashId = HashIdGenerator::generate();
+  }
+
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getType(): ?string
@@ -76,7 +97,7 @@ class Widget implements JsonSerializable
   public function jsonSerialize()
   {
     return [
-      'id' => $this->id,
+      'id' => $this->hashId,
       'type' => $this->type,
       'sortorder' => $this->sortorder,
       'attributes' => $this->getAttributes()

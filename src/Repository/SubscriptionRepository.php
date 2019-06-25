@@ -14,20 +14,20 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class SubscriptionRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
-    {
-        parent::__construct($registry, Subscription::class);
-    }
+  public function __construct(RegistryInterface $registry)
+  {
+    parent::__construct($registry, Subscription::class);
+  }
 
-    /**
-      * @return Subscription Returns a Subscription object by guid
-    */
-    public function findByGuid($guid)
-    {
-      return $this->createQueryBuilder('s')
-        ->andWhere('s.guid = :guid')
-        ->setParameter('guid', $guid)
-        ->getQuery()
-        ->getOneOrNullResult();
-    }
+  /**
+    * @return Subscription Returns a Subscription object by hashId
+  */
+  public function findByHashId($hashId)
+  {
+    return $this->createQueryBuilder('s')
+      ->andWhere('s.hashId = :hashId')
+      ->setParameter('hashId', $hashId)
+      ->getQuery()
+      ->getOneOrNullResult();
+  }
 }

@@ -17,7 +17,10 @@ class CustomMetricDatapointType extends AbstractType
     $builder
       ->add('metric', EntityType::class, [
         'class' => CustomMetric::class,
-        'choice_label' => 'name'
+        'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        }
       ])
       ->add('value', IntegerType::class)
       ->add('created', IntegerType::class, [

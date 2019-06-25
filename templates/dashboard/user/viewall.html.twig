@@ -29,12 +29,12 @@
           <tbody>
 
             {% for user in users %}
-            <tr data-id="{{ user.guid }}">
+            <tr data-id="{{ user.hashId }}">
               <td>{{ user.firstName }} {{ user.lastName }}</td>
               <td>{{ user.username }}</td>
               <td>
                 <button class="btn btn-error pull-right btn-delete">Delete</button>
-                <a href="/dashboard/users/{{ user.guid }}" class="btn btn-primary pull-right">Edit</a>
+                <a href="/dashboard/users/{{ user.hashId }}" class="btn btn-primary pull-right">Edit</a>
               </td>
             </tr>
             {% endfor %}

@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Ramsey\Uuid\Uuid;
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
 * @ORM\Entity(repositoryClass="App\Repository\MaintenanceRepository")
-* @ORM\Table(indexes={@ORM\Index(name="maintenance_guid_idx", columns={"guid"})})
+* @ORM\Table(indexes={@ORM\Index(name="maintenance_hashid_idx", columns={"hash_id"})})
 * @ORM\HasLifecycleCallbacks
 */
 class Maintenance implements JsonSerializable
@@ -21,6 +21,11 @@ class Maintenance implements JsonSerializable
   * @ORM\Column(type="integer")
   */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
   * @ORM\Column(type="string", length=255)
@@ -74,11 +79,6 @@ class Maintenance implements JsonSerializable
   private $anticipatedEnd;
 
   /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
-
-  /**
    * @ORM\Column(type="integer", nullable=true)
    */
   private $deletedOn;
@@ -116,15 +116,19 @@ class Maintenance implements JsonSerializable
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getName(): ?string
@@ -215,6 +219,39 @@ class Maintenance implements JsonSerializable
     return $this;
   }
 
+  public function getDeletedOn(): ?int
+  {
+    return $this->deletedOn;
+  }
+
+  public function setDeletedOn(?int $deletedOn): self
+  {
+    $this->deletedOn = $deletedOn;
+    return $this;
+  }
+
+  public function getDeletedBy(): ?User
+  {
+    return $this->deletedBy;
+  }
+
+  public function setDeletedBy(?User $deletedBy): self
+  {
+    $this->deletedBy = $deletedBy;
+    return $this;
+  }
+
+  public function getCreatedBy(): ?User
+  {
+    return $this->createdBy;
+  }
+
+  public function setCreatedBy(?User $createdBy): self
+  {
+    $this->createdBy = $createdBy;
+    return $this;
+  }
+
   /**
   * @return Collection|MaintenanceUpdate[]
   */
@@ -286,54 +323,10 @@ class Maintenance implements JsonSerializable
     return implode(', ', $services);
   }
 
-  public function getGuid()
-  {
-    return $this->guid;
-  }
-
-  public function setGuid($guid): self
-  {
-    $this->guid = $guid;
-    return $this;
-  }
-
-  public function getDeletedOn(): ?int
-  {
-    return $this->deletedOn;
-  }
-
-  public function setDeletedOn(?int $deletedOn): self
-  {
-    $this->deletedOn = $deletedOn;
-    return $this;
-  }
-
-  public function getDeletedBy(): ?User
-  {
-    return $this->deletedBy;
-  }
-
-  public function setDeletedBy(?User $deletedBy): self
-  {
-    $this->deletedBy = $deletedBy;
-    return $this;
-  }
-
-  public function getCreatedBy(): ?User
-  {
-    return $this->createdBy;
-  }
-
-  public function setCreatedBy(?User $createdBy): self
-  {
-    $this->createdBy = $createdBy;
-    return $this;
-  }
-
   public function jsonSerialize()
   {
     return [
-      'guid' => $this->guid,
+      'id' => $this->hashId,
       'name' => $this->name,
       'visibility' => $this->visibility,
       'scheduledFor' => $this->scheduledFor,

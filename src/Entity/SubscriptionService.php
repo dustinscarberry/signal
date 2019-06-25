@@ -59,7 +59,6 @@ class SubscriptionService implements JsonSerializable
   public function jsonSerialize()
   {
     return [
-      'guid' => $this->service->getGuid(),
       'name' => $this->service->getName()
     ];
   }

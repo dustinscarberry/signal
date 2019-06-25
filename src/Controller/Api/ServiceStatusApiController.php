@@ -31,17 +31,17 @@ class ServiceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicestatuses/{guid}", name="getServiceStatus", methods={"GET"})
+   * @Route("/api/v1/servicestatuses/{hashId}", name="getServiceStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getServiceStatus($guid)
+  public function getServiceStatus($hashId)
   {
     try
     {
       //get service status
       $serviceStatus = $this->getDoctrine()
         ->getRepository(ServiceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid service status
       if (!$serviceStatus)
@@ -95,17 +95,17 @@ class ServiceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicestatuses/{guid}", name="updateServiceStatus", methods={"PATCH"})
+   * @Route("/api/v1/servicestatuses/{hashId}", name="updateServiceStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateServiceStatus($guid, Request $req)
+  public function updateServiceStatus($hashId, Request $req)
   {
     try
     {
       //get status from database
       $status = $this->getDoctrine()
         ->getRepository(ServiceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$status)
         throw new \Exception('Object not found');
@@ -139,17 +139,17 @@ class ServiceStatusApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/servicestatuses/{guid}", name="deleteServiceStatus", methods={"DELETE"})
+   * @Route("/api/v1/servicestatuses/{hashId}", name="deleteServiceStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteServiceStatus($guid)
+  public function deleteServiceStatus($hashId)
   {
     try
     {
       //get service status
       $serviceStatus = $this->getDoctrine()
         ->getRepository(ServiceStatus::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid service status
       if (!$serviceStatus)

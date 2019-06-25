@@ -20,13 +20,13 @@ class ServiceCategoryRepository extends ServiceEntityRepository
   }
 
   /**
-    * @return ServiceCategory Returns a ServiceCategory object by guid
+    * @return ServiceCategory Returns a ServiceCategory object by hashId
   */
-  public function findByGuid($guid)
+  public function findByHashId($hashId)
   {
     return $this->createQueryBuilder('s')
-      ->andWhere('s.guid = :guid')
-      ->setParameter('guid', $guid)
+      ->andWhere('s.hashId = :hashId')
+      ->setParameter('hashId', $hashId)
       ->andWhere('s.deletedOn is NULL')
       ->getQuery()
       ->getOneOrNullResult();

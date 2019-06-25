@@ -87,10 +87,10 @@ class MaintenanceController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/maintenance/{maintenanceGuid}", name="editMaintenance")
+   * @Route("/dashboard/maintenance/{hashId}", name="editMaintenance")
    */
   public function edit(
-    $maintenanceGuid,
+    $hashId,
     Request $request,
     MaintenanceUpdatedMailer $maintenanceUpdatedMailer
   )
@@ -98,7 +98,7 @@ class MaintenanceController extends AbstractController
     //get maintenance from database
     $maintenance = $this->getDoctrine()
       ->getRepository(Maintenance::class)
-      ->findByGuid($maintenanceGuid);
+      ->findByHashId($hashId);
 
     //get array copy of original services
     $originalServices = new ArrayCollection();

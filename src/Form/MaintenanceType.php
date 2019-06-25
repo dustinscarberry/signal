@@ -34,7 +34,10 @@ class MaintenanceType extends AbstractType
       ])
       ->add('status', EntityType::class, [
         'class' => MaintenanceStatus::class,
-        'choice_label' => 'name'
+        'choice_label' => 'name',
+        'choice_value' => function($entity) {
+          return $entity ? $entity->getHashId() : '';
+        }
       ])
       ->add('updateServiceStatuses', CheckboxType::class, [
         'mapped' => false,

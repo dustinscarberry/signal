@@ -28,11 +28,11 @@
           <tbody>
 
             {% for status in serviceStatuses %}
-            <tr data-id="{{ status.guid }}">
+            <tr data-id="{{ status.hashId }}">
               <td>{{ status.name }}</td>
               <td>
                 <button class="btn btn-error pull-right btn-delete">Delete</button>
-                <button class="btn btn-primary pull-right" onclick="window.location.href='/dashboard/statuses/service/{{ status.guid }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
+                <button class="btn btn-primary pull-right" onclick="window.location.href='/dashboard/statuses/service/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
               </td>
             </tr>
             {% endfor %}
@@ -43,13 +43,13 @@
           <div id="service-status-view-list" class="table-list">
 
             {% for status in serviceStatuses %}
-            <div class="list-item" data-id="{{ status.guid }}">
+            <div class="list-item" data-id="{{ status.hashId }}">
               <div class="list-item-left">
                 <span class="list-item-title">{{ status.name }}</span>
                 <span class="list-item-description">...</span>
               </div>
               <div class="list-item-right">
-                <button class="btn btn-primary" onclick="window.location.href='/dashboard/statuses/service/{{ status.guid }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
+                <button class="btn btn-primary" onclick="window.location.href='/dashboard/statuses/service/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
                 <button class="btn btn-error btn-delete" {% if not status.deletable %}disabled{% endif %}>Delete</button>
               </div>
             </div>

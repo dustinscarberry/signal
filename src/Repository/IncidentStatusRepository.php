@@ -20,14 +20,14 @@ class IncidentStatusRepository extends ServiceEntityRepository
     }
 
     /**
-      * @return IncidentStatus Returns a IncidentStatus object by guid
+      * @return IncidentStatus Returns a IncidentStatus object by hashId
     */
-    public function findByGuid($guid)
+    public function findByHashId($hashId)
     {
       return $this->createQueryBuilder('i')
-        ->andWhere('i.guid = :guid')
+        ->andWhere('i.hashId = :hashId')
         ->andWhere('i.deletedOn is NULL')
-        ->setParameter('guid', $guid)
+        ->setParameter('hashId', $hashId)
         ->getQuery()
         ->getOneOrNullResult();
     }

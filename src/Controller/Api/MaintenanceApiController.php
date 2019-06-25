@@ -36,17 +36,17 @@ class MaintenanceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenance/{guid}", name="getMaintenance", methods={"GET"})
+   * @Route("/api/v1/maintenance/{hashId}", name="getMaintenance", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getMaintenance($guid)
+  public function getMaintenance($hashId)
   {
     try
     {
       //get maintenance
       $maintenance = $this->getDoctrine()
         ->getRepository(Maintenance::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid maintenance
       if (!$maintenance)
@@ -140,11 +140,11 @@ class MaintenanceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenance/{guid}", name="updateMaintenance", methods={"PATCH"})
+   * @Route("/api/v1/maintenance/{hashId}", name="updateMaintenance", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
   public function updateMaintenance(
-    $guid,
+    $hashId,
     Request $req,
     MaintenanceUpdatedMailer $maintenanceUpdatedMailer
   )
@@ -154,7 +154,7 @@ class MaintenanceApiController extends ApiController
       //get maintenance from database
       $maintenance = $this->getDoctrine()
         ->getRepository(Maintenance::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$maintenance)
         throw new \Exception('Item not found');
@@ -250,17 +250,17 @@ class MaintenanceApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/maintenance/{guid}", name="deleteMaintenance", methods={"DELETE"})
+   * @Route("/api/v1/maintenance/{hashId}", name="deleteMaintenance", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteMaintenance($guid)
+  public function deleteMaintenance($hashId)
   {
     try
     {
       //get maintenance
       $maintenance = $this->getDoctrine()
         ->getRepository(Maintenance::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid maintenance
       if (!$maintenance)

@@ -33,17 +33,17 @@ class CustomMetricApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/custommetrics/{guid}", name="getCustomMetric", methods={"GET"})
+   * @Route("/api/v1/custommetrics/{hashId}", name="getCustomMetric", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getCustomMetric($guid)
+  public function getCustomMetric($hashId)
   {
     try
     {
       //get item
       $metric = $this->getDoctrine()
         ->getRepository(CustomMetric::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid item
       if (!$metric)
@@ -97,17 +97,17 @@ class CustomMetricApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/custommetrics/{guid}", name="updateCustomMetric", methods={"PATCH"})
+   * @Route("/api/v1/custommetrics/{hashId}", name="updateCustomMetric", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateCustomMetric($guid, Request $req)
+  public function updateCustomMetric($hashId, Request $req)
   {
     try
     {
       //get metric from database
       $metric = $this->getDoctrine()
         ->getRepository(CustomMetric::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$metric)
         throw new \Exception('Object not found');
@@ -141,17 +141,17 @@ class CustomMetricApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/custommetrics/{guid}", name="deleteCustomMetric", methods={"DELETE"})
+   * @Route("/api/v1/custommetrics/{hashId}", name="deleteCustomMetric", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteCustomMetric($guid)
+  public function deleteCustomMetric($hashId)
   {
     try
     {
       //get metric
       $metric = $this->getDoctrine()
         ->getRepository(CustomMetric::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid metric
       if (!$metric)
@@ -162,9 +162,6 @@ class CustomMetricApiController extends ApiController
       $em->remove($metric);
       $em->flush();
 
-
-
-
       //respond with object
       return $this->respond($metric);
     }
@@ -172,52 +169,5 @@ class CustomMetricApiController extends ApiController
     {
       return $this->respondWithErrors([$e->getMessage()]);
     }
-  }
-
-  /**
-   * @Route("/api/v1/custommetricdatapoints", name="createCustomMetricDatapoint", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
-  public function createCustomMetricDatapoint(Request $req)
-  {
-    try
-    {
-      $datapoint = new CustomMetricDatapoint();
-      $form = $this->createForm(
-        CustomMetricDatapointType::class,
-        $datapoint,
-        ['csrf_protection' => false]
-      );
-
-      //submit form
-      $data = json_decode($req->getContent(), true);
-      $form->submit($data);
-
-      //save new widget to database if valid
-      if ($form->isSubmitted() && $form->isValid())
-      {
-        $datapoint = $form->getData();
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($datapoint);
-        $entityManager->flush();
-
-        return $this->respond($datapoint);
-      }
-
-      return $this->respondWithErrors(['Invalid Data']);
-    }
-    catch (\Exception $e)
-    {
-      return $this->respondWithErrors([$e->getMessage()]);
-    }
-  }
-
-  /**
-   * @Route("/api/v1/custommetricdatapoints/{guid}", name="deleteCustomMetricDatapoint", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
-  public function deleteCustomMetricDatapoint($guid, Request $req)
-  {
-
   }
 }

@@ -5,19 +5,19 @@
 
 {% for widget in widgets %}
   {% if widget.type == 'video-embed' %}
-    <div class="video-embed-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="video-embed-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'services-list' %}
-    <div class="services-list-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="services-list-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'incidents-list' %}
-    <div class="incidents-list-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="incidents-list-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'maintenance-list' %}
-    <div class="maintenance-list-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="maintenance-list-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'service-status-overview' %}
-    <div class="service-status-overview-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="service-status-overview-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'metrics-overview' %}
-    <div class="metrics-overview-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="metrics-overview-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'service-uptime-chart' %}
-    <div class="service-uptime-chart-widget-root" data-id="{{ widget.id }}"></div>
+    <div class="service-uptime-chart-widget-root" data-id="{{ widget.hashId }}"></div>
   {% endif %}
 
 {% endfor %}

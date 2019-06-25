@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(indexes={@ORM\Index(name="user_guid_idx", columns={"guid"})})
+ * @ORM\Table(indexes={@ORM\Index(name="user_hashid_idx", columns={"hash_id"})})
  * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface
@@ -21,6 +21,11 @@ class User implements UserInterface
    * @ORM\Column(type="integer")
    */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
    * @ORM\Column(type="string", length=180, unique=true)
@@ -62,11 +67,6 @@ class User implements UserInterface
    * @ORM\Column(type="integer")
    */
   private $updated;
-
-  /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
 
   /**
    * @ORM\Column(type="integer", nullable=true)
@@ -127,15 +127,19 @@ class User implements UserInterface
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   /**
@@ -216,17 +220,6 @@ class User implements UserInterface
   public function setLastName(string $lastName): self
   {
     $this->lastName = $lastName;
-    return $this;
-  }
-
-  public function getGuid()
-  {
-    return $this->guid;
-  }
-
-  public function setGuid($guid): self
-  {
-    $this->guid = $guid;
     return $this;
   }
 

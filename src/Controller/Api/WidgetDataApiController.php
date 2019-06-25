@@ -11,13 +11,13 @@ use App\Service\Api\WidgetDataGenerator;
 class WidgetDataApiController extends ApiController
 {
   /**
-   * @Route("/api/v1/widgetsdata/{id}", name="readWidgetsData", requirements={"id"="\d+"}, methods={"GET"})
+   * @Route("/api/v1/widgetsdata/{hashId}", name="readWidgetsData", methods={"GET"})
    */
-  public function readWidgetsData($id, WidgetDataGenerator $widgetDataGenerator)
+  public function readWidgetsData($hashId, WidgetDataGenerator $widgetDataGenerator)
   {
     $widget = $this->getDoctrine()
       ->getRepository(Widget::class)
-      ->find($id);
+      ->findByHashId($hashId);
 
     if ($widget)
     {

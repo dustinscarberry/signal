@@ -4,13 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Ramsey\Uuid\Uuid;
+use App\Service\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\IncidentRepository")
- * @ORM\Table(indexes={@ORM\Index(name="incident_guid_idx", columns={"guid"})})
+ * @ORM\Table(indexes={@ORM\Index(name="incident_hashid_idx", columns={"hash_id"})})
  * @ORM\HasLifecycleCallbacks
  */
 class Incident implements JsonSerializable
@@ -21,6 +21,11 @@ class Incident implements JsonSerializable
    * @ORM\Column(type="integer")
    */
   private $id;
+
+  /**
+   * @ORM\Column(type="string", length=25, unique=true)
+   */
+  private $hashId;
 
   /**
    * @ORM\Column(type="string", length=255)
@@ -80,11 +85,6 @@ class Incident implements JsonSerializable
   private $anticipatedResolution;
 
   /**
-   * @ORM\Column(type="uuid")
-   */
-  private $guid;
-
-  /**
    * @ORM\Column(type="integer", nullable=true)
    */
   private $deletedOn;
@@ -122,15 +122,19 @@ class Incident implements JsonSerializable
   /**
    * @ORM\PrePersist
    */
-  public function createGuid()
+  public function createHashId()
   {
-    if ($this->guid == null)
-      $this->guid = Uuid::uuid4();
+    $this->hashId = HashIdGenerator::generate();
   }
 
   public function getId(): ?int
   {
     return $this->id;
+  }
+
+  public function getHashId(): ?string
+  {
+    return $this->hashId;
   }
 
   public function getName(): ?string
@@ -232,14 +236,36 @@ class Incident implements JsonSerializable
     return $this;
   }
 
-  public function getGuid()
+  public function getDeletedOn(): ?int
   {
-    return $this->guid;
+    return $this->deletedOn;
   }
 
-  public function setGuid($guid): self
+  public function setDeletedOn(?int $deletedOn): self
   {
-    $this->guid = $guid;
+    $this->deletedOn = $deletedOn;
+    return $this;
+  }
+
+  public function getDeletedBy(): ?User
+  {
+    return $this->deletedBy;
+  }
+
+  public function setDeletedBy(?User $deletedBy): self
+  {
+    $this->deletedBy = $deletedBy;
+    return $this;
+  }
+
+  public function getCreatedBy(): ?User
+  {
+    return $this->createdBy;
+  }
+
+  public function setCreatedBy(?User $createdBy): self
+  {
+    $this->createdBy = $createdBy;
     return $this;
   }
 
@@ -314,43 +340,10 @@ class Incident implements JsonSerializable
     return implode(', ', $services);
   }
 
-  public function getDeletedOn(): ?int
-  {
-    return $this->deletedOn;
-  }
-
-  public function setDeletedOn(?int $deletedOn): self
-  {
-    $this->deletedOn = $deletedOn;
-    return $this;
-  }
-
-  public function getDeletedBy(): ?User
-  {
-    return $this->deletedBy;
-  }
-
-  public function setDeletedBy(?User $deletedBy): self
-  {
-    $this->deletedBy = $deletedBy;
-    return $this;
-  }
-
-  public function getCreatedBy(): ?User
-  {
-    return $this->createdBy;
-  }
-
-  public function setCreatedBy(?User $createdBy): self
-  {
-    $this->createdBy = $createdBy;
-    return $this;
-  }
-
   public function jsonSerialize()
   {
     return [
-      'guid' => $this->guid,
+      'id' => $this->hashId,
       'name' => $this->name,
       'visibility' => $this->visibility,
       'occurred' => $this->occurred,

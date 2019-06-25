@@ -58,14 +58,14 @@ class ServiceStatusController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/statuses/service/{statusGuid}", name="editServiceStatus")
+   * @Route("/dashboard/statuses/service/{hashId}", name="editServiceStatus")
    */
-  public function edit($statusGuid, Request $request)
+  public function edit($hashId, Request $request)
   {
     //get status from database
     $status = $this->getDoctrine()
       ->getRepository(ServiceStatus::class)
-      ->findByGuid($statusGuid);
+      ->findByHashId($hashId);
 
     //create form object for status
     $form = $this->createForm(ServiceStatusType::class, $status);

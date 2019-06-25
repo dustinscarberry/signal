@@ -35,17 +35,17 @@ class IncidentApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidents/{guid}", name="getIncident", methods={"GET"})
+   * @Route("/api/v1/incidents/{hashId}", name="getIncident", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncident($guid)
+  public function getIncident($hashId)
   {
     try
     {
       //get incident
       $incident = $this->getDoctrine()
         ->getRepository(Incident::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid incident
       if (!$incident)
@@ -134,11 +134,11 @@ class IncidentApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidents/{guid}", name="updateIncident", methods={"PATCH"})
+   * @Route("/api/v1/incidents/{hashId}", name="updateIncident", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
   public function updateIncident(
-    $guid,
+    $hashId,
     Request $req,
     IncidentUpdatedMailer $incidentUpdatedMailer
   )
@@ -148,7 +148,7 @@ class IncidentApiController extends ApiController
       //get incident from database
       $incident = $this->getDoctrine()
         ->getRepository(Incident::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       if (!$incident)
         throw new \Exception('Item not found');
@@ -240,17 +240,17 @@ class IncidentApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/incidents/{guid}", name="deleteIncident", methods={"DELETE"})
+   * @Route("/api/v1/incidents/{hashId}", name="deleteIncident", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteIncident($guid)
+  public function deleteIncident($hashId)
   {
     try
     {
       //get incident
       $incident = $this->getDoctrine()
         ->getRepository(Incident::class)
-        ->findByGuid($guid);
+        ->findByHashId($hashId);
 
       //check for valid incident
       if (!$incident)
