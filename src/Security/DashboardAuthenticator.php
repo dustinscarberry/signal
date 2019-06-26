@@ -45,6 +45,7 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
     $this->router = $router;
   }
 
+  //check if authenticator should be used - true or false
   public function supports(Request $request)
   {
     $this->isAPICall = $request->headers->has('X-API-TOKEN');
@@ -55,6 +56,7 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
       || $this->isAPICall;
   }
 
+  //get credentials of user or api to check later - user credentials
   public function getCredentials(Request $request)
   {
     if ($this->isAPICall)
@@ -90,13 +92,15 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
       $user = $this->em->getRepository(User::class)
         ->findOneBy(['apiToken' => $apiToken]);
 
-      //check for matched user
-      if (!$user)
-        throw new \Exception('Invalid API Token');
+      //check if api is enabled for user
+      if ($user && !$user->getApiEnabled())
+        return null;
+
+      return $user;
     }
     else
     {
-      //check if crsf token if valid
+      //check if crsf token is valid
       $token = new CsrfToken('authenticate', $credentials['csrf_token']);
       if (!$this->csrfTokenManager->isTokenValid($token))
         throw new InvalidCsrfTokenException();
@@ -139,6 +143,22 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
       return new RedirectResponse($targetPath);
 
     return new RedirectResponse($this->router->generate('dashboardHome'));
+  }
+
+  public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+  {
+    if ($this->isAPICall)
+    {
+      $response = new \stdClass();
+      $response->errors = 'Not authorized!';
+      return new \Symfony\Component\HttpFoundation\JsonResponse($response, 401);
+    }
+
+    if ($request->getSession() instanceof SessionInterface)
+      $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+
+    $url = $this->getLoginUrl();
+    return new RedirectResponse($url);
   }
 
   protected function getLoginUrl()
