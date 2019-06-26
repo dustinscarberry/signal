@@ -201,13 +201,65 @@ $(document).ready(function(){
   const incidentViewDataTable = $('#incident-view-table').DataTable({
     paging: false,
     info: false,
-    columnDefs: [{
-      targets: 2,
-      orderable: false
-    }],
+    columnDefs: [
+      {
+        targets: 1,
+        width: '120px'
+      },
+      {
+        targets: 2,
+        orderable: false,
+        width: '130px'
+      }
+    ],
+    autoWidth: false,
     order: [],
     language: {
       emptyTable: 'No incidents reported'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const maintenanceViewDataTable = $('#maintenance-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [
+      {
+        targets: 1,
+        width: '120px'
+      },
+      {
+        targets: 2,
+        orderable: false,
+        width: '130px'
+      }
+    ],
+    autoWidth: false,
+    order: [],
+    language: {
+      emptyTable: 'Nothing scheduled'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const serviceViewDataTable = $('#service-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [
+      {
+        targets: 1,
+        orderable: false,
+        width: '130px'
+      }
+    ],
+    autoWidth: false,
+    order: [],
+    language: {
+      emptyTable: 'Nothing to report here'
     },
     initComplete: function() {
       $(this).removeClass('is-hidden');

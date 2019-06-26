@@ -1,7 +1,7 @@
 //status classes
 .status-bubble{
-  width: 15px;
-  height: 15px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: block;
 
@@ -20,6 +20,12 @@
   &.status-bubble-offline{
     background: gray;
   }
+}
+
+.dashboard .status-bubble{
+  display: inline-block;
+  width: 22px;
+  height: 22px;
 }
 
 .status-icon{

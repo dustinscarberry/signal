@@ -22,6 +22,15 @@ class ChartDataGenerator
   {
     if ($serviceId == 'all')
       $serviceId = null;
+    else
+    {
+      $serviceId = $this->em
+        ->getRepository(Service::class)
+        ->findByHashId($serviceId);
+
+      if ($serviceId)
+        $serviceId = $serviceId->getId();
+    }
 
     $dataPoints = $this->getDataPoints($scale, $serviceId);
     return [['id' => $this->getDatasetName($serviceId), 'data' => $dataPoints]];
@@ -107,7 +116,7 @@ class ChartDataGenerator
   }
 
   //get dataset name, specific or generic
-  private function getDatasetName(?int $serviceId): string
+  private function getDatasetName(?string $serviceId): string
   {
     $datasetName = 'All Services';
 

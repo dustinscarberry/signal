@@ -498,7 +498,7 @@ form legend {
   -webkit-appearance: none;
   color: #2c2c2c;
   outline: 0;
-  padding: 8px 12px;
+  padding: 12px 12px;//was 8px 12px
   line-height: normal;
   font-size: 14px;
   font-weight: normal;
@@ -874,7 +874,7 @@ form .btn{
 //datetimepicker element
 .datetimepicker-wrapper{
   position: relative;
-  padding-right: 35px;
+  padding-right: 42px;
 }
 
 .datetimepicker-wrapper .datetimepicker{
@@ -887,11 +887,11 @@ form .btn{
   right: 0;
   background: #3876b7;
   height: 100%;
-  width: 35px;
+  width: 42px;
   color: #fff;
   top: 0;
   text-align: center;
-  line-height: 35px;
+  line-height: 42px;
 }
 
 //select element
