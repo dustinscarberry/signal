@@ -18,21 +18,7 @@ class VideoEmbedWidget extends React.Component
 
   componentDidMount()
   {
-
-    this.testApi();
     this.load();
-  }
-
-  async testApi()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id,
-      {
-        headers: {'X-Auth-Token': 'abc123'}
-      }
-    );
-
-    console.log(rsp);
   }
 
   async load()

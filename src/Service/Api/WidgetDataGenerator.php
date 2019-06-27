@@ -7,19 +7,27 @@ use App\Entity\Service;
 use App\Entity\Incident;
 use App\Entity\Maintenance;
 use App\Entity\ServiceStatusHistory;
+use App\Entity\CustomMetric;
 use App\Service\Api\ChartDataGenerator;
+use App\Service\Api\CustomMetricChartDataGenerator;
 use \DateTime;
 
 class WidgetDataGenerator
 {
   private $em;
-  private $chartDataGenerator;
+  private $serviceStatusChartDataGenerator;
+  private $customMetricChartDataGenerator;
   private $data;
 
-  public function __construct(EntityManagerInterface $em, ChartDataGenerator $chartDataGenerator)
+  public function __construct(
+    EntityManagerInterface $em,
+    ServiceStatusChartDataGenerator $serviceStatusChartDataGenerator,
+    CustomMetricChartDataGenerator $customMetricChartDataGenerator
+  )
   {
     $this->em = $em;
-    $this->chartDataGenerator = $chartDataGenerator;
+    $this->serviceStatusChartDataGenerator = $serviceStatusChartDataGenerator;
+    $this->customMetricChartDataGenerator = $customMetricChartDataGenerator;
   }
 
   //returns data for widget passed in
@@ -41,6 +49,8 @@ class WidgetDataGenerator
       $this->getMetricsOverviewData();
     else if ($widgetType == 'service-uptime-chart')
       $this->getServiceUptimeChartData();
+    else if ($widgetType == 'custom-metric-chart')
+      $this->getCustomMetricChartData();
 
     return $this->data;
   }
@@ -127,9 +137,34 @@ class WidgetDataGenerator
   private function getServiceUptimeChartData()
   {
     //get data for one or all services, with scale of day, hour, minute
-    $this->data['dataPoints'] = $this->chartDataGenerator->generate(
+    $this->data['dataPoints'] = $this->serviceStatusChartDataGenerator->generate(
       $this->data['options']->getAttributes()->scale,
       $this->data['options']->getAttributes()->service
     );
+  }
+
+  private function getCustomMetricChartData()
+  {
+    //get data for metric, with scale of day, hour, minute
+    $this->data['dataPoints'] = $this->customMetricChartDataGenerator->generate(
+      $this->data['options']->getAttributes()->scale,
+      $this->data['options']->getAttributes()->metric
+    );
+
+    //get start and end scale of metric
+    $metric = $this->em
+      ->getRepository(CustomMetric::class)
+      ->findByHashId($this->data['options']->getAttributes()->metric);
+
+    if ($metric)
+    {
+      $this->data['scaleStart'] = $metric->getScaleStart();
+      $this->data['scaleEnd'] = $metric->getScaleEnd();
+    }
+    else
+    {
+      $this->data['scaleStart'] = 0;
+      $this->data['scaleEnd'] = 100;
+    }
   }
 }

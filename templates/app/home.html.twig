@@ -18,8 +18,9 @@
     <div class="metrics-overview-widget-root" data-id="{{ widget.hashId }}"></div>
   {% elseif widget.type == 'service-uptime-chart' %}
     <div class="service-uptime-chart-widget-root" data-id="{{ widget.hashId }}"></div>
+  {% elseif widget.type == 'custom-metric-chart' %}
+    <div class="custom-metric-chart-widget-root" data-id="{{ widget.hashId }}"></div>
   {% endif %}
-
 {% endfor %}
 
 {% endblock %}

@@ -19,6 +19,7 @@ class CustomMetricChartWidgetBlock extends React.Component
     };
 
     this.changeTitle = this.changeTitle.bind(this);
+    this.changeYLegend = this.changeYLegend.bind(this);
     this.changeScale = this.changeScale.bind(this);
     this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
     this.changeMetric = this.changeMetric.bind(this);
@@ -46,6 +47,15 @@ class CustomMetricChartWidgetBlock extends React.Component
   {
     this.props.updateAttributes({
       title: e.target.value
+    });
+
+    this.props.toggleIsSaved(false);
+  }
+
+  changeYLegend(e)
+  {
+    this.props.updateAttributes({
+      yLegend: e.target.value
     });
 
     this.props.toggleIsSaved(false);
@@ -90,6 +100,13 @@ class CustomMetricChartWidgetBlock extends React.Component
           <TextInput
             value={this.props.widget.attributes.title}
             handleChange={this.changeTitle}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label title="Y Axis Legend"/>
+          <TextInput
+            value={this.props.widget.attributes.yLegend}
+            handleChange={this.changeYLegend}
           />
         </FormGroup>
         <FormGroup>

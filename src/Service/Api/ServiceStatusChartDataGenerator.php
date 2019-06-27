@@ -8,7 +8,7 @@ use App\Entity\ServiceStatusHistory;
 use App\Entity\Service;
 use \DateTime;
 
-class ChartDataGenerator
+class ServiceStatusChartDataGenerator
 {
   private $em;
 

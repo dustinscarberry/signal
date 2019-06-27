@@ -117,6 +117,7 @@ export const WIDGET_BLOCK_DATA = {
     sortOrder: undefined,
     attributes: {
       title: undefined,
+      yLegend: undefined,
       scale: undefined,
       metric: undefined,
       refreshInterval: 60

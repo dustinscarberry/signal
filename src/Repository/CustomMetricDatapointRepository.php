@@ -14,37 +14,39 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class CustomMetricDatapointRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
-    {
-        parent::__construct($registry, CustomMetricDatapoint::class);
-    }
+  public function __construct(RegistryInterface $registry)
+  {
+    parent::__construct($registry, CustomMetricDatapoint::class);
+  }
 
-    // /**
-    //  * @return CustomMetricDatapoint[] Returns an array of CustomMetricDatapoint objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+  /**
+   * @return CustomMetricDatapoint[] Returns an array of CustomMetricDatapoint objects after timestamp for metric
+   */
+  public function findAllAfterTimestampWithMetric($timestamp, $metricId)
+  {
+    return $this->createQueryBuilder('c')
+      ->andWhere('c.created >= :timestamp')
+      ->andWhere('c.metric = :metricId')
+      ->setParameter('timestamp', $timestamp)
+      ->setParameter('metricId', $metricId)
+      ->orderBy('c.created', 'ASC')
+      ->getQuery()
+      ->getResult();
+  }
 
-    /*
-    public function findOneBySomeField($value): ?CustomMetricDatapoint
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+  /**
+   * @return CustomMetricDatapoint[] Returns an array of CustomMetricDatapoint objects before timestamp for metric
+   */
+  public function findAllBeforeTimestampWithMetric($timestamp, $metricId)
+  {
+    return $this->createQueryBuilder('c')
+      ->andWhere('c.created < :timestamp')
+      ->andWhere('c.metric = :metricId')
+      ->setParameter('timestamp', $timestamp)
+      ->setParameter('metricId', $metricId)
+      ->orderBy('c.created', 'DESC')
+      ->setMaxResults(1)
+      ->getQuery()
+      ->getResult();
+  }
 }
