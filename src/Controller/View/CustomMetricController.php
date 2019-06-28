@@ -19,7 +19,7 @@ class CustomMetricController extends AbstractController
       ->getRepository(CustomMetric::class)
       ->findAll();
 
-    return $this->render('dashboard/custommetric/view.html.twig', [
+    return $this->render('dashboard/custommetric/viewall.html.twig', [
       'metrics' => $metrics
     ]);
   }

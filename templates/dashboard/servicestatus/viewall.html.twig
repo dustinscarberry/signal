@@ -38,29 +38,7 @@
             {% endfor %}
 
           </tbody>
-        </table>
-        <!--<div class="dashboard-panel-block">
-          <div id="service-status-view-list" class="table-list">
-
-            {% for status in serviceStatuses %}
-            <div class="list-item" data-id="{{ status.hashId }}">
-              <div class="list-item-left">
-                <span class="list-item-title">{{ status.name }}</span>
-                <span class="list-item-description">...</span>
-              </div>
-              <div class="list-item-right">
-                <button class="btn btn-primary" onclick="window.location.href='/dashboard/statuses/service/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
-                <button class="btn btn-error btn-delete" {% if not status.deletable %}disabled{% endif %}>Delete</button>
-              </div>
-            </div>
-            {% endfor %}
-
-            {% if serviceStatuses is empty %}
-            <span class="empty-list">No statuses created</span>
-            {% endif %}
-
-          </div>
-        </div>-->
+        </table>    
       </div>
     </div>
   </div>

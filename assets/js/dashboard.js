@@ -152,7 +152,7 @@ $(document).ready(function(){
   $('.datetimepicker').datetimepicker();
 
   //datatables
-  const subscriptionDataTable = $('#subscription-view-table').DataTable({
+  const subscriptionViewDataTable = $('#subscription-view-table').DataTable({
     paging: false,
     info: false,
     columnDefs: [{
@@ -167,7 +167,7 @@ $(document).ready(function(){
     }
   });
 
-  const userDataTable = $('#user-view-table').DataTable({
+  const userViewDataTable = $('#user-view-table').DataTable({
     paging: false,
     info: false,
     columnDefs: [{
@@ -182,7 +182,55 @@ $(document).ready(function(){
     }
   });
 
-  const serviceStatusDataTable = $('#service-status-view-table').DataTable({
+  const serviceStatusViewDataTable = $('#service-status-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [{
+      targets: 1,
+      orderable: false
+    }],
+    order: [],
+    language: {
+      emptyTable: 'Div by 0 ... not possible'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const custommetricViewDataTable = $('#custommetric-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [{
+      targets: 2,
+      orderable: false
+    }],
+    order: [],
+    language: {
+      emptyTable: 'No metrics available'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const maintenanceStatusViewDataTable = $('#maintenance-status-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [{
+      targets: 1,
+      orderable: false
+    }],
+    order: [],
+    language: {
+      emptyTable: 'Div by 0 ... not possible'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const incidentStatusViewDataTable = $('#incident-status-view-table').DataTable({
     paging: false,
     info: false,
     columnDefs: [{
@@ -209,7 +257,7 @@ $(document).ready(function(){
       {
         targets: 2,
         orderable: false,
-        width: '130px'
+        width: '140px'
       }
     ],
     autoWidth: false,
@@ -233,7 +281,7 @@ $(document).ready(function(){
       {
         targets: 2,
         orderable: false,
-        width: '130px'
+        width: '140px'
       }
     ],
     autoWidth: false,
@@ -260,6 +308,26 @@ $(document).ready(function(){
     order: [],
     language: {
       emptyTable: 'Nothing to report here'
+    },
+    initComplete: function() {
+      $(this).removeClass('is-hidden');
+    }
+  });
+
+  const serviceCategoryViewDataTable = $('#servicecategory-view-table').DataTable({
+    paging: false,
+    info: false,
+    columnDefs: [
+      {
+        targets: 1,
+        orderable: false,
+        width: '130px'
+      }
+    ],
+    autoWidth: false,
+    order: [],
+    language: {
+      emptyTable: 'No categories created'
     },
     initComplete: function() {
       $(this).removeClass('is-hidden');

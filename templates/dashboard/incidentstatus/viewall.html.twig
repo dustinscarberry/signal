@@ -18,28 +18,27 @@
   <div class="container-fluid container-fixed-lg">
     <div class="row">
       <div class="col-lg-12">
-        <div class="dashboard-panel-block">
-          <div id="incident-status-view-list" class="table-list">
+        <table id="incident-status-view-table" class="uk-table uk-table-hover uk-table-striped is-hidden">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
 
             {% for status in incidentStatuses %}
-              <div class="list-item" data-id="{{ status.hashId }}">
-                <div class="list-item-left">
-                  <span class="list-item-title">{{ status.name }}</span>
-                  <span class="list-item-description">...</span>
-                </div>
-                <div class="list-item-right">
-                  <button class="btn btn-primary" onclick="window.location.href='/dashboard/statuses/incident/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
-                  <button class="btn btn-error btn-delete" {% if not status.deletable %}disabled{% endif %}>Delete</button>
-                </div>
-              </div>
+            <tr data-id="{{ status.hashId }}">
+              <td>{{ status.name }}</td>
+              <td>
+                <button class="btn btn-error pull-right btn-delete">Delete</button>
+                <button class="btn btn-primary pull-right" onclick="window.location.href='/dashboard/statuses/incident/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
+              </td>
+            </tr>
             {% endfor %}
 
-            {% if incidentStatuses is empty %}
-              <span class="empty-list">No statuses created</span>
-            {% endif %}
-
-          </div>
-        </div>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
