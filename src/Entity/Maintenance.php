@@ -94,6 +94,16 @@ class Maintenance implements JsonSerializable
    */
   private $createdBy;
 
+  /**
+   * @ORM\OneToOne(targetEntity="App\Entity\ExchangeCalendarEvent", mappedBy="maintenance", cascade={"persist", "remove"})
+   */
+  private $exchangeCalendarEvent;
+
+  /**
+   * @ORM\OneToOne(targetEntity="App\Entity\GoogleCalendarEvent", mappedBy="maintenance", cascade={"persist", "remove"})
+   */
+  private $googleCalendarEvent;
+
   public function __construct()
   {
     $this->maintenanceUpdates = new ArrayCollection();
@@ -340,5 +350,41 @@ class Maintenance implements JsonSerializable
       'services' => $this->maintenanceServices->toArray(),
       'updates' => $this->maintenanceUpdates->toArray()
     ];
+  }
+
+  public function getExchangeCalendarEvent(): ?ExchangeCalendarEvent
+  {
+      return $this->exchangeCalendarEvent;
+  }
+
+  public function setExchangeCalendarEvent(?ExchangeCalendarEvent $exchangeCalendarEvent): self
+  {
+      $this->exchangeCalendarEvent = $exchangeCalendarEvent;
+
+      // set (or unset) the owning side of the relation if necessary
+      $newMaintenance = $exchangeCalendarEvent === null ? null : $this;
+      if ($newMaintenance !== $exchangeCalendarEvent->getMaintenance()) {
+          $exchangeCalendarEvent->setMaintenance($newMaintenance);
+      }
+
+      return $this;
+  }
+
+  public function getGoogleCalendarEvent(): ?GoogleCalendarEvent
+  {
+      return $this->googleCalendarEvent;
+  }
+
+  public function setGoogleCalendarEvent(?GoogleCalendarEvent $googleCalendarEvent): self
+  {
+      $this->googleCalendarEvent = $googleCalendarEvent;
+
+      // set (or unset) the owning side of the relation if necessary
+      $newMaintenance = $googleCalendarEvent === null ? null : $this;
+      if ($newMaintenance !== $googleCalendarEvent->getMaintenance()) {
+          $googleCalendarEvent->setMaintenance($newMaintenance);
+      }
+
+      return $this;
   }
 }

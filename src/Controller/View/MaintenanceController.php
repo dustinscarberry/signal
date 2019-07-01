@@ -9,8 +9,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Maintenance;
 use App\Form\MaintenanceType;
 use App\Entity\ServiceStatusHistory;
+use App\Entity\ExchangeCalendarEvent;
+use App\Entity\GoogleCalendarEvent;
 use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
 use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
+use App\Service\ExchangeEventGenerator;
 
 class MaintenanceController extends AbstractController
 {
@@ -31,7 +34,10 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance/add")
    */
-  public function add(Request $request, MaintenanceCreatedMailer $maintenanceCreatedMailer)
+  public function add(
+    Request $request,
+    MaintenanceCreatedMailer $maintenanceCreatedMailer
+  )
   {
     //create maintenance object
     $maintenance = new Maintenance();
@@ -75,6 +81,26 @@ class MaintenanceController extends AbstractController
       //send email if services included
       if ($maintenance->getMaintenanceServices())
         $maintenanceCreatedMailer->send($maintenance);
+
+      //add to exchange calendar if enabled
+      $exchangeEnabled = true;
+      if ($exchangeEnabled)
+      {
+        $eventId = ExchangeEventGenerator::createEvent($maintenance);
+
+        //save to database
+        $exchangeEvent = new ExchangeCalendarEvent();
+        $exchangeEvent->setEventId($eventId);
+        $exchangeEvent->setMaintenance($maintenance);
+        $em->persist($exchangeEvent);
+      }
+
+      //add to google calender if enabled
+      $googleEnabled = false;
+      if ($googleEnabled)
+      {
+        //$eventId = //
+      }
 
       $this->addFlash('success', 'Maintenance item created');
       return $this->redirectToRoute('viewMaintenance');
@@ -173,6 +199,29 @@ class MaintenanceController extends AbstractController
       //send email if services included
       if ($maintenance->getMaintenanceServices())
         $maintenanceUpdatedMailer->send($maintenance);
+
+
+
+
+
+      //update exchange calendar if enabled
+      $exchangeEnabled = true;
+      if ($exchangeEnabled)
+      {
+
+
+        dd($maintenance->getExchangeCalendarEvent());
+
+
+      //  $eventId = ExchangeEventGenerator::updateEvent($maintenance, $eventId);
+
+
+
+      }
+
+
+
+
 
       $this->addFlash('success', 'Maintenance item updated');
       return $this->redirectToRoute('viewMaintenance');

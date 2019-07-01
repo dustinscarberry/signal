@@ -98,6 +98,9 @@
     "hashids/hashids": {
         "version": "4.0.0"
     },
+    "jamesiarmes/php-ntlm": {
+        "version": "1.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -112,6 +115,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
+    },
+    "php-ews/php-ews": {
+        "version": "1.0.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
