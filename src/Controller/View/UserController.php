@@ -69,8 +69,7 @@ class UserController extends AbstractController
   public function edit(
     $hashId,
     Request $request,
-    UserPasswordEncoderInterface $passwordEncoder,
-    ApiTokenGenerator $tokenGenerator
+    UserPasswordEncoderInterface $passwordEncoder
   )
   {
     //get user from database
@@ -93,7 +92,7 @@ class UserController extends AbstractController
 
       if ($action == 'regenerateApiToken')
       {
-        $token = $tokenGenerator->generate();
+        $token = ApiTokenGenerator::generate();
         $user->setApiToken($token);
 
         $this->getDoctrine()->getManager()->flush();
