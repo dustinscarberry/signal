@@ -55,6 +55,12 @@ class SettingType extends AbstractType
       ->add('language', LanguageType::class)
       ->add('mailFromAddress', TextType::class)
       ->add('mailFromName', TextType::class)
+      ->add('enableExchangeCalendarSync', CheckboxType::class, [
+        'required' => false
+      ])
+      ->add('enableGoogleCalendarSync', CheckboxType::class, [
+        'required' => false
+      ])
       ->add('logo', FileType::class, [
         'required' => false,
         'attr' => ['accept' => '.jpg,.jpeg,.png'],

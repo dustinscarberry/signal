@@ -430,10 +430,10 @@ $(document).ready(function(){
     );
   });
 
-  $('#maintenance-view-list').on('click', '.btn-delete', function(){
+  $('#maintenance-view-table').on('click', '.btn-delete', function(){
     confirmDelete(
       async () => {
-        let parent = $(this).closest('.list-item');
+        let parent = $(this).closest('tr');
         let dataID = parent.data('id');
 
         let rsp = await axios.delete('/api/v1/maintenance/' + dataID);
@@ -442,7 +442,7 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            parent.remove();
+            maintenanceViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }

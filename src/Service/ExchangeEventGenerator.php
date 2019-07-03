@@ -25,6 +25,7 @@ use jamesiarmes\PhpEws\Enumeration\UnindexedFieldURIType;
 use jamesiarmes\PhpEws\Type\ItemChangeType;
 use jamesiarmes\PhpEws\Type\ItemIdType;
 use jamesiarmes\PhpEws\Type\SetItemFieldType;
+use jamesiarmes\PhpEws\Type\PathToUnindexedFieldType;
 use App\Model\AppConfig;
 use App\Entity\Maintenance;
 
@@ -163,7 +164,7 @@ class ExchangeEventGenerator
 
     //create request object
     $req = new CreateItemType();
-    $req->MessageDisposition = MessageDispositionType::SEND_AND_SAVE_COPY;
+    $req->MessageDisposition = MessageDispositionType::SAVE_ONLY;
     $req->Items = new NonEmptyArrayOfAllItemsType();
     $req->Items->CancelCalendarItem[] = $cancellation;
 

@@ -14,6 +14,7 @@ use App\Entity\GoogleCalendarEvent;
 use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
 use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
 use App\Service\ExchangeEventGenerator;
+use App\Model\AppConfig;
 
 class MaintenanceController extends AbstractController
 {
@@ -36,7 +37,8 @@ class MaintenanceController extends AbstractController
    */
   public function add(
     Request $request,
-    MaintenanceCreatedMailer $maintenanceCreatedMailer
+    MaintenanceCreatedMailer $maintenanceCreatedMailer,
+    AppConfig $appConfig
   )
   {
     //create maintenance object
@@ -83,8 +85,7 @@ class MaintenanceController extends AbstractController
         $maintenanceCreatedMailer->send($maintenance);
 
       //add to exchange calendar if enabled
-      $exchangeEnabled = true;
-      if ($exchangeEnabled)
+      if ($appConfig->getEnableExchangeCalendarSync())
       {
         $eventId = ExchangeEventGenerator::createEvent($maintenance);
 
@@ -93,11 +94,11 @@ class MaintenanceController extends AbstractController
         $exchangeEvent->setEventId($eventId);
         $exchangeEvent->setMaintenance($maintenance);
         $em->persist($exchangeEvent);
+        $em->flush();
       }
 
       //add to google calender if enabled
-      $googleEnabled = false;
-      if ($googleEnabled)
+      if ($appConfig->getEnableGoogleCalendarSync())
       {
         //$eventId = //
       }
@@ -118,7 +119,8 @@ class MaintenanceController extends AbstractController
   public function edit(
     $hashId,
     Request $request,
-    MaintenanceUpdatedMailer $maintenanceUpdatedMailer
+    MaintenanceUpdatedMailer $maintenanceUpdatedMailer,
+    AppConfig $appConfig
   )
   {
     //get maintenance from database
@@ -200,28 +202,31 @@ class MaintenanceController extends AbstractController
       if ($maintenance->getMaintenanceServices())
         $maintenanceUpdatedMailer->send($maintenance);
 
-
-
-
-
       //update exchange calendar if enabled
-      $exchangeEnabled = true;
-      if ($exchangeEnabled)
+      if ($appConfig->getEnableExchangeCalendarSync())
       {
+        $exchangeEvent = $maintenance->getExchangeCalendarEvent();
 
+        if ($exchangeEvent)
+          ExchangeEventGenerator::updateEvent($maintenance, $exchangeEvent->getEventId());
+        else
+        {
+          $eventId = ExchangeEventGenerator::createEvent($maintenance);
 
-        dd($maintenance->getExchangeCalendarEvent());
-
-
-      //  $eventId = ExchangeEventGenerator::updateEvent($maintenance, $eventId);
-
-
-
+          //save to database
+          $exchangeEvent = new ExchangeCalendarEvent();
+          $exchangeEvent->setEventId($eventId);
+          $exchangeEvent->setMaintenance($maintenance);
+          $em->persist($exchangeEvent);
+          $em->flush();
+        }
       }
 
+      //update google calendar if enabled
+      if ($appConfig->getEnableGoogleCalendarSync())
+      {
 
-
-
+      }
 
       $this->addFlash('success', 'Maintenance item updated');
       return $this->redirectToRoute('viewMaintenance');

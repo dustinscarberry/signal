@@ -126,7 +126,8 @@ class AppFixtures extends Fixture
     $settings['appTheme'] = 'light';
     $settings['mailFromAddress'] = 'statusbot@donotreply.com';
     $settings['mailFromName'] = 'Status Bot';
-    $settings['useMailEnvFile'] = false;
+    $settings['enableExchangeCalendarSync'] = false;
+    $settings['enableGoogleCalendarSync'] = false;
 
     foreach ($settings as $key => $value)
     {

@@ -7,9 +7,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Maintenance;
+use App\Entity\ExchangeCalendarEvent;
 use App\Form\MaintenanceType;
 use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
 use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
+use App\Service\ExchangeEventGenerator;
+use App\Model\AppConfig;
 
 class MaintenanceApiController extends ApiController
 {
@@ -67,7 +70,8 @@ class MaintenanceApiController extends ApiController
   */
   public function createMaintenance(
     Request $req,
-    MaintenanceCreatedMailer $maintenanceCreatedMailer
+    MaintenanceCreatedMailer $maintenanceCreatedMailer,
+    AppConfig $appConfig
   )
   {
     try
@@ -128,6 +132,19 @@ class MaintenanceApiController extends ApiController
         if ($maintenance->getMaintenanceServices())
           $maintenanceCreatedMailer->send($maintenance);
 
+        //add to exchange calendar if enabled
+        if ($appConfig->getEnableExchangeCalendarSync())
+        {
+          $eventId = ExchangeEventGenerator::createEvent($maintenance);
+
+          //save to database
+          $exchangeEvent = new ExchangeCalendarEvent();
+          $exchangeEvent->setEventId($eventId);
+          $exchangeEvent->setMaintenance($maintenance);
+          $em->persist($exchangeEvent);
+          $em->flush();
+        }
+
         return $this->respond($maintenance);
       }
 
@@ -146,7 +163,8 @@ class MaintenanceApiController extends ApiController
   public function updateMaintenance(
     $hashId,
     Request $req,
-    MaintenanceUpdatedMailer $maintenanceUpdatedMailer
+    MaintenanceUpdatedMailer $maintenanceUpdatedMailer,
+    AppConfig $appConfig
   )
   {
     try
@@ -238,6 +256,32 @@ class MaintenanceApiController extends ApiController
         if ($maintenance->getMaintenanceServices())
           $maintenanceUpdatedMailer->send($maintenance);
 
+        //update exchange calendar if enabled
+        if ($appConfig->getEnableExchangeCalendarSync())
+        {
+          $exchangeEvent = $maintenance->getExchangeCalendarEvent();
+
+          if ($exchangeEvent)
+            ExchangeEventGenerator::updateEvent($maintenance, $exchangeEvent->getEventId());
+          else
+          {
+            $eventId = ExchangeEventGenerator::createEvent($maintenance);
+
+            //save to database
+            $exchangeEvent = new ExchangeCalendarEvent();
+            $exchangeEvent->setEventId($eventId);
+            $exchangeEvent->setMaintenance($maintenance);
+            $em->persist($exchangeEvent);
+            $em->flush();
+          }
+        }
+
+        //update google calendar if enabled
+        if ($appConfig->getEnableGoogleCalendarSync())
+        {
+
+        }
+
         return $this->respond($maintenance);
       }
 
@@ -253,7 +297,7 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance/{hashId}", name="deleteMaintenance", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteMaintenance($hashId)
+  public function deleteMaintenance($hashId, AppConfig $appConfig)
   {
     try
     {
@@ -265,6 +309,17 @@ class MaintenanceApiController extends ApiController
       //check for valid maintenance
       if (!$maintenance)
         return $this->respondWithErrors(['Invalid data']);
+
+      //delete from exchange calendar if enabled
+      if ($appConfig->getEnableExchangeCalendarSync())
+      {
+        //delete exchange event if found
+        $exchangeEvent = $maintenance->getExchangeCalendarEvent();
+        if ($exchangeEvent)
+        {
+          ExchangeEventGenerator::deleteEvent($exchangeEvent->getEventId());
+        }
+      }
 
       //delete maintenance
       $maintenance->setDeletedOn(time());

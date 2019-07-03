@@ -21,6 +21,8 @@ class AppConfig
   private $appTheme;
   private $mailFromAddress;
   private $mailFromName;
+  private $enableExchangeCalendarSync;
+  private $enableGoogleCalendarSync;
 
   private $em;
   private $loadedSettings;
@@ -182,6 +184,28 @@ class AppConfig
   public function setMailFromName(?string $mailFromName): self
   {
     $this->mailFromName = $mailFromName;
+    return $this;
+  }
+
+  public function getEnableExchangeCalendarSync(): bool
+  {
+    return $this->enableExchangeCalendarSync;
+  }
+
+  public function setEnableExchangeCalendarSync(bool $enableExchangeCalendarSync): self
+  {
+    $this->enableExchangeCalendarSync = $enableExchangeCalendarSync;
+    return $this;
+  }
+
+  public function getEnableGoogleCalendarSync(): bool
+  {
+    return $this->enableGoogleCalendarSync;
+  }
+
+  public function setEnableGoogleCalendarSync(bool $enableGoogleCalendarSync): self
+  {
+    $this->enableGoogleCalendarSync = $enableGoogleCalendarSync;
     return $this;
   }
 

@@ -29,9 +29,7 @@ class MaintenanceType extends AbstractType
         'required' => false
       ])
       ->add('scheduledFor', TextType::class)
-      ->add('anticipatedEnd', TextType::class, [
-        'required' => false
-      ])
+      ->add('anticipatedEnd', TextType::class)
       ->add('status', EntityType::class, [
         'class' => MaintenanceStatus::class,
         'choice_label' => 'name',
