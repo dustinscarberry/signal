@@ -120,7 +120,7 @@ class AppFixtures extends Fixture
     $settings['siteAbout'] = '';
     $settings['allowSubscriptions'] = true;
     $settings['cssOverrides'] = '';
-    $settings['siteTimezone'] = '';
+    $settings['siteTimezone'] = 'America/New_York';
     $settings['analyticsGoogleID'] = '';
     $settings['dashboardTheme'] = 'purple';
     $settings['appTheme'] = 'light';
