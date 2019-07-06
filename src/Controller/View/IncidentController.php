@@ -12,6 +12,7 @@ use App\Entity\ServiceStatusHistory;
 use App\Form\IncidentType;
 use App\Service\Mail\Mailer\IncidentCreatedMailer;
 use App\Service\Mail\Mailer\IncidentUpdatedMailer;
+use App\Service\Manager\IncidentManager;
 
 class IncidentController extends AbstractController
 {
@@ -32,7 +33,7 @@ class IncidentController extends AbstractController
   /**
    * @Route("/dashboard/incidents/add")
    */
-  public function add(Request $request, IncidentCreatedMailer $incidentCreatedMailer)
+  public function add(Request $request, IncidentCreatedMailer $incidentCreatedMailer, IncidentManager $incidentManager)
   {
     //create incident object
     $incident = new Incident();
@@ -46,7 +47,13 @@ class IncidentController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $incident = $form->getData();
+
+
+
+
+
+
+
       $em = $this->getDoctrine()->getManager();
 
       //set user
@@ -72,6 +79,12 @@ class IncidentController extends AbstractController
       //send email if services included
       if ($incident->getIncidentServices())
         $incidentCreatedMailer->send($incident);
+
+
+
+
+
+
 
       $this->addFlash('success', 'Incident created');
       return $this->redirectToRoute('viewIncidents');
@@ -100,6 +113,10 @@ class IncidentController extends AbstractController
     if (!$incident)
       throw new \Exception('Incident not found');
 
+
+
+
+
     //get array copy of original services
     $originalServices = new ArrayCollection();
 
@@ -112,6 +129,10 @@ class IncidentController extends AbstractController
     foreach ($incident->getIncidentUpdates() as $update)
       $originalUpdates->add($update);
 
+
+
+
+
     //create form object for incident
     $form = $this->createForm(IncidentType::class, $incident);
 
@@ -121,8 +142,11 @@ class IncidentController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      //get latest incident data
-      $incident = $form->getData();
+
+
+
+
+
 
       $em = $this->getDoctrine()->getManager();
 
@@ -169,6 +193,12 @@ class IncidentController extends AbstractController
       //send email if services included
       if ($incident->getIncidentServices())
         $incidentUpdatedMailer->send($incident);
+
+
+
+
+
+        
 
       $this->addFlash('success', 'Incident updated');
       return $this->redirectToRoute('viewIncidents');

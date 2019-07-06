@@ -5,14 +5,9 @@ namespace App\Controller\Api;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Maintenance;
-use App\Entity\ExchangeCalendarEvent;
 use App\Form\MaintenanceType;
-use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
-use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
-use App\Service\ExchangeEventGenerator;
-use App\Model\AppConfig;
+use App\Service\Manager\MaintenanceManager;
 
 class MaintenanceApiController extends ApiController
 {
@@ -68,11 +63,7 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance", name="createMaintenance", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function createMaintenance(
-    Request $req,
-    MaintenanceCreatedMailer $maintenanceCreatedMailer,
-    AppConfig $appConfig
-  )
+  public function createMaintenance(Request $req, MaintenanceManager $maintenanceManager)
   {
     try
     {
@@ -93,57 +84,11 @@ class MaintenanceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $maintenance = $form->getData();
-        $em = $this->getDoctrine()->getManager();
 
-        //set created by
-        $maintenance->setCreatedBy($this->getUser());
-
-        //check for status update check
-        if ($form->get('updateServiceStatuses'))
-        {
-          //update maintenance statuses and store histories
-          foreach ($maintenance->getMaintenanceServices() as $service)
-          {
-            if ($service->getStatus() != $service->getService()->getStatus())
-            {
-              $service->getService()->setStatus($service->getStatus());
-
-              $serviceStatusHistory = new ServiceStatusHistory();
-              $serviceStatusHistory->setService($service->getService());
-              $serviceStatusHistory->setStatus($service->getStatus());
-              $em->persist($serviceStatusHistory);
-            }
-          }
-        }
-
-        //set status and user of any updates
-        foreach ($maintenance->getMaintenanceUpdates() as $update)
-        {
-          $update->setStatus($maintenance->getStatus());
-          $update->setCreatedBy($this->getUser());
-        }
-
-        //persist maintenance
-        $em->persist($maintenance);
-        $em->flush();
-
-        //send email if services included
-        if ($maintenance->getMaintenanceServices())
-          $maintenanceCreatedMailer->send($maintenance);
-
-        //add to exchange calendar if enabled
-        if ($appConfig->getEnableExchangeCalendarSync())
-        {
-          $eventId = ExchangeEventGenerator::createEvent($maintenance);
-
-          //save to database
-          $exchangeEvent = new ExchangeCalendarEvent();
-          $exchangeEvent->setEventId($eventId);
-          $exchangeEvent->setMaintenance($maintenance);
-          $em->persist($exchangeEvent);
-          $em->flush();
-        }
+        $maintenanceManager->createMaintenance(
+          $maintenance,
+          $form->get('updateServiceStatuses')
+        );
 
         return $this->respond($maintenance);
       }
@@ -160,12 +105,7 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance/{hashId}", name="updateMaintenance", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function updateMaintenance(
-    $hashId,
-    Request $req,
-    MaintenanceUpdatedMailer $maintenanceUpdatedMailer,
-    AppConfig $appConfig
-  )
+  public function updateMaintenance($hashId, Request $req, MaintenanceManager $maintenanceManager)
   {
     try
     {
@@ -177,17 +117,9 @@ class MaintenanceApiController extends ApiController
       if (!$maintenance)
         throw new \Exception('Item not found');
 
-      //get array copy of original services
-      $originalServices = new ArrayCollection();
-
-      foreach ($maintenance->getMaintenanceServices() as $service)
-        $originalServices->add($service);
-
-      //get array copy of original updates
-      $originalUpdates = new ArrayCollection();
-
-      foreach ($maintenance->getMaintenanceUpdates() as $update)
-        $originalUpdates->add($update);
+      //get original updates and services to compare against
+      $originalServices = MaintenanceManager::getCurrentServices($maintenance);
+      $originalUpdates = MaintenanceManager::getCurrentUpdates($maintenance);
 
       //create form object for maintenance
       $form = $this->createForm(
@@ -203,84 +135,12 @@ class MaintenanceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        //get latest maintenance data
-        $maintenance = $form->getData();
-
-        $em = $this->getDoctrine()->getManager();
-
-        //remove deleted services from database
-        foreach ($originalServices as $service)
-        {
-          if ($maintenance->getMaintenanceServices()->contains($service) === false)
-            $em->remove($service);
-        }
-
-        //check for status update check
-        if ($form->get('updateServiceStatuses'))
-        {
-          //update maintenance statuses and store histories
-          foreach ($maintenance->getMaintenanceServices() as $service)
-          {
-            if ($service->getStatus() != $service->getService()->getStatus())
-            {
-              $service->getService()->setStatus($service->getStatus());
-
-              $serviceStatusHistory = new ServiceStatusHistory();
-              $serviceStatusHistory->setService($service->getService());
-              $serviceStatusHistory->setStatus($service->getStatus());
-              $em->persist($serviceStatusHistory);
-            }
-          }
-        }
-
-        //remove deleted updates from database
-        foreach ($originalUpdates as $update)
-        {
-          if ($maintenance->getMaintenanceUpdates()->contains($update) === false)
-            $em->remove($update);
-        }
-
-        //set status and user of new updates
-        foreach ($maintenance->getMaintenanceUpdates() as $update)
-        {
-          if ($originalUpdates->contains($update) === false)
-          {
-            $update->setStatus($maintenance->getStatus());
-            $update->setCreatedBy($this->getUser());
-          }
-        }
-
-        $em->flush();
-
-        //send email if services included
-        if ($maintenance->getMaintenanceServices())
-          $maintenanceUpdatedMailer->send($maintenance);
-
-        //update exchange calendar if enabled
-        if ($appConfig->getEnableExchangeCalendarSync())
-        {
-          $exchangeEvent = $maintenance->getExchangeCalendarEvent();
-
-          if ($exchangeEvent)
-            ExchangeEventGenerator::updateEvent($maintenance, $exchangeEvent->getEventId());
-          else
-          {
-            $eventId = ExchangeEventGenerator::createEvent($maintenance);
-
-            //save to database
-            $exchangeEvent = new ExchangeCalendarEvent();
-            $exchangeEvent->setEventId($eventId);
-            $exchangeEvent->setMaintenance($maintenance);
-            $em->persist($exchangeEvent);
-            $em->flush();
-          }
-        }
-
-        //update google calendar if enabled
-        if ($appConfig->getEnableGoogleCalendarSync())
-        {
-
-        }
+        $maintenanceManager->createMaintenance(
+          $maintenance,
+          $form->get('updateServiceStatuses'),
+          $originalServices,
+          $originalUpdates
+        );
 
         return $this->respond($maintenance);
       }
@@ -297,7 +157,7 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance/{hashId}", name="deleteMaintenance", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteMaintenance($hashId, AppConfig $appConfig)
+  public function deleteMaintenance($hashId)
   {
     try
     {
@@ -310,21 +170,8 @@ class MaintenanceApiController extends ApiController
       if (!$maintenance)
         return $this->respondWithErrors(['Invalid data']);
 
-      //delete from exchange calendar if enabled
-      if ($appConfig->getEnableExchangeCalendarSync())
-      {
-        //delete exchange event if found
-        $exchangeEvent = $maintenance->getExchangeCalendarEvent();
-        if ($exchangeEvent)
-        {
-          ExchangeEventGenerator::deleteEvent($exchangeEvent->getEventId());
-        }
-      }
-
       //delete maintenance
-      $maintenance->setDeletedOn(time());
-      $maintenance->setDeletedBy($this->getUser());
-      $this->getDoctrine()->getManager()->flush();
+      $maintenanceManager->deleteMaintenance($maintenance);
 
       //respond with object
       return $this->respond($maintenance);
