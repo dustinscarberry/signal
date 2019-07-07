@@ -58,9 +58,7 @@ class IncidentController extends AbstractController
   public function edit($hashId, Request $req, IncidentManager $incidentManager)
   {
     //get incident from database
-    $incident = $this->getDoctrine()
-      ->getRepository(Incident::class)
-      ->findByHashId($hashId);
+    $incident = $incidentManager->getIncident($hashId);
 
     if (!$incident)
       throw new \Exception('Incident not found');

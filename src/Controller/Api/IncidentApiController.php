@@ -149,9 +149,7 @@ class IncidentApiController extends ApiController
     try
     {
       //get incident
-      $incident = $this->getDoctrine()
-        ->getRepository(Incident::class)
-        ->findByHashId($hashId);
+      $incident = $incidentManager->getIncident($hashId);
 
       //check for valid incident
       if (!$incident)

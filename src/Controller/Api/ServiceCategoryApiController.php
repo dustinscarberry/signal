@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\ServiceCategory;
 use App\Form\ServiceCategoryType;
+use App\Service\Manager\ServiceCategoryManager;
 
 class ServiceCategoryApiController extends ApiController
 {
@@ -14,12 +15,9 @@ class ServiceCategoryApiController extends ApiController
   * @Route("/api/v1/servicecategories", name="getServiceCategories", methods={"GET"})
   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getServiceCategories()
+  public function getServiceCategories(ServiceCategoryManager $serviceCategoryManager)
   {
-    $serviceCategories = $this->getDoctrine()
-      ->getRepository(ServiceCategory::class)
-      ->findAllNotDeleted();
-
+    $serviceCategories = $serviceCategoryManager->getServiceCategories();
     return $this->respond($serviceCategories);
   }
 
@@ -27,12 +25,10 @@ class ServiceCategoryApiController extends ApiController
   * @Route("/api/v1/servicecategories/{hashId}", name="getServiceCategory", methods={"GET"})
   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getServiceCategory($hashId)
+  public function getServiceCategory($hashId, ServiceCategoryManager $serviceCategoryManager)
   {
     //get service category
-    $serviceCategory = $this->getDoctrine()
-      ->getRepository(ServiceCategory::class)
-      ->findByHashId($hashId);
+    $serviceCategory = $serviceCategoryManager->getServiceCategory($hashId);
 
     //check for valid service category
     if (!$serviceCategory)
@@ -46,7 +42,7 @@ class ServiceCategoryApiController extends ApiController
    * @Route("/api/v1/servicecategories", name="createServiceCategory", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createServiceCategory(Request $req)
+  public function createServiceCategory(Request $req, ServiceCategoryManager $serviceCategoryManager)
   {
     try
     {
@@ -67,11 +63,7 @@ class ServiceCategoryApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceCategory = $form->getData();
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($serviceCategory);
-        $em->flush();
+        $serviceCategoryManager->createServiceCategory($serviceCategory);
 
         //respond with object
         return $this->respond($serviceCategory);
@@ -89,17 +81,12 @@ class ServiceCategoryApiController extends ApiController
    * @Route("/api/v1/servicecategories/{hashId}", name="updateServiceCategory", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateServiceCategory(
-    $hashId,
-    Request $request
-  )
+  public function updateServiceCategory($hashId, Request $req, ServiceCategoryManager $serviceCategoryManager)
   {
     try
     {
       //get service from database
-      $serviceCategory = $this->getDoctrine()
-        ->getRepository(ServiceCategory::class)
-        ->findByHashId($hashId);
+      $serviceCategory = $serviceCategoryManager->getServiceCategory($hashId);
 
       if (!$serviceCategory)
         throw new \Exception('No service category found');
@@ -108,15 +95,13 @@ class ServiceCategoryApiController extends ApiController
       $form = $this->createForm(ServiceCategoryType::class, $serviceCategory, ['csrf_protection' => false]);
 
       //submit form
-      $data = json_decode($request->getContent(), true);
+      $data = json_decode($req->getContent(), true);
       $form->submit($data, false);
 
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceCategory = $form->getData();
-
-        $this->getDoctrine()->getManager()->flush();
+        $serviceCategoryManager->updateServiceCategory();
 
         //respond with object
         return $this->respond($serviceCategory);
@@ -134,23 +119,18 @@ class ServiceCategoryApiController extends ApiController
   * @Route("/api/v1/servicecategories/{hashId}", name="deleteServiceCategory", methods={"DELETE"})
   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteServiceCategory($hashId)
+  public function deleteServiceCategory($hashId, ServiceCategoryManager $serviceCategoryManager)
   {
     try
     {
       //get service category
-      $serviceCategory = $this->getDoctrine()
-        ->getRepository(ServiceCategory::class)
-        ->findByHashId($hashId);
+      $serviceCategory = $serviceCategoryManager->getServiceCategory($hashId);
 
       //check for valid service category
       if (!$serviceCategory)
         return $this->respondWithErrors(['Invalid service category']);
 
-      //delete service category
-      $serviceCategory->setDeletedOn(time());
-      $serviceCategory->setDeletedBy($this->getUser());
-      $this->getDoctrine()->getManager()->flush();
+      $serviceCategoryManager->deleteServiceCategory($serviceCategory);
 
       //respond with object
       return $this->respond($serviceCategory);

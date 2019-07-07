@@ -104,9 +104,7 @@ class MaintenanceApiController extends ApiController
     try
     {
       //get maintenance from database
-      $maintenance = $this->getDoctrine()
-        ->getRepository(Maintenance::class)
-        ->findByHashId($hashId);
+      $maintenance = $maintenanceManager->getMaintenance($hashId);
 
       if (!$maintenance)
         throw new \Exception('Item not found');
@@ -151,14 +149,12 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance/{hashId}", name="deleteMaintenance", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteMaintenance($hashId)
+  public function deleteMaintenance($hashId, MaintenanceManager $maintenanceManager)
   {
     try
     {
       //get maintenance
-      $maintenance = $this->getDoctrine()
-        ->getRepository(Maintenance::class)
-        ->findByHashId($hashId);
+      $maintenance = $maintenanceManager->getMaintenance($hashId);
 
       //check for valid maintenance
       if (!$maintenance)

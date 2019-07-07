@@ -9,6 +9,7 @@ use App\Entity\Service;
 use App\Entity\ServiceStatusHistory;
 use App\Form\ServiceType;
 use App\Service\Mail\Mailer\ServiceUpdatedMailer;
+use App\Service\Manager\ServiceManager;
 
 class ServiceApiController extends ApiController
 {
@@ -16,14 +17,11 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services", name="getServices", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getServices()
+  public function getServices(ServiceManager $serviceManager)
   {
     try
     {
-      $services = $this->getDoctrine()
-        ->getRepository(Service::class)
-        ->findAllNotDeleted();
-
+      $services = $serviceManager->getServices();
       return $this->respond($services);
     }
     catch (\Exception $e)
@@ -36,14 +34,12 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="getService", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getService($hashId)
+  public function getService($hashId, ServiceManager $serviceManager)
   {
     try
     {
       //get service
-      $service = $this->getDoctrine()
-        ->getRepository(Service::class)
-        ->findByHashId($hashId);
+      $service = $serviceManager->getService($hashId);
 
       //check for valid service
       if (!$service)
@@ -62,7 +58,7 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services", name="createService", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createService(Request $request)
+  public function createService(Request $req, ServiceManager $serviceManager)
   {
     try
     {
@@ -73,24 +69,13 @@ class ServiceApiController extends ApiController
       $form = $this->createForm(ServiceType::class, $service, ['csrf_protection' => false]);
 
       //submit form
-      $data = json_decode($request->getContent(), true);
+      $data = json_decode($req->getContent(), true);
       $form->submit($data);
-
-      //return $this->respond($data);
 
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $service = $form->getData();
-        $em = $this->getDoctrine()->getManager();
-
-        $serviceStatusHistory = new ServiceStatusHistory();
-        $serviceStatusHistory->setService($service);
-        $serviceStatusHistory->setStatus($service->getStatus());
-
-        $em->persist($service);
-        $em->persist($serviceStatusHistory);
-        $em->flush();
+        $serviceManager->createService($service);
 
         //respond with object
         return $this->respond($service);
@@ -108,24 +93,18 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="updateService", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateService(
-    $hashId,
-    Request $request,
-    ServiceUpdatedMailer $serviceUpdatedMailer
-  )
+  public function updateService($hashId, Request $req, ServiceManager $serviceManager)
   {
     try
     {
       //get service from database
-      $service = $this->getDoctrine()
-        ->getRepository(Service::class)
-        ->findByHashId($hashId);
+      $service = $serviceManager->getService($hashId);
 
       if (!$service)
         throw new \Exception('No service found');
 
       //get previous status
-      $serviceStatus = $service->getStatus();
+      $currentServiceStatus = $serviceManager->getCurrentServiceStatus($service);
 
       //create form object for service
       $form = $this->createForm(ServiceType::class, $service, ['csrf_protection' => false]);
@@ -137,22 +116,7 @@ class ServiceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $service = $form->getData();
-        $em = $this->getDoctrine()->getManager();
-
-        //add new service status history if changed
-        if ($serviceStatus != $service->getStatus())
-        {
-          $serviceStatusHistory = new ServiceStatusHistory();
-          $serviceStatusHistory->setService($service);
-          $serviceStatusHistory->setStatus($service->getStatus());
-          $em->persist($serviceStatusHistory);
-
-          //send update email
-          $serviceUpdatedMailer->send($service);
-        }
-
-        $em->flush();
+        $serviceManager->updateService($service, $currentServiceStatus);
 
         //respond with object
         return $this->respond($service);
@@ -170,24 +134,20 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="deleteService", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteService($hashId)
+  public function deleteService($hashId, ServiceManager $serviceManager)
   {
     try
     {
       //get service
-      $service = $this->getDoctrine()
-        ->getRepository(Service::class)
-        ->findByHashId($hashId);
+      $service = $serviceManager->getService($hashId);
 
       //check for valid service
       if (!$service)
         return $this->respondWithErrors(['Invalid service']);
 
       //delete service
-      $service->setDeletedOn(time());
-      $service->setDeletedBy($this->getUser());
-      $this->getDoctrine()->getManager()->flush();
-
+      $serviceManager->deleteService($service);
+        
       //respond with object
       return $this->respond($service);
     }

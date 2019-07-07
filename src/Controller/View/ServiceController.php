@@ -3,24 +3,20 @@
 namespace App\Controller\View;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Service\Mail\Mailer\ServiceUpdatedMailer;
 use App\Entity\Service;
-use App\Entity\ServiceStatusHistory;
 use App\Form\ServiceType;
+use App\Service\Manager\ServiceManager;
 
 class ServiceController extends AbstractController
 {
   /**
    * @Route("/dashboard/services", name="viewServices")
    */
-  public function viewall()
+  public function viewall(ServiceManager $serviceManager)
   {
-    $services = $this->getDoctrine()
-      ->getRepository(Service::class)
-      ->findAllNotDeleted();
+    $services = $serviceManager->getServices();
 
     return $this->render('dashboard/service/viewall.html.twig', [
       'services' => $services
@@ -28,9 +24,9 @@ class ServiceController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/services/add")
+   * @Route("/dashboard/services/add", name="addService")
    */
-  public function add(Request $request)
+  public function add(Request $req, ServiceManager $serviceManager)
   {
     //create service object
     $service = new Service();
@@ -39,21 +35,12 @@ class ServiceController extends AbstractController
     $form = $this->createForm(ServiceType::class, $service);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $service = $form->getData();
-      $em = $this->getDoctrine()->getManager();
-
-      $serviceStatusHistory = new ServiceStatusHistory();
-      $serviceStatusHistory->setService($service);
-      $serviceStatusHistory->setStatus($service->getStatus());
-
-      $em->persist($service);
-      $em->persist($serviceStatusHistory);
-      $em->flush();
+      $serviceManager->createService($service);
 
       $this->addFlash('success', 'Service created');
       return $this->redirectToRoute('viewServices');
@@ -68,45 +55,24 @@ class ServiceController extends AbstractController
   /**
    * @Route("/dashboard/services/{hashId}", name="editService")
    */
-  public function edit(
-    $hashId,
-    Request $request,
-    ServiceUpdatedMailer $serviceUpdatedMailer
-  )
+  public function edit($hashId, Request $req, ServiceManager $serviceManager)
   {
     //get service from database
-    $service = $this->getDoctrine()
-      ->getRepository(Service::class)
-      ->findByHashId($hashId);
+    $service = $serviceManager->getService($hashId);
 
     //get previous status
-    $serviceStatus = $service->getStatus();
+    $currentServiceStatus = $serviceManager->getCurrentServiceStatus($service);
 
     //create form object for service
     $form = $this->createForm(ServiceType::class, $service);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $service = $form->getData();
-      $em = $this->getDoctrine()->getManager();
-
-      //add new service status history if changed
-      if ($serviceStatus != $service->getStatus())
-      {
-        $serviceStatusHistory = new ServiceStatusHistory();
-        $serviceStatusHistory->setService($service);
-        $serviceStatusHistory->setStatus($service->getStatus());
-        $em->persist($serviceStatusHistory);
-
-        //send update email
-        $serviceUpdatedMailer->send($service);
-      }
-
-      $em->flush();
+      $serviceManager->updateService($service, $currentServiceStatus);
 
       $this->addFlash('success', 'Service updated');
       return $this->redirectToRoute('viewServices');

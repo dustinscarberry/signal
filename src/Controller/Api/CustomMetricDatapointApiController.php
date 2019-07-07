@@ -5,10 +5,9 @@ namespace App\Controller\Api;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use App\Entity\CustomMetric;
 use App\Entity\CustomMetricDatapoint;
-use App\Form\CustomMetricType;
 use App\Form\CustomMetricDatapointType;
+use App\Service\Manager\CustomMetricDatapointManager;
 
 class CustomMetricDatapointApiController extends ApiController
 {
@@ -16,11 +15,12 @@ class CustomMetricDatapointApiController extends ApiController
    * @Route("/api/v1/custommetricdatapoints", name="createCustomMetricDatapoint", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createCustomMetricDatapoint(Request $req)
+  public function createCustomMetricDatapoint(Request $req, CustomMetricDatapointManager $customMetricDatapointManager)
   {
     try
     {
       $datapoint = new CustomMetricDatapoint();
+
       $form = $this->createForm(
         CustomMetricDatapointType::class,
         $datapoint,
@@ -34,10 +34,7 @@ class CustomMetricDatapointApiController extends ApiController
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid())
       {
-        $datapoint = $form->getData();
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($datapoint);
-        $entityManager->flush();
+        $customMetricDatapointManager->createCustomMetricDatapoint($datapoint);
 
         return $this->respond($datapoint);
       }
@@ -54,23 +51,19 @@ class CustomMetricDatapointApiController extends ApiController
    * @Route("/api/v1/custommetricdatapoints/{hashId}", name="deleteCustomMetricDatapoint", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteCustomMetricDatapoint($hashId, Request $req)
+  public function deleteCustomMetricDatapoint($hashId, Request $req, CustomMetricDatapointManager $customMetricDatapointManager)
   {
     try
     {
       //get datapoint
-      $datapoint = $this->getDoctrine()
-        ->getRepository(CustomMetricDatapoint::class)
-        ->findByHashId($hashId);
+      $datapoint = $customMetricDatapointManager->getCustomMetricDatapoint($hashId);
 
       //check for valid datapoint
       if (!$datapoint)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete datapoint
-      $em = $this->getDoctrine()->getManager();
-      $em->remove($datapoint);
-      $em->flush();
+      $customMetricDatapointManager->deleteCustomMetricDatapoint($datapoint);
 
       //respond with object
       return $this->respond($datapoint);

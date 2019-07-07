@@ -6,9 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\CustomMetric;
-use App\Entity\CustomMetricDatapoint;
 use App\Form\CustomMetricType;
-use App\Form\CustomMetricDatapointType;
+use App\Service\Manager\CustomMetricManager;
 
 class CustomMetricApiController extends ApiController
 {
@@ -16,14 +15,11 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics", name="getCustomMetrics", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getCustomMetrics()
+  public function getCustomMetrics(CustomMetricManager $customMetricManager)
   {
     try
     {
-      $metrics = $this->getDoctrine()
-        ->getRepository(CustomMetric::class)
-        ->findAll();
-
+      $metrics = $customMetricManager->getCustomMetrics();
       return $this->respond($metrics);
     }
     catch (\Exception $e)
@@ -36,14 +32,12 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="getCustomMetric", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getCustomMetric($hashId)
+  public function getCustomMetric($hashId, CustomMetricManager $customMetricManager)
   {
     try
     {
       //get item
-      $metric = $this->getDoctrine()
-        ->getRepository(CustomMetric::class)
-        ->findByHashId($hashId);
+      $metric = $customMetricManager->getCustomMetric($hashId);
 
       //check for valid item
       if (!$metric)
@@ -62,11 +56,12 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics", name="createCustomMetric", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createCustomMetric(Request $req)
+  public function createCustomMetric(Request $req, CustomMetricManager $customMetricManager)
   {
     try
     {
       $metric = new CustomMetric();
+
       $form = $this->createForm(
         CustomMetricType::class,
         $metric,
@@ -80,10 +75,7 @@ class CustomMetricApiController extends ApiController
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid())
       {
-        $metric = $form->getData();
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($metric);
-        $entityManager->flush();
+        $customMetricManager->createCustomMetric($metric);
 
         return $this->respond($metric);
       }
@@ -100,14 +92,12 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="updateCustomMetric", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateCustomMetric($hashId, Request $req)
+  public function updateCustomMetric($hashId, Request $req, CustomMetricManager $customMetricManager)
   {
     try
     {
       //get metric from database
-      $metric = $this->getDoctrine()
-        ->getRepository(CustomMetric::class)
-        ->findByHashId($hashId);
+      $metric = $customMetricManager->getCustomMetric($hashId);
 
       if (!$metric)
         throw new \Exception('Object not found');
@@ -126,8 +116,7 @@ class CustomMetricApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $metric = $form->getData();
-        $this->getDoctrine()->getManager()->flush();
+        $customMetricManager->updateCustomMetric();
 
         return $this->respond($metric);
       }
@@ -144,24 +133,20 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="deleteCustomMetric", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteCustomMetric($hashId)
+  public function deleteCustomMetric($hashId, CustomMetricManager $customMetricManager)
   {
     try
     {
       //get metric
-      $metric = $this->getDoctrine()
-        ->getRepository(CustomMetric::class)
-        ->findByHashId($hashId);
+      $metric = $customMetricManager->getCustomMetric($hashId);
 
       //check for valid metric
       if (!$metric)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete metric
-      $em = $this->getDoctrine()->getManager();
-      $em->remove($metric);
-      $em->flush();
-
+      $customMetricManager->deleteCustomMetric($metric);
+      
       //respond with object
       return $this->respond($metric);
     }

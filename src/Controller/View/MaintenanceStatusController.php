@@ -7,17 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\MaintenanceStatus;
 use App\Form\MaintenanceStatusType;
+use App\Service\Manager\MaintenanceStatusManager;
 
 class MaintenanceStatusController extends AbstractController
 {
   /**
    * @Route("/dashboard/statuses/maintenance", name="viewMaintenanceStatuses")
    */
-  public function viewall()
+  public function viewall(MaintenanceStatusManager $maintenanceStatusManager)
   {
-    $statuses = $this->getDoctrine()
-      ->getRepository(MaintenanceStatus::class)
-      ->findAllNotDeleted();
+    $statuses = $maintenanceStatusManager->getMaintenanceStatuses();
 
     return $this->render('dashboard/maintenancestatus/viewall.html.twig', [
       'maintenanceStatuses' => $statuses
@@ -27,7 +26,7 @@ class MaintenanceStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/maintenance/add", name="addMaintenanceStatus")
    */
-  public function add(Request $request)
+  public function add(Request $req, MaintenanceStatusManager $maintenanceStatusManager)
   {
     //create status object
     $status = new MaintenanceStatus();
@@ -36,16 +35,12 @@ class MaintenanceStatusController extends AbstractController
     $form = $this->createForm(MaintenanceStatusType::class, $status);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $status = $form->getData();
-
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($status);
-      $em->flush();
+      $maintenanceStatusManager->createMaintenanceStatus($status);
 
       $this->addFlash('success', 'Maintenance Status created');
       return $this->redirectToRoute('viewMaintenanceStatuses');
@@ -60,24 +55,21 @@ class MaintenanceStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/maintenance/{hashId}", name="editMaintenanceStatus")
    */
-  public function edit($hashId, Request $request)
+  public function edit($hashId, Request $req, MaintenanceStatusManager $maintenanceStatusManager)
   {
     //get status from database
-    $status = $this->getDoctrine()
-      ->getRepository(MaintenanceStatus::class)
-      ->findByHashId($hashId);
+    $status = $maintenanceStatusManager->getMaintenanceStatus($hashId);
 
     //create form object for status
     $form = $this->createForm(MaintenanceStatusType::class, $status);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $status = $form->getData();
-      $this->getDoctrine()->getManager()->flush();
+      $maintenanceStatusManager->updateMaintenanceStatus();
 
       $this->addFlash('success', 'Maintenance Status updated');
       return $this->redirectToRoute('viewMaintenanceStatuses');

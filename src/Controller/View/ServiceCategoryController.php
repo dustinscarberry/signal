@@ -7,17 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\ServiceCategory;
 use App\Form\ServiceCategoryType;
+use App\Service\Manager\ServiceCategoryManager;
 
 class ServiceCategoryController extends AbstractController
 {
   /**
    * @Route("/dashboard/servicecategories", name="viewServiceCategories")
    */
-  public function viewall()
+  public function viewall(ServiceCategoryManager $serviceCategoryManager)
   {
-    $serviceCategories = $this->getDoctrine()
-      ->getRepository(ServiceCategory::class)
-      ->findAllNotDeleted();
+    $serviceCategories = $serviceCategoryManager->getServiceCategories();
 
     return $this->render('dashboard/servicecategory/viewall.html.twig', [
       'serviceCategories' => $serviceCategories
@@ -25,9 +24,9 @@ class ServiceCategoryController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/servicecategories/add")
+   * @Route("/dashboard/servicecategories/add", name="addServiceCategory")
    */
-  public function add(Request $request)
+  public function add(Request $req, ServiceCategoryManager $serviceCategoryManager)
   {
     //create service category object
     $serviceCategory = new ServiceCategory();
@@ -36,16 +35,12 @@ class ServiceCategoryController extends AbstractController
     $form = $this->createForm(ServiceCategoryType::class, $serviceCategory);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceCategory = $form->getData();
-
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($serviceCategory);
-      $em->flush();
+      $serviceCategoryManager->createServiceCategory($serviceCategory);
 
       $this->addFlash('success', 'Service Category created');
       return $this->redirectToRoute('viewServiceCategories');
@@ -60,25 +55,21 @@ class ServiceCategoryController extends AbstractController
   /**
    * @Route("/dashboard/servicecategories/{hashId}", name="editServiceCategory")
    */
-  public function edit($hashId, Request $request)
+  public function edit($hashId, Request $req, ServiceCategoryManager $serviceCategoryManager)
   {
     //get service from database
-    $serviceCategory = $this->getDoctrine()
-      ->getRepository(ServiceCategory::class)
-      ->findByHashId($hashId);
+    $serviceCategory = $serviceCategoryManager->getServiceCategory($hashId);
 
     //create form object for service
     $form = $this->createForm(ServiceCategoryType::class, $serviceCategory);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceCategory = $form->getData();
-
-      $this->getDoctrine()->getManager()->flush();
+      $serviceCategoryManager->updateServiceCategory();
 
       $this->addFlash('success', 'Service Category updated');
       return $this->redirectToRoute('viewServiceCategories');

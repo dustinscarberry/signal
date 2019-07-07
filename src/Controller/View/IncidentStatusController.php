@@ -7,17 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\IncidentStatus;
 use App\Form\IncidentStatusType;
+use App\Service\Manager\IncidentStatusManager;
 
 class IncidentStatusController extends AbstractController
 {
   /**
    * @Route("/dashboard/statuses/incident", name="viewIncidentStatuses")
    */
-  public function viewall()
+  public function viewall(IncidentStatusManager $incidentStatusManager)
   {
-    $statuses = $this->getDoctrine()
-      ->getRepository(IncidentStatus::class)
-      ->findAllNotDeleted();
+    $statuses = $incidentStatusManager->getIncidentStatuses();
 
     return $this->render('dashboard/incidentstatus/viewall.html.twig', [
       'incidentStatuses' => $statuses
@@ -27,7 +26,7 @@ class IncidentStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/incident/add", name="addIncidentStatus")
    */
-  public function add(Request $request)
+  public function add(Request $req, IncidentStatusManager $incidentStatusManager)
   {
     //create status object
     $status = new IncidentStatus();
@@ -36,16 +35,12 @@ class IncidentStatusController extends AbstractController
     $form = $this->createForm(IncidentStatusType::class, $status);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $status = $form->getData();
-
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($status);
-      $em->flush();
+      $incidentStatusManager->createIncidentStatus($status);
 
       $this->addFlash('success', 'Incident Status created');
       return $this->redirectToRoute('viewIncidentStatuses');
@@ -60,24 +55,21 @@ class IncidentStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/incident/{hashId}", name="editIncidentStatus")
    */
-  public function edit($hashId, Request $request)
+  public function edit($hashId, Request $req, IncidentStatusManager $incidentStatusManager)
   {
     //get status from database
-    $status = $this->getDoctrine()
-      ->getRepository(IncidentStatus::class)
-      ->findByHashId($hashId);
+    $status = $incidentStatusManager->getIncidentStatus($hashId);
 
     //create form object for status
     $form = $this->createForm(IncidentStatusType::class, $status);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $status = $form->getData();
-      $this->getDoctrine()->getManager()->flush();
+      $incidentStatusManager->updateIncidentStatus();
 
       $this->addFlash('success', 'Incident Status updated');
       return $this->redirectToRoute('viewIncidentStatuses');
