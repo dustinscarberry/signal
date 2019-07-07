@@ -5,12 +5,9 @@ namespace App\Controller\Api;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Entity\Incident;
-use App\Entity\ServiceStatusHistory;
 use App\Form\IncidentType;
-use App\Service\Mail\Mailer\IncidentCreatedMailer;
-use App\Service\Mail\Mailer\IncidentUpdatedMailer;
+use App\Service\Manager\IncidentManager;
 
 class IncidentApiController extends ApiController
 {
@@ -18,14 +15,11 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents", name="getIncidents", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncidents()
+  public function getIncidents(IncidentManager $incidentManager)
   {
     try
     {
-      $incidents = $this->getDoctrine()
-        ->getRepository(Incident::class)
-        ->findAllNotDeleted();
-
+      $incidents = $incidentManager->getIncidents();
       return $this->respond($incidents);
     }
     catch (\Exception $e)
@@ -38,14 +32,12 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="getIncident", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncident($hashId)
+  public function getIncident($hashId, IncidentManager $incidentManager)
   {
     try
     {
       //get incident
-      $incident = $this->getDoctrine()
-        ->getRepository(Incident::class)
-        ->findByHashId($hashId);
+      $incident = $incidentManager->getIncident($hashId);
 
       //check for valid incident
       if (!$incident)
@@ -63,10 +55,7 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents", name="createIncident", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function createIncident(
-    Request $req,
-    IncidentCreatedMailer $incidentCreatedMailer
-  )
+  public function createIncident(Request $req, IncidentManager $incidentManager)
   {
     try
     {
@@ -87,40 +76,7 @@ class IncidentApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $incident = $form->getData();
-        $em = $this->getDoctrine()->getManager();
-
-        //set user
-        $incident->setCreatedBy($this->getUser());
-
-        //update service statuses and store histories
-        foreach ($incident->getIncidentServices() as $service)
-        {
-          if ($service->getStatus() != $service->getService()->getStatus())
-          {
-            $service->getService()->setStatus($service->getStatus());
-
-            $serviceStatusHistory = new ServiceStatusHistory();
-            $serviceStatusHistory->setService($service->getService());
-            $serviceStatusHistory->setStatus($service->getStatus());
-            $em->persist($serviceStatusHistory);
-          }
-        }
-
-        //set status and user of any updates
-        foreach ($incident->getIncidentUpdates() as $update)
-        {
-           $update->setStatus($incident->getStatus());
-           $update->setCreatedBy($this->getUser());
-        }
-
-        //persist incident
-        $em->persist($incident);
-        $em->flush();
-
-        //send email if services included
-        if ($incident->getIncidentServices())
-          $incidentCreatedMailer->send($incident);
+        $incidentManager->createIncident($incident);
 
         return $this->respond($incident);
       }
@@ -137,11 +93,7 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="updateIncident", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function updateIncident(
-    $hashId,
-    Request $req,
-    IncidentUpdatedMailer $incidentUpdatedMailer
-  )
+  public function updateIncident($hashId, Request $req, IncidentManager $incidentManager)
   {
     try
     {
@@ -153,17 +105,9 @@ class IncidentApiController extends ApiController
       if (!$incident)
         throw new \Exception('Item not found');
 
-      //get array copy of original services
-      $originalServices = new ArrayCollection();
-
-      foreach ($incident->getIncidentServices() as $service)
-        $originalServices->add($service);
-
-      //get array copy of original updates
-      $originalUpdates = new ArrayCollection();
-
-      foreach ($incident->getIncidentUpdates() as $update)
-        $originalUpdates->add($update);
+      //get original updates and services to compare against
+      $originalServices = IncidentManager::getCurrentServices($incident);
+      $originalUpdates = IncidentManager::getCurrentUpdates($incident);
 
       //create form object for incident
       $form = $this->createForm(
@@ -179,54 +123,11 @@ class IncidentApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        //get latest incident data
-        $incident = $form->getData();
-
-        $em = $this->getDoctrine()->getManager();
-
-        //remove deleted services from database
-        foreach ($originalServices as $service)
-        {
-          if ($incident->getIncidentServices()->contains($service) === false)
-            $em->remove($service);
-        }
-
-        //update service statuses and store histories
-        foreach ($incident->getIncidentServices() as $service)
-        {
-          if ($service->getStatus() != $service->getService()->getStatus())
-          {
-            $service->getService()->setStatus($service->getStatus());
-
-            $serviceStatusHistory = new ServiceStatusHistory();
-            $serviceStatusHistory->setService($service->getService());
-            $serviceStatusHistory->setStatus($service->getStatus());
-            $em->persist($serviceStatusHistory);
-          }
-        }
-
-        //remove deleted updates from database
-        foreach ($originalUpdates as $update)
-        {
-          if ($incident->getIncidentUpdates()->contains($update) === false)
-            $em->remove($update);
-        }
-
-        //set status and user of new updates
-        foreach ($incident->getIncidentUpdates() as $update)
-        {
-          if ($originalUpdates->contains($update) === false)
-          {
-             $update->setStatus($incident->getStatus());
-             $update->setCreatedBy($this->getUser());
-          }
-        }
-
-        $em->flush();
-
-        //send email if services included
-        if ($incident->getIncidentServices())
-          $incidentUpdatedMailer->send($incident);
+        $incidentManager->updateIncident(
+          $incident,
+          $originalServices,
+          $originalUpdates
+        );
 
         return $this->respond($incident);
       }
@@ -243,7 +144,7 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="deleteIncident", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteIncident($hashId)
+  public function deleteIncident($hashId, IncidentManager $incidentManager)
   {
     try
     {
@@ -256,10 +157,8 @@ class IncidentApiController extends ApiController
       if (!$incident)
         return $this->respondWithErrors(['Invalid data']);
 
-      //soft delete incident
-      $incident->setDeletedOn(time());
-      $incident->setDeletedBy($this->getUser());
-      $this->getDoctrine()->getManager()->flush();
+      //delete incident
+      $incidentManager->deleteIncident($incident);
 
       //respond with object
       return $this->respond($incident);

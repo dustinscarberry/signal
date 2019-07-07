@@ -5,13 +5,8 @@ namespace App\Controller\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Incident;
-use App\Entity\ServiceStatusHistory;
 use App\Form\IncidentType;
-use App\Service\Mail\Mailer\IncidentCreatedMailer;
-use App\Service\Mail\Mailer\IncidentUpdatedMailer;
 use App\Service\Manager\IncidentManager;
 
 class IncidentController extends AbstractController
@@ -19,11 +14,9 @@ class IncidentController extends AbstractController
   /**
    * @Route("/dashboard/incidents", name="viewIncidents")
    */
-  public function viewall()
+  public function viewall(IncidentManager $incidentManager)
   {
-    $incidents = $this->getDoctrine()
-      ->getRepository(Incident::class)
-      ->findAllNotDeleted();
+    $incidents = $incidentManager->getIncidents();
 
     return $this->render('dashboard/incident/viewall.html.twig', [
       'incidents' => $incidents
@@ -31,9 +24,9 @@ class IncidentController extends AbstractController
   }
 
   /**
-   * @Route("/dashboard/incidents/add")
+   * @Route("/dashboard/incidents/add", name="addIncident")
    */
-  public function add(Request $request, IncidentCreatedMailer $incidentCreatedMailer, IncidentManager $incidentManager)
+  public function add(Request $req, IncidentManager $incidentManager)
   {
     //create incident object
     $incident = new Incident();
@@ -42,49 +35,12 @@ class IncidentController extends AbstractController
     $form = $this->createForm(IncidentType::class, $incident);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-
-
-
-
-
-
-
-      $em = $this->getDoctrine()->getManager();
-
-      //set user
-      $incident->setCreatedBy($this->getUser());
-
-      //update service statuses and store histories
-      foreach ($incident->getIncidentServices() as $service)
-      {
-        if ($service->getStatus() != $service->getService()->getStatus())
-        {
-          $service->getService()->setStatus($service->getStatus());
-
-          $serviceStatusHistory = new ServiceStatusHistory();
-          $serviceStatusHistory->setService($service->getService());
-          $serviceStatusHistory->setStatus($service->getStatus());
-          $em->persist($serviceStatusHistory);
-        }
-      }
-
-      $em->persist($incident);
-      $em->flush();
-
-      //send email if services included
-      if ($incident->getIncidentServices())
-        $incidentCreatedMailer->send($incident);
-
-
-
-
-
-
+      $incidentManager->createIncident($incident);
 
       $this->addFlash('success', 'Incident created');
       return $this->redirectToRoute('viewIncidents');
@@ -99,11 +55,7 @@ class IncidentController extends AbstractController
   /**
    * @Route("/dashboard/incidents/{hashId}", name="editIncident")
    */
-  public function edit(
-    $hashId,
-    Request $request,
-    IncidentUpdatedMailer $incidentUpdatedMailer
-  )
+  public function edit($hashId, Request $req, IncidentManager $incidentManager)
   {
     //get incident from database
     $incident = $this->getDoctrine()
@@ -113,92 +65,24 @@ class IncidentController extends AbstractController
     if (!$incident)
       throw new \Exception('Incident not found');
 
-
-
-
-
-    //get array copy of original services
-    $originalServices = new ArrayCollection();
-
-    foreach ($incident->getIncidentServices() as $service)
-      $originalServices->add($service);
-
-    //get array copy of original updates
-    $originalUpdates = new ArrayCollection();
-
-    foreach ($incident->getIncidentUpdates() as $update)
-      $originalUpdates->add($update);
-
-
-
-
+    //get original updates and services to compare against
+    $originalServices = IncidentManager::getCurrentServices($incident);
+    $originalUpdates = IncidentManager::getCurrentUpdates($incident);
 
     //create form object for incident
     $form = $this->createForm(IncidentType::class, $incident);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-
-
-
-
-
-
-      $em = $this->getDoctrine()->getManager();
-
-      //remove deleted services from database
-      foreach ($originalServices as $service)
-      {
-        if ($incident->getIncidentServices()->contains($service) === false)
-          $em->remove($service);
-      }
-
-      //update service statuses and store histories
-      foreach ($incident->getIncidentServices() as $service)
-      {
-        if ($service->getStatus() != $service->getService()->getStatus())
-        {
-          $service->getService()->setStatus($service->getStatus());
-
-          $serviceStatusHistory = new ServiceStatusHistory();
-          $serviceStatusHistory->setService($service->getService());
-          $serviceStatusHistory->setStatus($service->getStatus());
-          $em->persist($serviceStatusHistory);
-        }
-      }
-
-      //remove deleted updates from database
-      foreach ($originalUpdates as $update)
-      {
-        if ($incident->getIncidentUpdates()->contains($update) === false)
-          $em->remove($update);
-      }
-
-      //set status and user of new updates
-      foreach ($incident->getIncidentUpdates() as $update)
-      {
-        if ($originalUpdates->contains($update) === false)
-        {
-           $update->setStatus($incident->getStatus());
-           $update->setCreatedBy($this->getUser());
-        }
-      }
-
-      $em->flush();
-
-      //send email if services included
-      if ($incident->getIncidentServices())
-        $incidentUpdatedMailer->send($incident);
-
-
-
-
-
-        
+      $incidentManager->updateIncident(
+        $incident,
+        $originalServices,
+        $originalUpdates
+      );
 
       $this->addFlash('success', 'Incident updated');
       return $this->redirectToRoute('viewIncidents');

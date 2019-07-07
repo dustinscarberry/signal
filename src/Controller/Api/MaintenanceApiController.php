@@ -15,16 +15,12 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance", name="getMaintenances", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getMaintenances()
+  public function getMaintenances(MaintenanceManager $maintenanceManager)
   {
     try
     {
       //get maintenance
-      $maintenances = $this->getDoctrine()
-        ->getRepository(Maintenance::class)
-        ->findAllNotDeleted();
-
-      //respond with object
+      $maintenances = $maintenanceManager->getMaintenances();
       return $this->respond($maintenances);
     }
     catch (\Exception $e)
@@ -37,14 +33,12 @@ class MaintenanceApiController extends ApiController
    * @Route("/api/v1/maintenance/{hashId}", name="getMaintenance", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getMaintenance($hashId)
+  public function getMaintenance($hashId, MaintenanceManager $maintenanceManager)
   {
     try
     {
       //get maintenance
-      $maintenance = $this->getDoctrine()
-        ->getRepository(Maintenance::class)
-        ->findByHashId($hashId);
+      $maintenance = $maintenanceManager->getMaintenance($hashId);
 
       //check for valid maintenance
       if (!$maintenance)
@@ -135,7 +129,7 @@ class MaintenanceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $maintenanceManager->createMaintenance(
+        $maintenanceManager->updateMaintenance(
           $maintenance,
           $form->get('updateServiceStatuses'),
           $originalServices,

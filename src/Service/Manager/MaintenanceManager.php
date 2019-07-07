@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Security;
 use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
 use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
 use App\Service\ExchangeEventGenerator;
+use App\Entity\Maintenance;
 use App\Entity\ServiceStatusHistory;
 use App\Entity\ExchangeCalendarEvent;
 use App\Entity\GoogleCalendarEvent;
@@ -147,6 +148,22 @@ class MaintenanceManager
     $maintenance->setDeletedOn(time());
     $maintenance->setDeletedBy($this->security->getUser());
     $this->em->flush();
+  }
+
+  public function getMaintenance($hashId)
+  {
+    //get maintenance
+    return $this->em
+      ->getRepository(Maintenance::class)
+      ->findByHashId($hashId);
+  }
+
+  public function getMaintenances()
+  {
+    //get maintenance
+    return $this->em
+      ->getRepository(Maintenance::class)
+      ->findAllNotDeleted();
   }
 
   private function sendNotificationEmails($action, $maintenance)

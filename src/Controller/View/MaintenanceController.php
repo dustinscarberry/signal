@@ -14,11 +14,9 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance", name="viewAllMaintenance")
    */
-  public function viewall()
+  public function viewall(MaintenanceManager $maintenanceManager)
   {
-    $maintenance = $this->getDoctrine()
-      ->getRepository(Maintenance::class)
-      ->findAllNotDeleted();
+    $maintenance = $maintenanceManager->getMaintenances();
 
     return $this->render('dashboard/maintenance/viewall.html.twig', [
       'maintenance' => $maintenance
@@ -80,7 +78,7 @@ class MaintenanceController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $maintenanceManager->createMaintenance(
+      $maintenanceManager->updateMaintenance(
         $maintenance,
         $form->get('updateServiceStatuses'),
         $originalServices,
