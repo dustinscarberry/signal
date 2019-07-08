@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Form\WidgetAPIType;
 use App\Entity\Widget;
+use App\Service\Manager\WidgetManager;
 
 class WidgetApiController extends ApiController
 {
@@ -14,12 +15,9 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets", name="readWidgets", methods={"GET"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function readWidgets()
+  public function readWidgets(WidgetManager $widgetManager)
   {
-    $widgets = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findAllSorted();
-
+    $widgets = $widgetManager->getWidgets();
     return $this->respond($widgets);
   }
 
@@ -27,51 +25,10 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets/{hashId}", name="readWidget", methods={"GET"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function readWidget($hashId)
+  public function readWidget($hashId, WidgetManager $widgetManager)
   {
-    $widget = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findByHashId($hashId);
-
+    $widget = $widgetManager->getWidget($hashId);
     return $this->respond($widget);
-  }
-
-  /**
-   * @Route("/api/v1/widgets/{hashId}", name="updateWidget", methods={"PATCH"})
-   * @Security("is_granted('ROLE_ADMIN')")
-   */
-  public function updateWidget($hashId, Request $request)
-  {
-    $widget = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findByHashId($hashId);
-
-    if (!$widget)
-      throw $this->createNotFoundException(
-        'No widget found for id '. $hashId
-      );
-
-    $form = $this->createForm(WidgetAPIType::class, $widget);
-    $data = json_decode($request->getContent(), true);
-
-    if (isset($data['attributes']))
-      $data['attributes'] = json_encode($data['attributes']);
-
-    $form->submit($data);
-
-    //save widget updates to database if valid
-    if ($form->isSubmitted() && $form->isValid())
-    {
-      $widget = $form->getData();
-      $entityManager = $this->getDoctrine()->getManager();
-      $entityManager->flush();
-
-      return $this->respond($widget);
-    }
-
-    return $this->respondWithErrors([
-      'Invalid Data'
-    ]);
   }
 
   /**
@@ -79,11 +36,11 @@ class WidgetApiController extends ApiController
    * @Security("is_granted('ROLE_ADMIN')")
    * Pass {type, sortorder, attributes}
    */
-  public function createWidget(Request $request)
+  public function createWidget(Request $req, WidgetManager $widgetManager)
   {
     $widget = new Widget();
     $form = $this->createForm(WidgetAPIType::class, $widget);
-    $data = json_decode($request->getContent(), true);
+    $data = json_decode($req->getContent(), true);
 
     if (isset($data['attributes']))
       $data['attributes'] = json_encode($data['attributes']);
@@ -93,10 +50,40 @@ class WidgetApiController extends ApiController
     //save new widget to database if valid
     if ($form->isSubmitted() && $form->isValid())
     {
-      $widget = $form->getData();
-      $entityManager = $this->getDoctrine()->getManager();
-      $entityManager->persist($widget);
-      $entityManager->flush();
+      $widgetManager->createWidget($widget);
+      return $this->respond($widget);
+    }
+
+    return $this->respondWithErrors([
+      'Invalid Data'
+    ]);
+  }
+
+  /**
+   * @Route("/api/v1/widgets/{hashId}", name="updateWidget", methods={"PATCH"})
+   * @Security("is_granted('ROLE_ADMIN')")
+   */
+  public function updateWidget($hashId, Request $req, WidgetManager $widgetManager)
+  {
+    $widget = $widgetManager->getWidget($hashId);
+
+    if (!$widget)
+      throw $this->createNotFoundException(
+        'No widget found for id '. $hashId
+      );
+
+    $form = $this->createForm(WidgetAPIType::class, $widget);
+    $data = json_decode($req->getContent(), true);
+
+    if (isset($data['attributes']))
+      $data['attributes'] = json_encode($data['attributes']);
+
+    $form->submit($data);
+
+    //save widget updates to database if valid
+    if ($form->isSubmitted() && $form->isValid())
+    {
+      $widgetManager->updateWidget();
 
       return $this->respond($widget);
     }
@@ -110,20 +97,17 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets/{hashId}", name="deleteWidget", methods={"DELETE"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function deleteWidget($hashId)
+  public function deleteWidget($hashId, WidgetManager $widgetManager)
   {
-    $widget = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findByHashId($hashId);
+    $widget = $widgetManager->getWidget($hashId);
 
     if (!$widget)
       throw $this->createNotFoundException(
         'No widget found for id '. $hashId
       );
 
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->remove($widget);
-    $entityManager->flush();
+    //delete widget
+    $widgetManager->deleteWidget($widget);
 
     return $this->respondWithNull();
   }

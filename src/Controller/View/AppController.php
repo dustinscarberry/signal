@@ -62,7 +62,7 @@ class AppController extends AbstractController
   /**
    * @Route("/subscription/{subscriptionID}", name="manageSubscription")
    */
-  public function manageSubscription($subscriptionID, Request $request, SubscriptionManagement $subscriptionManagement)
+  public function manageSubscription($subscriptionID, Request $req, SubscriptionManagement $subscriptionManagement)
   {
     //initialize subscription management fields
     $subscriptionManagement->initialize($subscriptionID);
@@ -71,12 +71,11 @@ class AppController extends AbstractController
     $form = $this->createForm(SubscriptionManagementType::class, $subscriptionManagement);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $subscriptionManagement = $form->getData();
       $subscriptionManagement->update($subscriptionID);
 
       $this->addFlash('success', 'Subscription updated');

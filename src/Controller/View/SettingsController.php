@@ -15,18 +15,16 @@ class SettingsController extends AbstractController
   /**
    * @Route("/dashboard/settings")
    */
-  public function update(Request $request, AppConfig $appConfig)
+  public function update(Request $req, AppConfig $appConfig)
   {
     $form = $this->createForm(SettingType::class, $appConfig);
 
     $previousLogo = $appConfig->getLogo();
 
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     if ($form->isSubmitted() && $form->isValid())
     {
-      $appConfig = $form->getData();
-
       $logo = $appConfig->getLogo();
 
       if ($logo)
@@ -47,6 +45,7 @@ class SettingsController extends AbstractController
         $appConfig->setLogo($previousLogo);
 
       $appConfig->save();
+
       $this->addFlash('success', 'App settings updated');
     }
 

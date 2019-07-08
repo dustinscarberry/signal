@@ -5,7 +5,6 @@ namespace App\Controller\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\User;
 use App\Form\UserType;
 
 class AccountController extends AbstractController
@@ -13,7 +12,7 @@ class AccountController extends AbstractController
   /**
    * @Route("/dashboard/account", name="viewAccount")
    */
-  public function view(Request $request, Security $security)
+  public function view(Request $req)
   {
     $user = $this->getUser();
 
@@ -21,7 +20,7 @@ class AccountController extends AbstractController
     $form = $this->createForm(UserType::class, $user);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
