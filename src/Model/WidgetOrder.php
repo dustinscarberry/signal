@@ -34,7 +34,7 @@ class WidgetOrder
     $widgetCount = count($this->widgetIDs);
     for ($i = 0; $i < $widgetCount; $i++)
     {
-      $widget = $respository->find($this->widgetIDs[$i]);
+      $widget = $respository->findByHashId($this->widgetIDs[$i]);
       $widget->setSortorder($i);
     }
 

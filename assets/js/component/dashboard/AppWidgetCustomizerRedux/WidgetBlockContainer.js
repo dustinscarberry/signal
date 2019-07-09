@@ -159,6 +159,7 @@ class WidgetBlockContainer extends React.Component
   async saveWidgetsOrder()
   {
     const widgetIDs = this.props.widgets.map(widget => widget.id);
+    this.updateWidgetOrderInDB(widgetIDs);
   }
 
   getBlockTitle()
