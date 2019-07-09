@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Service\HashIdGenerator;
+use App\Service\Generator\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
