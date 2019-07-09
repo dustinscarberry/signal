@@ -5,12 +5,13 @@ namespace App\Controller\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Widget;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
 use App\Form\SubscriptionManagementType;
-use App\Service\Mail\Mailer\SubscriptionCreatedMailer;
-
+use App\Service\Manager\SubscriptionManager;
+use App\Service\Manager\WidgetManager;
+use App\Service\Manager\IncidentManager;
+use App\Service\Manager\MaintenanceManager;
 use App\Model\SubscriptionManagement;
 
 class AppController extends AbstractController
@@ -18,11 +19,13 @@ class AppController extends AbstractController
   /**
    * @Route("/")
    */
-  public function home(Request $request, SubscriptionCreatedMailer $subscriptionMailer)
+  public function home(
+    Request $req,
+    SubscriptionManager $subscriptionManager,
+    WidgetManager $widgetManager
+  )
   {
-    $widgets = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findAllSorted();
+    $widgets = $widgetManager->getWidgets();
 
     //create subscription object
     $subscription = new Subscription();
@@ -31,19 +34,12 @@ class AppController extends AbstractController
     $form = $this->createForm(SubscriptionType::class, $subscription);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $subscription = $form->getData();
-
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($subscription);
-      $em->flush();
-
-      //send subscription created email to user
-      $subscriptionMailer->send($subscription);
+      $subscriptionManager->createSubscription($subscription);
 
       $this->addFlash('success', 'Congrats! Your subscribed');
 
@@ -83,6 +79,30 @@ class AppController extends AbstractController
 
     return $this->render('app/subscription.html.twig', [
       'subscriptionManagementForm' => $form->createView()
+    ]);
+  }
+
+  /**
+   * @Route("/incident/{incidentId}", name="viewIncident")
+   */
+  public function viewIncident($incidentId, IncidentManager $incidentManager)
+  {
+    $incident = $incidentManager->getIncident($incidentId);
+
+    return $this->render('app/viewincident.html.twig', [
+      'incident' => $incident
+    ]);
+  }
+
+  /**
+   * @Route("/maintenance/{maintenanceId}", name="viewMaintenance")
+   */
+  public function viewMaintenance($maintenanceId, MaintenanceManager $maintenanceManager)
+  {
+    $maintenance = $maintenanceManager->getMaintenance($maintenanceId);
+
+    return $this->render('app/viewmaintenance.html.twig', [
+      'maintenance' => $maintenance
     ]);
   }
 }
