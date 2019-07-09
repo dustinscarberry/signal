@@ -21,7 +21,27 @@
           <div class="log-viewer">
 
           {% for line in logData %}
-            <div class="log-row">{{ line.type }}{{ line.time }}{{ line.errorType }}{{ line.message }}</div>
+
+            {% if line.type == 'debug' %}
+              {% set lineClass = 'log-row-debug' %}
+            {% elseif line.type == 'error' %}
+              {% set lineClass = 'log-row-error' %}
+            {% elseif line.type == 'critical' %}
+              {% set lineClass = 'log-row-critical' %}
+            {% elseif line.type == 'info' %}
+              {% set lineClass = 'log-row-info' %}
+            {% else %}
+              {% set lineClass = 'log-row-d' %}
+            {% endif %}
+
+            <div class="log-row {{ lineClass }}">
+              <span class="log-icon"></span>
+              <div class="log-description">
+                <span class="log-datetime">{{ line.time }}</span>
+                <span class="log-message">{{ line.component }}: {{ line.message }}</span>
+              </div>
+            </div>
+
           {% endfor %}
 
           </div>

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Generator;
 
-class LogManager
+class LogGenerator
 {
   public static function parseLog($path, $maxLines = 100, $reverseLog = true)
   {
@@ -28,7 +28,7 @@ class LogManager
       $line = str_replace($time, '', $line);
       $errorType = strtok($line, ':') . ':';
       $message = trim(str_replace($errorType, '', $line));
-      $errorType = trim(rtrim($errorType, ':'));
+      //$errorType = trim(rtrim($errorType, ':'));
 
       if (strpos($errorType, 'DEBUG') !== false)
         $data->type = 'debug';
@@ -47,8 +47,11 @@ class LogManager
       else if (strpos($errorType, 'EMERGENCY') != false)
         $data->type = 'emergency';
 
+      $componentPiece = strrchr($errorType, '.');
+      $component = strtoupper(trim(str_replace($componentPiece, '', $errorType)));
+
       $data->time = $time;
-      $data->errorType = $errorType;
+      $data->component = $component;
       $data->message = $message;
       $logData[] = $data;
     }

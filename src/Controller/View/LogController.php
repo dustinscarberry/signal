@@ -4,7 +4,7 @@ namespace App\Controller\View;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Service\Manager\LogManager;
+use App\Service\Generator\LogGenerator;
 
 class LogController extends AbstractController
 {
@@ -16,7 +16,7 @@ class LogController extends AbstractController
     $path = $this->getParameter('kernel.logs_dir') . '/'
       . $this->getParameter('kernel.environment') . '.log';
 
-    $logData = LogManager::parseLog($path);
+    $logData = LogGenerator::parseLog($path);
 
     return $this->render('dashboard/log/view.html.twig', [
       'logData' => $logData

@@ -645,13 +645,97 @@
 //log viewer
 .log-viewer{
   overflow: hidden;
+  font-family: 'Inconsolata', monospace;
 
   .log-row{
-    padding: 1rem;
     line-height: 1.4;
+    position: relative;
 
     &:nth-child(odd){
-      background: #ddd;
+      background: #dedede40
     }
+  }
+
+  .log-icon{
+    position: absolute;
+    width: 50px;
+    border-right: 5px solid #fff;
+    top: 0;
+    bottom: 0;
+  }
+
+  .log-icon::before{
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-weight: 900;
+    font-family: "Font Awesome 5 Free";
+    font-size: 1.8rem;
+    padding-top: 1rem;
+    width: 45px;
+    text-align: center;
+  }
+
+  .log-row-error{
+    .log-icon{
+      border-right-color: #ff3547;
+    }
+
+    .log-icon::before{
+      color: #ff3547;
+      content: "\f12a";
+    }
+  }
+
+  .log-row-critical{
+    .log-icon{
+      border-right-color: #ff3547;
+    }
+
+    .log-icon::before{
+      color: #ff3547;
+      content: "\f06a";
+    }
+  }
+
+  .log-row-debug{
+    .log-icon{
+      border-right-color: #999;
+    }
+
+    .log-icon::before{
+      color: #999;
+      content: "\f188";
+    }
+  }
+
+  .log-row-info{
+    .log-icon{
+      border-right-color: #1e87f0;
+    }
+
+    .log-icon::before{
+      color: #1e87f0;
+      content: "\f129";
+    }
+  }
+
+  .log-description{
+    display: block;
+    margin-left: 50px;
+    padding: 1rem;
+  }
+
+  .log-datetime{
+    display: inline-block;
+    font-style: italic;
+  }
+
+  .log-message{
+    display: inline-block;
   }
 }
