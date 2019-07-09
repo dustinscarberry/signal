@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\ServiceCategory;
 use App\Form\Type\SubscriptionGroupType;
-use App\Service\SubscriptionManagement;
+use App\Model\SubscriptionManagement;
 
 class SubscriptionManagementType extends AbstractType
 {

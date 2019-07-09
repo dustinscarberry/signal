@@ -5,18 +5,16 @@ namespace App\Controller\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Entity\Subscription;
+use App\Service\Manager\SubscriptionManager;
 
 class SubscriptionController extends AbstractController
 {
   /**
    * @Route("/dashboard/subscriptions", name="viewSubscriptions")
    */
-  public function viewall()
+  public function viewall(SubscriptionManager $subscriptionManager)
   {
-    $subscriptions = $this->getDoctrine()
-      ->getRepository(Subscription::class)
-      ->findAll();
+    $subscriptions = $subscriptionManager->getSubscriptions();
 
     return $this->render('dashboard/subscription/viewall.html.twig', [
       'subscriptions' => $subscriptions

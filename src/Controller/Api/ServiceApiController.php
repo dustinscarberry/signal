@@ -6,9 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\Service;
-use App\Entity\ServiceStatusHistory;
 use App\Form\ServiceType;
-use App\Service\Mail\Mailer\ServiceUpdatedMailer;
 use App\Service\Manager\ServiceManager;
 
 class ServiceApiController extends ApiController
@@ -147,7 +145,7 @@ class ServiceApiController extends ApiController
 
       //delete service
       $serviceManager->deleteService($service);
-        
+
       //respond with object
       return $this->respond($service);
     }

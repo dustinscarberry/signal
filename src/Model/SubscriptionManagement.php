@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Model;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Service;
@@ -84,7 +84,6 @@ class SubscriptionManagement
     foreach ($serviceCategories as $serviceCategory)
     {
       $indexer = 'serviceCategory-' . $serviceCategory->getId();
-
       $this->$indexer = [];
 
       foreach ($serviceCategory->getServices() as $service)

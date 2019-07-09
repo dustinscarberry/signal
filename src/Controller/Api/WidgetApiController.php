@@ -84,7 +84,7 @@ class WidgetApiController extends ApiController
     if ($form->isSubmitted() && $form->isValid())
     {
       $widgetManager->updateWidget();
-
+      
       return $this->respond($widget);
     }
 

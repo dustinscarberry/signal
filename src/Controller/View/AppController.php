@@ -11,7 +11,7 @@ use App\Form\SubscriptionType;
 use App\Form\SubscriptionManagementType;
 use App\Service\Mail\Mailer\SubscriptionCreatedMailer;
 
-use App\Service\SubscriptionManagement;
+use App\Model\SubscriptionManagement;
 
 class AppController extends AbstractController
 {

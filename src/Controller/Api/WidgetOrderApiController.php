@@ -14,16 +14,15 @@ class WidgetOrderApiController extends ApiController
    * @Route("/api/v1/widgetsorder", name="updateWidgetsOrder", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateWidgetsOrder(Request $request, WidgetOrder $widgetOrder)
+  public function updateWidgetsOrder(Request $req, WidgetOrder $widgetOrder)
   {
     $form = $this->createForm(WidgetOrderAPIType::class, $widgetOrder);
-    $data = json_decode($request->getContent(), true);
+    $data = json_decode($req->getContent(), true);
     $form->submit($data);
 
     //save widget updates to database if valid
     if ($form->isSubmitted() && $form->isValid())
     {
-      $widgetOrder = $form->getData();
       $widgetOrder->save();
 
       return $this->respond($widgetOrder);

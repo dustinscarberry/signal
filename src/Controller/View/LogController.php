@@ -4,6 +4,7 @@ namespace App\Controller\View;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\Manager\LogManager;
 
 class LogController extends AbstractController
 {
@@ -12,19 +13,13 @@ class LogController extends AbstractController
    */
   public function logs()
   {
-    $path = $this->getParameter('kernel.project_dir') . '/var/log/dev.log';
-    $file = new \SplFileObject($path, 'r');
-  	$file->seek(PHP_INT_MAX);
-  	$last_line = $file->key();
-  	$lines = new \LimitIterator($file, $last_line - 100, $last_line);
-  	$lines = array_reverse(iterator_to_array($lines));
+    $path = $this->getParameter('kernel.logs_dir') . '/'
+      . $this->getParameter('kernel.environment') . '.log';
 
-    //remove blank line at beginning
-    if ($lines)
-      array_shift($lines);
+    $logData = LogManager::parseLog($path);
 
     return $this->render('dashboard/log/view.html.twig', [
-      'logContentLines' => $lines
+      'logData' => $logData
     ]);
   }
 }

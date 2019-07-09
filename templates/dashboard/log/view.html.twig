@@ -20,8 +20,8 @@
         <div class="dashboard-panel-block">
           <div class="log-viewer">
 
-          {% for line in logContentLines %}
-            <div class="log-row">{{ line }}</div>
+          {% for line in logData %}
+            <div class="log-row">{{ line.type }}{{ line.time }}{{ line.errorType }}{{ line.message }}</div>
           {% endfor %}
 
           </div>

@@ -5,21 +5,18 @@ namespace App\Controller\View;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use App\Form\UserType;
-use App\Service\ApiTokenGenerator;
+use App\Service\Manager\UserManager;
 
 class UserController extends AbstractController
 {
   /**
    * @Route("/dashboard/users", name="viewUsers")
    */
-  public function viewall()
+  public function viewall(UserManager $userManager)
   {
-    $users = $this->getDoctrine()
-      ->getRepository(User::class)
-      ->findAllNotDeleted();
+    $users = $userManager->getUsers();
 
     return $this->render('dashboard/user/viewall.html.twig', [
       'users' => $users
@@ -29,7 +26,7 @@ class UserController extends AbstractController
   /**
    * @Route("/dashboard/users/add")
    */
-  public function add(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+  public function add(Request $req, UserManager $userManager)
   {
     //create user object
     $user = new User();
@@ -38,20 +35,12 @@ class UserController extends AbstractController
     $form = $this->createForm(UserType::class, $user);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $user = $form->getData();
-
-      //encode password and add roles
-      $user->setPassword($passwordEncoder->encodePassword($user, $user->getPassword()));
-      $user->setRoles(['ROLE_ADMIN']);
-
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($user);
-      $em->flush();
+      $userManager->createUser($user);
 
       $this->addFlash('success', 'User added');
       return $this->redirectToRoute('viewUsers');
@@ -66,53 +55,38 @@ class UserController extends AbstractController
   /**
    * @Route("/dashboard/users/{hashId}", name="editUser")
    */
-  public function edit(
-    $hashId,
-    Request $request,
-    UserPasswordEncoderInterface $passwordEncoder
-  )
+  public function edit($hashId, Request $req, UserManager $userManager)
   {
     //get user from database
-    $user = $this->getDoctrine()
-      ->getRepository(User::class)
-      ->findByHashId($hashId);
+    $user = $userManager->getUser($hashId);
 
     //create form object for user
     $form = $this->createForm(UserType::class, $user);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $action = $request->request->get('regenerateApiToken')
+      $action = $req->request->get('regenerateApiToken')
         ? 'regenerateApiToken'
         : 'updateUser';
 
       if ($action == 'regenerateApiToken')
       {
-        $token = ApiTokenGenerator::generate();
-        $user->setApiToken($token);
+        $user = $userManager->regenerateApiToken($user);
 
-        $this->getDoctrine()->getManager()->flush();
-
+        //refresh form with new api token included for user
         $form = $this->createForm(UserType::class, $user);
 
         $this->addFlash('success', 'API Token Regenerated');
       }
       else if ($action == 'updateUser')
       {
-        $user = $form->getData();
-
-        //get new password field
+        //get new password field and update user
         $newPassword = $form->get('password')->getData();
-
-        //change password if valid
-        if ($newPassword)
-          $user->setPassword($passwordEncoder->encodePassword($user, $newPassword));
-
-        $this->getDoctrine()->getManager()->flush();
+        $userManager->updateUser($user, $newPassword);
 
         $this->addFlash('success', 'User updated');
         return $this->redirectToRoute('viewUsers');

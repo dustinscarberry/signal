@@ -5,19 +5,17 @@ namespace App\Controller\Api;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use App\Entity\Widget;
 use App\Service\Api\WidgetDataGenerator;
+use App\Service\Manager\WidgetManager;
 
 class WidgetDataApiController extends ApiController
 {
   /**
    * @Route("/api/v1/widgetsdata/{hashId}", name="readWidgetsData", methods={"GET"})
    */
-  public function readWidgetsData($hashId, WidgetDataGenerator $widgetDataGenerator)
+  public function readWidgetsData($hashId, WidgetDataGenerator $widgetDataGenerator, WidgetManager $widgetManager)
   {
-    $widget = $this->getDoctrine()
-      ->getRepository(Widget::class)
-      ->findByHashId($hashId);
+    $widget = $widgetManager->getWidget($hashId);
 
     if ($widget)
     {
