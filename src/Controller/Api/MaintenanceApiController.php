@@ -81,7 +81,7 @@ class MaintenanceApiController extends ApiController
 
         $maintenanceManager->createMaintenance(
           $maintenance,
-          $form->get('updateServiceStatuses')
+          $form->get('updateServiceStatuses')->getData()
         );
 
         return $this->respond($maintenance);
@@ -129,7 +129,7 @@ class MaintenanceApiController extends ApiController
       {
         $maintenanceManager->updateMaintenance(
           $maintenance,
-          $form->get('updateServiceStatuses'),
+          $form->get('updateServiceStatuses')->getData(),
           $originalServices,
           $originalUpdates
         );

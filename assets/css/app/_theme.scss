@@ -1,8 +1,81 @@
 //light theme is default - no specific overrides
 
+//medium dark theme
+.theme-mediumdark{
+  background: #21252b;
+
+  .app-logo i{
+    color: #eee;
+  }
+
+  .app-logo h3{
+    color: #eee;
+  }
+
+  .widget-header{
+    color: #eee;
+  }
+
+  .service-list,
+  .service-list-group{
+    background: #ccc;
+  }
+
+  .service-group-name{
+    background: #aaa;
+  }
+
+  .incident-list-item,
+  .maintenance-list-item{
+    background: #ccc;
+  }
+
+  .subscription-group-items{
+    background: #ccc;
+  }
+
+  .metrics-overview-widget{
+    background: #ccc;
+  }
+
+  .service-uptime-chart-widget,
+  .custom-metric-chart-widget{
+    background: #ccc;
+  }
+
+  .modal-content{
+    background: #ccc;
+  }
+
+  .modal-header{
+    border-bottom-color: #bcbcbc;
+  }
+
+  .modal-footer{
+    border-top-color: #bcbcbc;
+  }
+
+  .subscription-group-header{
+    color: #eee;
+  }
+
+  .incident-list-widget .incident-list-item,
+  .maintenance-list-widget .maintenance-list-item{
+    border-color: #bcbcbc;
+  }
+
+  .loader{
+    background: #fff;
+  }
+
+  a{
+    color: #eee;
+  }
+}
+
 //dark theme
 .theme-dark{
-  background: #21252b;
+  background: #121212;
 
   .app-logo i{
     color: #eee;

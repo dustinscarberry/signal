@@ -30,7 +30,7 @@
             {% for subscription in subscriptions %}
             <tr data-id="{{ subscription.hashId }}">
               <td>{{ subscription.email }}</td>
-              <td>{{ subscription.created|date("m/d/Y g:ia") }}</td>
+              <td>{{ subscription.created|date("m/d/Y g:ia", config.siteTimezone) }}</td>
               <td>
                 <button class="btn btn-error pull-right btn-delete">Delete</button>
               </td>

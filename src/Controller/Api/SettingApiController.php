@@ -16,17 +16,15 @@ class SettingApiController extends ApiController
    * @Route("/api/v1/settings", name="updateSettings", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateSettings(Request $request, AppConfig $appConfig)
+  public function updateSettings(Request $req, AppConfig $appConfig)
   {
     $form = $this->createForm(SettingType::class, $appConfig);
 
-    $data = json_decode($request->getContent(), true);
+    $data = json_decode($req->getContent(), true);
     $form->submit($data, false);
 
     if ($form->isSubmitted() && $form->isValid())
     {
-      $appConfig = $form->getData();
-
       $logo = $appConfig->getLogo();
 
       if ($logo instanceof UploadedFile)

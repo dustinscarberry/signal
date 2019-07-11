@@ -17,9 +17,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Model\AppConfig;
 
 class MaintenanceType extends AbstractType
 {
+  private $siteTimezone;
+
+  public function __construct(AppConfig $appConfig)
+  {
+    $this->siteTimezone = $appConfig->getSiteTimezone();
+  }
+
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder
@@ -57,10 +65,10 @@ class MaintenanceType extends AbstractType
       ]);
 
     $builder->get('scheduledFor')
-      ->addModelTransformer(new TimestampToDateTimeStringTransformer());
+      ->addModelTransformer(new TimestampToDateTimeStringTransformer($this->siteTimezone));
 
     $builder->get('anticipatedEnd')
-      ->addModelTransformer(new TimestampToDateTimeStringTransformer());
+      ->addModelTransformer(new TimestampToDateTimeStringTransformer($this->siteTimezone));
 
     $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
     {

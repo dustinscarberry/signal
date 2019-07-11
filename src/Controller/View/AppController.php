@@ -88,7 +88,7 @@ class AppController extends AbstractController
   public function viewIncident($incidentId, IncidentManager $incidentManager)
   {
     $incident = $incidentManager->getIncident($incidentId);
-
+    
     return $this->render('app/viewincident.html.twig', [
       'incident' => $incident
     ]);

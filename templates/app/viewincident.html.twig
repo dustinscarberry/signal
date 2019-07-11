@@ -4,7 +4,67 @@
 
 <div class="content-block">
   <div class="content-block-inner">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="incident-list-widget">
+              <div class="incident-list">
+                <div class="incident-list-item is-open">
+                  <h3 class="incident-subject status-icon status-icon-{{ incident.status.type }}">{{ incident.name }}</h3>
+                  <div class="incident-field">
+                    <span class="incident-field-label">Occurred:</span>
+                    <span>{{ incident.occurred|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                  </div>
+                  <div class="incident-field">
+                    <p>{{ incident.message|nl2br }}</p>
+                  </div>
+                  <div class="incident-field">
+                    <span class="incident-field-label">Anticipated Resolution:</span>
+                    <span>
+                      {% if incident.anticipatedResolution %}
+                        {{ incident.anticipatedResolution|date("n/j/Y, g:i A", config.siteTimezone) }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="incident-field">
+                    <span class="incident-field-label">Reported By:</span>
+                    <span>{{ incident.createdBy.fullName }}</span>
+                  </div>
+                  <div class="incident-field">
+                    <span class="incident-field-label">Type:</span>
+                    <span>{{ incident.type.name }}</span>
+                  </div>
+                  <div class="incident-field">
+                    <span class="incident-field-label">Affected Services:</span>
+                    <span>
+                      {% for service in  incident.incidentServices %}
+                        {{ service.service.name }}{% if not loop.last %},{% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                  <div class="incident-updates">
+                    <span class="incident-field-label">Updates:</span>
 
+                    {% for update in incident.incidentUpdates %}
+
+                    <div class="incident-update">
+                      <span class="incident-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                      <p>{{ update.message|nl2br }}</p>
+                    </div>
+
+                    {% endfor %}
+
+                    {% if incident.incidentUpdates is empty %}
+                      N/A
+                    {% endif %}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
 </div>
 

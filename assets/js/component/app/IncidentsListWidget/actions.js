@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const getFormattedDateTime = (timestamp) =>
 {
   if (!timestamp)
@@ -12,7 +14,8 @@ export const getFormattedDateTime = (timestamp) =>
       day: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      hour12: true
+      hour12: true,
+      timeZoneName: 'short'
     }
   );
 }
@@ -20,18 +23,19 @@ export const getFormattedDateTime = (timestamp) =>
 export const getStatusIconClasses = (iconType) =>
 {
   const classes = ['status-icon'];
-
-  if (iconType == 'error')
-    classes.push('status-icon-error');
-  else if (iconType == 'issues')
-    classes.push('status-icon-issue');
-  else if (iconType == 'ok')
-    classes.push('status-icon-ok');
-
+  classes.push('status-icon-' + iconType);
   return classes;
 }
 
 export const isValidResponse = (rsp) =>
 {
   return rsp && rsp.status == 200 && !rsp.data.error;
+}
+
+//convert new lines to html breaks
+export const nl2br = (text) =>
+{
+  return text.split('\n').map((item, key) => {
+    return <span key={key}>{item}<br/></span>;
+  })
 }

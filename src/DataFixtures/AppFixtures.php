@@ -85,8 +85,8 @@ class AppFixtures extends Fixture
 
     //create default maintenance statuses
     $maintenanceStatuses = [
-      ['name' => 'Upcoming', 'type' => 'ok'],
-      ['name' => 'In Progress', 'type' => 'offline'],
+      ['name' => 'Upcoming', 'type' => 'future'],
+      ['name' => 'In Progress', 'type' => 'progress'],
       ['name' => 'Complete', 'type' => 'ok']
     ];
 

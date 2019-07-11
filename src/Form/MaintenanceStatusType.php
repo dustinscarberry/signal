@@ -22,7 +22,9 @@ class MaintenanceStatusType extends AbstractType
           'Issues' => 'issue',
           'Error' => 'error',
           'Unknown' => 'unknown',
-          'Offline' => 'offline'
+          'Offline' => 'offline',
+          'Progress' => 'progress',
+          'Future' => 'future'
         ]
       ]);
   }

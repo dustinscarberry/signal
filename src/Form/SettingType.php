@@ -41,6 +41,7 @@ class SettingType extends AbstractType
       ->add('appTheme', ChoiceType::class, [
         'choices' => [
           'Dark' => 'dark',
+          'Medium Dark' => 'mediumdark',
           'Light' => 'light'
         ]
       ])

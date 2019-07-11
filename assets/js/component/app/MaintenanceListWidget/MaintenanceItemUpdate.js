@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFormattedDateTime, getStatusIconClasses } from './actions';
+import { getFormattedDateTime, getStatusIconClasses, nl2br } from './actions';
 import classnames from 'classnames';
 
 const MaintenanceItemUpdate = (props) =>
@@ -11,7 +11,7 @@ const MaintenanceItemUpdate = (props) =>
   return (
     <div className="maintenance-update">
       <span className={classnames('maintenance-update-occurred', updateStatusClass)}>{getFormattedDateTime(update.created)}</span>
-      <p>{update.message}</p>
+      <p>{nl2br(update.message)}</p>
     </div>
   );
 }

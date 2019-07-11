@@ -1,7 +1,7 @@
 import React from 'react';
 import MaintenanceItemUpdates from './MaintenanceItemUpdates';
 import MaintenanceItemServices from './MaintenanceItemServices';
-import { getFormattedDateTime, getStatusIconClasses } from './actions';
+import { getFormattedDateTime, getStatusIconClasses, nl2br } from './actions';
 import classnames from 'classnames';
 
 class MaintenanceListItem extends React.Component
@@ -38,13 +38,15 @@ class MaintenanceListItem extends React.Component
 
     return (
       <div className={classnames('maintenance-list-item', maintenanceClasses)}>
-        <h3 className={classnames('maintenance-subject', maintenanceStatusClass)}>{maintenance.name}</h3>
+        <a href={'/maintenance/' + maintenance.id}>
+          <h3 className={classnames('maintenance-subject', maintenanceStatusClass)}>{maintenance.name}</h3>
+        </a>
         <div className="maintenance-field">
           <span className="maintenance-field-label">Scheduled For:</span>
           <span>{getFormattedDateTime(maintenance.scheduledFor)}</span>
         </div>
         <div className="maintenance-field">
-          <p className={classnames(messageClasses)}>{maintenance.purpose}</p>
+          <p className={classnames(messageClasses)}>{nl2br(maintenance.purpose)}</p>
         </div>
         <div className="maintenance-field maintenance-details">
           <div className="maintenance-field">

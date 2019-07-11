@@ -26,7 +26,7 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance/add", name="addMaintenance")
    */
-  public function add(Request $request, MaintenanceManager $maintenanceManager)
+  public function add(Request $req, MaintenanceManager $maintenanceManager)
   {
     //create maintenance object
     $maintenance = new Maintenance();
@@ -35,14 +35,14 @@ class MaintenanceController extends AbstractController
     $form = $this->createForm(MaintenanceType::class, $maintenance);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
       $maintenanceManager->createMaintenance(
         $maintenance,
-        $form->get('updateServiceStatuses')
+        $form->get('updateServiceStatuses')->getData()
       );
 
       $this->addFlash('success', 'Maintenance item created');
@@ -58,7 +58,7 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance/{hashId}", name="editMaintenance")
    */
-  public function edit($hashId, Request $request, MaintenanceManager $maintenanceManager)
+  public function edit($hashId, Request $req, MaintenanceManager $maintenanceManager)
   {
     //get maintenance from database
     $maintenance = $this->getDoctrine()
@@ -73,20 +73,20 @@ class MaintenanceController extends AbstractController
     $form = $this->createForm(MaintenanceType::class, $maintenance);
 
     //handle form request if posted
-    $form->handleRequest($request);
+    $form->handleRequest($req);
 
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
       $maintenanceManager->updateMaintenance(
         $maintenance,
-        $form->get('updateServiceStatuses'),
+        $form->get('updateServiceStatuses')->getData(),
         $originalServices,
         $originalUpdates
       );
 
       $this->addFlash('success', 'Maintenance item updated');
-      return $this->redirectToRoute('viewMaintenance');
+      return $this->redirectToRoute('viewAllMaintenance');
     }
 
     //render maintenance add page

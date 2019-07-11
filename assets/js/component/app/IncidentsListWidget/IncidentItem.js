@@ -1,7 +1,7 @@
 import React from 'react';
 import IncidentItemUpdates from './IncidentItemUpdates';
 import IncidentItemServices from './IncidentItemServices';
-import { getFormattedDateTime, getStatusIconClasses } from './actions';
+import { getFormattedDateTime, getStatusIconClasses, nl2br } from './actions';
 import classnames from 'classnames';
 
 class IncidentListItem extends React.Component
@@ -38,13 +38,15 @@ class IncidentListItem extends React.Component
 
     return (
       <div className={classnames('incident-list-item', incidentClasses)}>
-        <h3 className={classnames('incident-subject', incidentStatusClass)}>{incident.name}</h3>
+        <a href={'/incident/' + incident.id}>
+          <h3 className={classnames('incident-subject', incidentStatusClass)}>{incident.name}</h3>
+        </a>
         <div className="incident-field">
           <span className="incident-field-label">Occurred:</span>
           <span>{getFormattedDateTime(incident.occurred)}</span>
         </div>
         <div className="incident-field">
-          <p className={classnames(messageClasses)}>{incident.message}</p>
+          <p className={classnames(messageClasses)}>{nl2br(incident.message)}</p>
         </div>
         <div className="incident-field incident-details">
           <div className="incident-field">

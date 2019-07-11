@@ -51,8 +51,18 @@
     color: #aa0114;
   }
 
-  &.status-icon-issue::before{
+  &.status-icon-issues::before{
     content: "\f071";
     color: #cc8100;
+  }
+
+  &.status-icon-progress::before{
+    content: "\f042";
+    color: #cc8100;
+  }
+
+  &.status-icon-future::before{
+    content: "\f017";
+    color: #0080ff;
   }
 }

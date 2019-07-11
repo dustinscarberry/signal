@@ -18,9 +18,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Model\AppConfig;
 
 class IncidentType extends AbstractType
 {
+  private $siteTimezone;
+
+  public function __construct(AppConfig $appConfig)
+  {
+    $this->siteTimezone = $appConfig->getSiteTimezone();
+  }
+
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder
@@ -61,10 +69,10 @@ class IncidentType extends AbstractType
       ]);
 
       $builder->get('occurred')
-        ->addModelTransformer(new TimestampToDateTimeStringTransformer());
+        ->addModelTransformer(new TimestampToDateTimeStringTransformer($this->siteTimezone));
 
       $builder->get('anticipatedResolution')
-        ->addModelTransformer(new TimestampToDateTimeStringTransformer());
+        ->addModelTransformer(new TimestampToDateTimeStringTransformer($this->siteTimezone));
 
       $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
       {

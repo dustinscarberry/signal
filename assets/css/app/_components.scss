@@ -172,6 +172,11 @@
   border-bottom-right-radius: 5px;
 }
 
+.incident-subject,
+.maintenance-subject{
+  color: #000;
+}
+
 .incident-subject::before,
 .maintenance-subject::before{
   font-size: 2.8rem;
@@ -209,11 +214,15 @@
 .maintenance-list-item .maintenance-field-label{
   font-weight: bold;
   margin-right: 1rem;
+  font-size: 1.7rem;
 }
 
 .incident-details-toggle,
 .maintenance-details-toggle{
-  float: right;
+  width: 100%;
+  display: block;
+  text-align: right;
+  padding: .5rem 0;
   background: none;
   border: 0;
   cursor: pointer;

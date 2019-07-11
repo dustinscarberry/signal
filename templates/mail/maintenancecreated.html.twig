@@ -26,8 +26,8 @@
   <tr>
     <td style="padding: 0px 20px 5px 20px;">
       <b>Status:</b> {{ maintenance.status.name }}<br>
-      <b>Scheduled For:</b> {{ maintenance.scheduledFor|date("m/d/Y g:ia") }}<br>
-      <b>Anticipated End:</b> {{ maintenance.anticipatedEnd|date("m/d/Y g:ia") }}<br>
+      <b>Scheduled For:</b> {{ maintenance.scheduledFor|date("m/d/Y g:ia", config.siteTimezone) }}<br>
+      <b>Anticipated End:</b> {{ maintenance.anticipatedEnd|date("m/d/Y g:ia", config.siteTimezone) }}<br>
       <b>Services Affected:</b> {{ maintenance.servicesString }}<br><br>
       {{ maintenance.purpose }}
     </td>

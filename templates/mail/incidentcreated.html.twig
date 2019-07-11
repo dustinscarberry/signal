@@ -26,8 +26,8 @@
   <tr>
     <td style="padding: 0px 20px 5px 20px;">
       <b>Status:</b> {{ incident.status.name }}<br>
-      <b>Occurred:</b> {{ incident.occurred|date("m/d/Y g:ia") }}<br>
-      <b>Anticipated Resolution:</b> {{ incident.anticipatedResolution|date("m/d/Y g:ia") }}<br>
+      <b>Occurred:</b> {{ incident.occurred|date("m/d/Y g:ia", config.siteTimezone) }}<br>
+      <b>Anticipated Resolution:</b> {{ incident.anticipatedResolution|date("m/d/Y g:ia", config.siteTimezone) }}<br>
       <b>Type:</b> {{ incident.type.name }}<br>
       <b>Services Affected:</b> {{ incident.servicesString }}<br><br>
       {{ incident.message }}
