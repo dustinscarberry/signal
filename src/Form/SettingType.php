@@ -62,6 +62,21 @@ class SettingType extends AbstractType
       ->add('enableGoogleCalendarSync', CheckboxType::class, [
         'required' => false
       ])
+      ->add('enableSaml2Login', CheckboxType::class, [
+        'required' => false
+      ])
+      ->add('saml2AppIdentifier', TextType::class, [
+        'required' => false
+      ])
+      ->add('saml2IdpLoginUrl', TextType::class, [
+        'required' => false
+      ])
+      ->add('saml2IdpSigningCertificate', TextareaType::class, [
+        'required' => false
+      ])
+      ->add('saml2SubjectIdentifier', TextType::class, [
+        'required' => false
+      ])
       ->add('logo', FileType::class, [
         'required' => false,
         'attr' => ['accept' => '.jpg,.jpeg,.png'],

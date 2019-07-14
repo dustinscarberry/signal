@@ -62,6 +62,14 @@
         {{ form_row(form.enableExchangeCalendarSync) }}
         {{ form_row(form.enableGoogleCalendarSync) }}
       </div>
+      <div class="dashboard-panel-block">
+        <h3 class="dashboard-panel-header">SSO</h3>
+        {{ form_row(form.enableSaml2Login) }}
+        {{ form_row(form.saml2AppIdentifier) }}
+        {{ form_row(form.saml2IdpLoginUrl) }}
+        {{ form_row(form.saml2SubjectIdentifier) }}
+        {{ form_row(form.saml2IdpSigningCertificate) }}
+      </div>
     </div>
   </div>
 </div>

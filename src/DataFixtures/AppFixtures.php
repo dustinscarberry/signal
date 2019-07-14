@@ -128,6 +128,11 @@ class AppFixtures extends Fixture
     $settings['mailFromName'] = 'Status Bot';
     $settings['enableExchangeCalendarSync'] = false;
     $settings['enableGoogleCalendarSync'] = false;
+    $settings['enableSaml2Login'] = false;
+    $settings['saml2AppIdentifier'] = '';
+    $settings['saml2IdpLoginUrl'] = '';
+    $settings['saml2IdpSigningCertificate'] = '';
+    $settings['saml2SubjectIdentifier'] = '';
 
     foreach ($settings as $key => $value)
     {

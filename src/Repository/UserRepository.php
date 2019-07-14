@@ -33,6 +33,19 @@ class UserRepository extends ServiceEntityRepository
     }
 
     /**
+      * @return User Returns a User object by username
+    */
+    public function findByUsername($username)
+    {
+      return $this->createQueryBuilder('u')
+        ->andWhere('u.username = :username')
+        ->setParameter('username', $username)
+        ->andWhere('u.deletedOn is NULL')
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
+
+    /**
       * @return User[] Returns all non deleted User objects
     */
     public function findAllNotDeleted()

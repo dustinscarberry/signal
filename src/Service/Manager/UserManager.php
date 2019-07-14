@@ -67,6 +67,13 @@ class UserManager
       ->findByHashId($hashId);
   }
 
+  public function getUserByUsername($username)
+  {
+    return $this->em
+      ->getRepository(User::class)
+      ->findByUsername($username);
+  }
+
   public function getUsers()
   {
     return $this->em

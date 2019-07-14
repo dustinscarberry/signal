@@ -23,6 +23,11 @@
         <input type="password" name="password" id="password" placeholder="Password" class="form-control"/>
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <button type="submit" class="btn btn-primary btn-large">Login</button>
+
+        {% if config.enableSaml2Login %}
+          <a href="/dashboard/samllogin">SSO Login</a>
+        {% endif %}
+
       </form>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

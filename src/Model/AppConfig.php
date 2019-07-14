@@ -23,6 +23,11 @@ class AppConfig
   private $mailFromName;
   private $enableExchangeCalendarSync;
   private $enableGoogleCalendarSync;
+  private $enableSaml2Login;
+  private $saml2AppIdentifier;
+  private $saml2IdpLoginUrl;
+  private $saml2IdpSigningCertificate;
+  private $saml2SubjectIdentifier;
 
   private $em;
   private $loadedSettings;
@@ -154,7 +159,7 @@ class AppConfig
     return $this;
   }
 
-  public function getAppTheme(): ?string
+  public function getAppTheme(): string
   {
     return $this->appTheme;
   }
@@ -206,6 +211,61 @@ class AppConfig
   public function setEnableGoogleCalendarSync(bool $enableGoogleCalendarSync): self
   {
     $this->enableGoogleCalendarSync = $enableGoogleCalendarSync;
+    return $this;
+  }
+
+  public function getEnableSaml2Login(): bool
+  {
+    return $this->enableSaml2Login;
+  }
+
+  public function setEnableSaml2Login(bool $enableSaml2Login): self
+  {
+    $this->enableSaml2Login = $enableSaml2Login;
+    return $this;
+  }
+
+  public function getSaml2AppIdentifier(): ?string
+  {
+    return $this->saml2AppIdentifier;
+  }
+
+  public function setSaml2AppIdentifier(?string $saml2AppIdentifier): self
+  {
+    $this->saml2AppIdentifier = $saml2AppIdentifier;
+    return $this;
+  }
+
+  public function getSaml2IdpLoginUrl(): ?string
+  {
+    return $this->saml2IdpLoginUrl;
+  }
+
+  public function setSaml2IdpLoginUrl(?string $saml2IdpLoginUrl): self
+  {
+    $this->saml2IdpLoginUrl = $saml2IdpLoginUrl;
+    return $this;
+  }
+
+  public function getSaml2IdpSigningCertificate(): ?string
+  {
+    return $this->saml2IdpSigningCertificate;
+  }
+
+  public function setSaml2IdpSigningCertificate(?string $saml2IdpSigningCertificate): self
+  {
+    $this->saml2IdpSigningCertificate = $saml2IdpSigningCertificate;
+    return $this;
+  }
+
+  public function getSaml2SubjectIdentifier(): ?string
+  {
+    return $this->saml2SubjectIdentifier;
+  }
+
+  public function setSaml2SubjectIdentifier(?string $saml2SubjectIdentifier): self
+  {
+    $this->saml2SubjectIdentifier = $saml2SubjectIdentifier;
     return $this;
   }
 
