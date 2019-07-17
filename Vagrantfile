@@ -11,6 +11,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, path: "vagrant/bootstrap.sh"
   config.vm.network :forwarded_port, guest: 80, host: 80
   config.vm.network :forwarded_port, guest: 443, host: 443
+  config.vm.network :private_network, ip: "192.168.3.10"
+  config.vm.hostname = "signal.marshall.edu"
   config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
   end
