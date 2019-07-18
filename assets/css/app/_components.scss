@@ -157,20 +157,26 @@
   border: 1px solid #ccc;
   padding: 1.5rem;
   border-top-width: 0;
+  margin-bottom: 2.5rem;
+  border-radius: .5rem;
 }
 
 .incident-list :first-child,
 .maintenance-list :first-child{
-  border-top-width: 1px;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  //border-top-width: 1px;
+  //border-top-left-radius: 5px;
+  //border-top-right-radius: 5px;
 }
 
 .incident-list :last-child,
 .maintenance-list :last-child{
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  //border-bottom-left-radius: 5px;
+  //border-bottom-right-radius: 5px;
 }
+
+
+
+
 
 .incident-subject,
 .maintenance-subject{
