@@ -166,6 +166,20 @@ class MaintenanceManager
       ->findAllNotDeleted();
   }
 
+  public function getPastMaintenances()
+  {
+    return $this->em
+      ->getRepository(Maintenance::class)
+      ->findAllPastMaintenance();
+  }
+
+  public function getScheduledMaintenances()
+  {
+    return $this->em
+      ->getRepository(Maintenance::class)
+      ->findAllScheduledMaintenance();
+  }
+
   private function sendNotificationEmails($action, $maintenance)
   {
     //send email if services included

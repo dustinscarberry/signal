@@ -1,0 +1,80 @@
+{% extends 'app/appbase.html.twig' %}
+
+{% block contentblocks %}
+
+<div class="content-block">
+  <div class="content-block-inner">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="maintenance-list-widget">
+              <h2 class="widget-header">Past Maintenance</h2>
+              <div class="maintenance-list">
+
+                {% for maintenance in maintenances %}
+
+                <div class="maintenance-list-item is-open">
+                  <h3 class="maintenance-subject status-icon status-icon-{{ maintenance.status.type }}">{{ maintenance.name }}</h3>
+                  <div class="maintenance-field">
+                    <span class="maintenance-field-label">Scheduled For:</span>
+                    <span>{{ maintenance.scheduledFor|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                  </div>
+                  <div class="maintenance-field">
+                    <p>{{ maintenance.purpose|nl2br }}</p>
+                  </div>
+                  <div class="maintenance-field">
+                    <span class="maintenance-field-label">Anticipated Resolution:</span>
+                    <span>
+                      {% if maintenance.anticipatedEnd %}
+                        {{ maintenance.anticipatedEnd|date("n/j/Y, g:i A", config.siteTimezone) }}
+                      {% endif %}
+                    </span>
+                  </div>
+                  <div class="maintenance-field">
+                    <span class="maintenance-field-label">Posted By:</span>
+                    <span>{{ maintenance.createdBy.fullName }}</span>
+                  </div>
+                  <div class="maintenance-field">
+                    <span class="maintenance-field-label">Affected Services:</span>
+                    <span>
+                      {% for service in  maintenance.maintenanceServices %}
+                        {{ service.service.name }}{% if not loop.last %},{% endif %}
+                      {% endfor %}
+                    </span>
+                  </div>
+                  <div class="maintenance-updates">
+                    <span class="maintenance-field-label">Updates:</span>
+
+                    {% for update in maintenance.maintenanceUpdates %}
+
+                    <div class="maintenance-update">
+                      <span class="maintenance-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                      <p>{{ update.message|nl2br }}</p>
+                    </div>
+
+                    {% endfor %}
+
+                    {% if maintenance.maintenanceUpdates is empty %}
+                      N/A
+                    {% endif %}
+
+                  </div>
+                </div>
+
+                {% endfor %}
+
+                {% if maintenances is empty %}
+
+                  <p class="no-items-found">No past maintenance found</p>
+
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

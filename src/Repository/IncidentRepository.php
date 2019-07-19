@@ -44,6 +44,19 @@ class IncidentRepository extends ServiceEntityRepository
   }
 
   /**
+    * @return Incident[] Returns all non deleted past Incident objects
+  */
+  public function findAllPastIncidents()
+  {
+    return $this->createQueryBuilder('i')
+      ->andWhere('i.anticipatedResolution < :currentTime')
+      ->setParameter('currentTime', time())
+      ->andWhere('i.deletedOn is NULL')
+      ->getQuery()
+      ->getResult();
+  }
+
+  /**
    * @return Incident[] Return all active incidents
   */
   public function findAllActiveIncidents()

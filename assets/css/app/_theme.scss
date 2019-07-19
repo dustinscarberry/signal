@@ -64,6 +64,11 @@
     border-color: #bcbcbc;
   }
 
+  //no items text
+  .no-items-found{
+    color: #eee;
+  }
+
   .loader{
     background: #fff;
   }
@@ -135,6 +140,11 @@
   .incident-list-widget .incident-list-item,
   .maintenance-list-widget .maintenance-list-item{
     border-color: #bcbcbc;
+  }
+
+  //no items text
+  .no-items-found{
+    color: #eee;
   }
 
   .loader{

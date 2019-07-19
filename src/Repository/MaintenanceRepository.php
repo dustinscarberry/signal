@@ -44,14 +44,27 @@ class MaintenanceRepository extends ServiceEntityRepository
   }
 
   /**
+    * @return Maintenance[] Returns all past Maintenance objects
+  */
+  public function findAllPastMaintenance()
+  {
+    return $this->createQueryBuilder('m')
+      ->andWhere('m.anticipatedEnd < :currentTime')
+      ->andWhere('m.deletedOn is NULL')
+      ->setParameter('currentTime', time())
+      ->getQuery()
+      ->getResult();
+  }
+
+  /**
     * @return Maintenance[] Returns all scheduled Maintenance objects
   */
   public function findAllScheduledMaintenance()
   {
     return $this->createQueryBuilder('m')
       ->andWhere('m.scheduledFor > :currentTime')
-      ->setParameter('currentTime', time())
       ->andWhere('m.deletedOn is NULL')
+      ->setParameter('currentTime', time())
       ->getQuery()
       ->getResult();
   }

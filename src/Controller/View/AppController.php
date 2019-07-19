@@ -88,9 +88,21 @@ class AppController extends AbstractController
   public function viewIncident($incidentId, IncidentManager $incidentManager)
   {
     $incident = $incidentManager->getIncident($incidentId);
-    
+
     return $this->render('app/viewincident.html.twig', [
       'incident' => $incident
+    ]);
+  }
+
+  /**
+   * @Route("/pastincidents", name="viewPastIncidents")
+   */
+  public function viewPastIncidents(IncidentManager $incidentManager)
+  {
+    $incidents = $incidentManager->getPastIncidents();
+
+    return $this->render('app/viewpastincidents.html.twig', [
+      'incidents' => $incidents
     ]);
   }
 
@@ -103,6 +115,30 @@ class AppController extends AbstractController
 
     return $this->render('app/viewmaintenance.html.twig', [
       'maintenance' => $maintenance
+    ]);
+  }
+
+  /**
+   * @Route("/pastmaintenance", name="viewPastMaintenance")
+   */
+  public function viewPastMaintenance(MaintenanceManager $maintenanceManager)
+  {
+    $maintenances = $maintenanceManager->getPastMaintenances();
+
+    return $this->render('app/viewpastmaintenance.html.twig', [
+      'maintenances' => $maintenances
+    ]);
+  }
+
+  /**
+   * @Route("/scheduledmaintenance", name="viewScheduledMaintenance")
+   */
+  public function viewScheduledMaintenance(MaintenanceManager $maintenanceManager)
+  {
+    $maintenances = $maintenanceManager->getScheduledMaintenances();
+
+    return $this->render('app/viewscheduledmaintenance.html.twig', [
+      'maintenances' => $maintenances
     ]);
   }
 }

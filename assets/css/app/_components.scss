@@ -30,6 +30,11 @@
   color: #333;
 }
 
+//no items text
+.no-items-found{
+  
+}
+
 //services widget
 .service-list,
 .service-list-group{
@@ -159,6 +164,7 @@
   border-top-width: 0;
   margin-bottom: 2.5rem;
   border-radius: .5rem;
+  position: relative;
 }
 
 .incident-list :first-child,
@@ -181,6 +187,7 @@
 .incident-subject,
 .maintenance-subject{
   color: #000;
+  display: inline-block;
 }
 
 .incident-subject::before,
@@ -233,6 +240,11 @@
   border: 0;
   cursor: pointer;
   outline: none;
+  position: absolute;
+  top: 2.5rem;
+  right: 2.5rem;
+  width: 25px;
+  height: 25px;
 }
 
 .incident-details-toggle::before,

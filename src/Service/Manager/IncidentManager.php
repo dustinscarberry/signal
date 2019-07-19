@@ -132,6 +132,13 @@ class IncidentManager
       ->findAllNotDeleted();
   }
 
+  public function getPastIncidents()
+  {
+    return $this->em
+      ->getRepository(Incident::class)
+      ->findAllPastIncidents();
+  }
+
   private function sendNotificationEmails($action, $incident)
   {
     //send email if services included
