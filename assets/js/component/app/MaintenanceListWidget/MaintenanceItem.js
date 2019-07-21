@@ -58,7 +58,7 @@ class MaintenanceListItem extends React.Component
             <span>{maintenance.createdBy}</span>
           </div>
           <MaintenanceItemServices services={maintenance.services}/>
-          <MaintenanceItemUpdates updates={maintenance.updates}/>
+          <MaintenanceItemUpdates updates={maintenance.updates.reverse()}/>
         </div>
         <button className="maintenance-details-toggle" onClick={this.toggleDetails}></button>
       </div>

@@ -62,7 +62,7 @@ class IncidentListItem extends React.Component
             <span>{incident.type}</span>
           </div>
           <IncidentItemServices services={incident.services}/>
-          <IncidentItemUpdates updates={incident.updates}/>
+          <IncidentItemUpdates updates={incident.updates.reverse()}/>
         </div>
         <button className="incident-details-toggle" onClick={this.toggleDetails}></button>
       </div>

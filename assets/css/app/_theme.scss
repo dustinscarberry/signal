@@ -108,6 +108,13 @@
     background: #ccc;
   }
 
+  .maintenance-subject,
+  .incident-subject{
+    &:hover{
+      color: #444;
+    }
+  }
+
   .subscription-group-items{
     background: #ccc;
   }

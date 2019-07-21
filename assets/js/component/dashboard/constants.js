@@ -6,7 +6,9 @@ export const WIDGET_BLOCK_TYPE = {
   SERVICE_STATUS_OVERVIEW: 'service-status-overview',
   METRICS_OVERVIEW: 'metrics-overview',
   SERVICE_UPTIME_CHART: 'service-uptime-chart',
-  CUSTOM_METRIC_CHART: 'custom-metric-chart'
+  CUSTOM_METRIC_CHART: 'custom-metric-chart',
+  PAST_FUTURE_LINKS: 'past-future-links',
+  CUSTOM_LINKS: 'custom-links'
 }
 
 export const WIDGET_BLOCK_ATTRIBUTES = {
@@ -41,6 +43,14 @@ export const WIDGET_BLOCK_ATTRIBUTES = {
   [WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART]: {
     title: 'Custom Metric Chart',
     iconClass: 'fas fa-hourglass-start'
+  },
+  [WIDGET_BLOCK_TYPE.PAST_FUTURE_LINKS]: {
+    title: 'Past & Future Links',
+    iconClass: 'fas fa-link'
+  },
+  [WIDGET_BLOCK_TYPE.CUSTOM_LINKS]: {
+    title: 'Custom Links',
+    iconClass: 'fas fa-link'
   }
 }
 
@@ -122,5 +132,16 @@ export const WIDGET_BLOCK_DATA = {
       metric: undefined,
       refreshInterval: 60
     }
-  }
+  },
+  [WIDGET_BLOCK_TYPE.PAST_FUTURE_LINKS]: {
+    id: undefined,
+    type: WIDGET_BLOCK_TYPE.PAST_FUTURE_LINKS,
+    sortOrder: undefined,
+    attributes: {
+      showPastMaintenance: true,
+      showFutureMaintenance: true,
+      showPastIncidents: true
+    }
+  },
+
 }

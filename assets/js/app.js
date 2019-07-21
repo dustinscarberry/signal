@@ -10,6 +10,7 @@ import ServiceStatusOverviewWidget from './component/app/ServiceStatusOverviewWi
 import MetricsOverviewWidget from './component/app/MetricsOverviewWidget';
 import ServiceUptimeChartWidget from './component/app/ServiceUptimeChartWidget';
 import CustomMetricChartWidget from './component/app/CustomMetricChartWidget';
+import PastFutureLinksWidget from './component/app/PastFutureLinksWidget';
 
 const videoEmbeds = document.querySelectorAll('.video-embed-widget-root');
 const servicesLists = document.querySelectorAll('.services-list-widget-root');
@@ -19,6 +20,7 @@ const serviceStatusOverviews = document.querySelectorAll('.service-status-overvi
 const metricsOverviews = document.querySelectorAll('.metrics-overview-widget-root');
 const serviceUptimeCharts = document.querySelectorAll('.service-uptime-chart-widget-root');
 const customMetricCharts = document.querySelectorAll('.custom-metric-chart-widget-root');
+const pastFutureLinks = document.querySelectorAll('.past-future-links-widget-root');
 
 if (videoEmbeds)
   Array.prototype.forEach.call(videoEmbeds, videoEmbed => {
@@ -58,4 +60,9 @@ if (serviceUptimeCharts)
 if (customMetricCharts)
   Array.prototype.forEach.call(customMetricCharts, customMetricChart => {
     ReactDOM.render(<CustomMetricChartWidget id={customMetricChart.getAttribute('data-id')}/>, customMetricChart);
+  });
+
+if (pastFutureLinks)
+  Array.prototype.forEach.call(pastFutureLinks, pastFutureLink => {
+    ReactDOM.render(<PastFutureLinksWidget id={pastFutureLink.getAttribute('data-id')}/>, pastFutureLink);
   });

@@ -19,6 +19,7 @@ import ServiceStatusOverviewWidgetBlock from './blocks/ServiceStatusOverviewWidg
 import MetricsOverviewWidgetBlock from './blocks/MetricsOverviewWidgetBlock';
 import ServiceUptimeChartWidgetBlock from './blocks/ServiceUptimeChartWidgetBlock';
 import CustomMetricChartWidgetBlock from './blocks/CustomMetricChartWidgetBlock';
+import PastFutureLinksWidgetBlock from './blocks/PastFutureLinksWidgetBlock';
 
 const mapStateToProps = (state) => {
   return {widgets: state.widgets};
@@ -231,6 +232,13 @@ class WidgetBlockContainer extends React.Component
       />;
     else if (widget.type == WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART)
       return <CustomMetricChartWidgetBlock
+        toggleIsSaved={this.toggleIsSaved}
+        updateAttributes={this.updateAttributes}
+        {...this.state}
+        {...this.props}
+      />;
+    else if (widget.type == WIDGET_BLOCK_TYPE.PAST_FUTURE_LINKS)
+      return <PastFutureLinksWidgetBlock
         toggleIsSaved={this.toggleIsSaved}
         updateAttributes={this.updateAttributes}
         {...this.state}
