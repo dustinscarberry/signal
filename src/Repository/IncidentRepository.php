@@ -35,24 +35,38 @@ class IncidentRepository extends ServiceEntityRepository
   /**
     * @return Incident[] Returns all non deleted Incident objects
   */
-  public function findAllNotDeleted()
+  public function findAllNotDeleted($reverse, $maxRecords)
   {
-    return $this->createQueryBuilder('i')
-      ->andWhere('i.deletedOn is NULL')
-      ->getQuery()
+    $query = $this->createQueryBuilder('i')
+      ->andWhere('i.deletedOn is NULL');
+
+    if ($reverse)
+      $query->addOrderBy('i.occurred', 'DESC');
+
+    if ($maxRecords)
+      $query->setMaxResults($maxRecords);
+
+    return $query->getQuery()
       ->getResult();
   }
 
   /**
     * @return Incident[] Returns all non deleted past Incident objects
   */
-  public function findAllPastIncidents()
+  public function findAllPastIncidents($reverse, $maxRecords)
   {
-    return $this->createQueryBuilder('i')
+    $query = $this->createQueryBuilder('i')
       ->andWhere('i.anticipatedResolution < :currentTime')
       ->setParameter('currentTime', time())
-      ->andWhere('i.deletedOn is NULL')
-      ->getQuery()
+      ->andWhere('i.deletedOn is NULL');
+
+    if ($reverse)
+      $query->addOrderBy('i.occurred', 'DESC');
+
+    if ($maxRecords)
+      $query->setMaxResults($maxRecords);
+
+    return $query->getQuery()
       ->getResult();
   }
 

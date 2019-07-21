@@ -99,7 +99,7 @@ class AppController extends AbstractController
    */
   public function viewPastIncidents(IncidentManager $incidentManager)
   {
-    $incidents = $incidentManager->getPastIncidents();
+    $incidents = $incidentManager->getPastIncidents(true);
 
     return $this->render('app/viewpastincidents.html.twig', [
       'incidents' => $incidents
@@ -123,7 +123,7 @@ class AppController extends AbstractController
    */
   public function viewPastMaintenance(MaintenanceManager $maintenanceManager)
   {
-    $maintenances = $maintenanceManager->getPastMaintenances();
+    $maintenances = $maintenanceManager->getPastMaintenances(true);
 
     return $this->render('app/viewpastmaintenance.html.twig', [
       'maintenances' => $maintenances

@@ -35,37 +35,58 @@ class MaintenanceRepository extends ServiceEntityRepository
   /**
     * @return Maintenance[] Returns all non deleted Maintenance objects
   */
-  public function findAllNotDeleted()
+  public function findAllNotDeleted($reverse, $maxRecords)
   {
-    return $this->createQueryBuilder('m')
-      ->andWhere('m.deletedOn is NULL')
-      ->getQuery()
+    $query = $this->createQueryBuilder('m')
+      ->andWhere('m.deletedOn is NULL');
+
+    if ($reverse)
+      $query->addOrderBy('m.scheduledFor', 'DESC');
+
+    if ($maxRecords)
+      $query->setMaxResults($maxRecords);
+
+    return $query->getQuery()
       ->getResult();
   }
 
   /**
     * @return Maintenance[] Returns all past Maintenance objects
   */
-  public function findAllPastMaintenance()
+  public function findAllPastMaintenance($reverse, $maxRecords)
   {
-    return $this->createQueryBuilder('m')
+    $query = $this->createQueryBuilder('m')
       ->andWhere('m.anticipatedEnd < :currentTime')
       ->andWhere('m.deletedOn is NULL')
-      ->setParameter('currentTime', time())
-      ->getQuery()
+      ->setParameter('currentTime', time());
+
+    if ($reverse)
+      $query->addOrderBy('m.scheduledFor', 'DESC');
+
+    if ($maxRecords)
+      $query->setMaxResults($maxRecords);
+
+    return $query->getQuery()
       ->getResult();
   }
 
   /**
     * @return Maintenance[] Returns all scheduled Maintenance objects
   */
-  public function findAllScheduledMaintenance()
+  public function findAllScheduledMaintenance($reverse, $maxRecords)
   {
-    return $this->createQueryBuilder('m')
+    $query = $this->createQueryBuilder('m')
       ->andWhere('m.scheduledFor > :currentTime')
       ->andWhere('m.deletedOn is NULL')
-      ->setParameter('currentTime', time())
-      ->getQuery()
+      ->setParameter('currentTime', time());
+
+    if ($reverse)
+      $query->addOrderBy('m.scheduledFor', 'DESC');
+
+    if ($maxRecords)
+      $query->setMaxResults($maxRecords);
+
+    return $query->getQuery()
       ->getResult();
   }
 }

@@ -3,31 +3,43 @@
 namespace App\Service\Api;
 
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Service;
 use App\Entity\Incident;
 use App\Entity\Maintenance;
-use App\Entity\ServiceStatusHistory;
-use App\Entity\CustomMetric;
 use App\Service\Api\ChartDataGenerator;
 use App\Service\Api\CustomMetricChartDataGenerator;
-use \DateTime;
+use App\Service\Manager\ServiceManager;
+use App\Service\Manager\MaintenanceManager;
+use App\Service\Manager\IncidentManager;
+use App\Service\Manager\CustomMetricManager;
 
 class WidgetDataGenerator
 {
   private $em;
   private $serviceStatusChartDataGenerator;
   private $customMetricChartDataGenerator;
+  private $maintenanceManager;
+  private $incidentManager;
+  private $customMetricManager;
+  private $serviceManager;
   private $data;
 
   public function __construct(
     EntityManagerInterface $em,
     ServiceStatusChartDataGenerator $serviceStatusChartDataGenerator,
-    CustomMetricChartDataGenerator $customMetricChartDataGenerator
+    CustomMetricChartDataGenerator $customMetricChartDataGenerator,
+    MaintenanceManager $maintenanceManager,
+    IncidentManager $incidentManager,
+    CustomMetricManager $customMetricManager,
+    ServiceManager $serviceManager
   )
   {
     $this->em = $em;
     $this->serviceStatusChartDataGenerator = $serviceStatusChartDataGenerator;
     $this->customMetricChartDataGenerator = $customMetricChartDataGenerator;
+    $this->maintenanceManager = $maintenanceManager;
+    $this->incidentManager = $incidentManager;
+    $this->customMetricManager = $customMetricManager;
+    $this->serviceManager = $serviceManager;
   }
 
   //returns data for widget passed in
@@ -57,9 +69,7 @@ class WidgetDataGenerator
 
   private function getServicesListData()
   {
-    $services = $this->em
-      ->getRepository(Service::class)
-      ->findAllNotDeleted();
+    $services = $this->serviceManager->getServices();
 
     $this->data['services'] = [];
 
@@ -76,27 +86,17 @@ class WidgetDataGenerator
 
   private function getIncidentsListData()
   {
-    $incidents = $this->em
-      ->getRepository(Incident::class)
-      ->findAllNotDeleted();
-
-    $this->data['incidents'] = $incidents;
+    $this->data['incidents'] = $this->incidentManager->getIncidents();
   }
 
   private function getMaintenanceListData()
   {
-    $maintenance = $this->em
-      ->getRepository(Maintenance::class)
-      ->findAllNotDeleted();
-
-    $this->data['maintenance'] = $maintenance;
+    $this->data['maintenance'] = $this->maintenanceManager->getMaintenances();
   }
 
   private function getServiceStatusOverviewData()
   {
-    $services = $this->em
-      ->getRepository(Service::class)
-      ->findAllNotDeleted();
+    $services = $this->serviceManager->getServices();
 
     $this->data['serviceStatuses'] = array_map(function($item){
       return $item->getStatus()->getType();
@@ -125,9 +125,9 @@ class WidgetDataGenerator
 
     if ($lastIncident)
     {
-      $lastIncidentDate = new DateTime();
+      $lastIncidentDate = new \DateTime();
       $lastIncidentDate->setTimestamp($lastIncident->getOccurred());
-      $currentDate = new DateTime();
+      $currentDate = new \DateTime();
 
       $interval = $currentDate->diff($lastIncidentDate);
       $this->data['daysSinceLastIncident'] = $interval->days;
@@ -152,9 +152,9 @@ class WidgetDataGenerator
     );
 
     //get start and end scale of metric
-    $metric = $this->em
-      ->getRepository(CustomMetric::class)
-      ->findByHashId($this->data['options']->getAttributes()->metric);
+    $metric = $this->customMetricManager->getCustomMetric(
+      $this->data['options']->getAttributes()->metric
+    );
 
     if ($metric)
     {

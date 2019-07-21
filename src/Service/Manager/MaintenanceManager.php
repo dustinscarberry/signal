@@ -152,32 +152,30 @@ class MaintenanceManager
 
   public function getMaintenance($hashId)
   {
-    //get maintenance
     return $this->em
       ->getRepository(Maintenance::class)
       ->findByHashId($hashId);
   }
 
-  public function getMaintenances()
+  public function getMaintenances($reverse = false, $maxRecords = null)
   {
-    //get maintenance
     return $this->em
       ->getRepository(Maintenance::class)
-      ->findAllNotDeleted();
+      ->findAllNotDeleted($reverse, $maxRecords);
   }
 
-  public function getPastMaintenances()
+  public function getPastMaintenances($reverse = false, $maxRecords = null)
   {
     return $this->em
       ->getRepository(Maintenance::class)
-      ->findAllPastMaintenance();
+      ->findAllPastMaintenance($reverse, $maxRecords);
   }
 
-  public function getScheduledMaintenances()
+  public function getScheduledMaintenances($reverse = false, $maxRecords = null)
   {
     return $this->em
       ->getRepository(Maintenance::class)
-      ->findAllScheduledMaintenance();
+      ->findAllScheduledMaintenance($reverse, $maxRecords);
   }
 
   private function sendNotificationEmails($action, $maintenance)

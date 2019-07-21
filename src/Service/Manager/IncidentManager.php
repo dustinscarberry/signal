@@ -125,18 +125,18 @@ class IncidentManager
       ->findByHashId($hashId);
   }
 
-  public function getIncidents()
+  public function getIncidents($reverse = false, $maxRecords = null)
   {
     return $this->em
       ->getRepository(Incident::class)
-      ->findAllNotDeleted();
+      ->findAllNotDeleted($reverse, $maxRecords);
   }
 
-  public function getPastIncidents()
+  public function getPastIncidents($reverse = false, $maxRecords = null)
   {
     return $this->em
       ->getRepository(Incident::class)
-      ->findAllPastIncidents();
+      ->findAllPastIncidents($reverse, $maxRecords);
   }
 
   private function sendNotificationEmails($action, $incident)
