@@ -41,7 +41,7 @@
                   <div class="maintenance-updates">
                     <span class="maintenance-field-label">Updates:</span>
 
-                    {% for update in maintenance.maintenanceUpdates %}
+                    {% for update in maintenance.maintenanceUpdates|reverse %}
 
                     <div class="maintenance-update">
                       <span class="maintenance-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>

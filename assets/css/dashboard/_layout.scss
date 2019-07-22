@@ -83,19 +83,23 @@ body.dashboard-login{
   padding-left: 3rem;
   padding-left: 1.7rem;
   min-width: 200px;
+  font-size: 2.5rem;
+  color: #eee;
 
   .logo-icon{
-    color: #eee;
     font-size: 2.5rem;
     margin-right: 1rem;
   }
 
   .logo-text{
-    font-size: 2.5rem;
     line-height: 60px;
-    color: #eee;
     font-weight: bold;
     text-transform: uppercase;
+  }
+
+  &:hover{
+    text-decoration: none;
+    color: #fff;
   }
 }
 

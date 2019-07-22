@@ -49,7 +49,7 @@
                   <div class="incident-updates">
                     <span class="incident-field-label">Updates:</span>
 
-                    {% for update in incident.incidentUpdates %}
+                    {% for update in incident.incidentUpdates|reverse %}
 
                     <div class="incident-update">
                       <span class="incident-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
