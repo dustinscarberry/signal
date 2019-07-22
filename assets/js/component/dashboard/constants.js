@@ -81,7 +81,9 @@ export const WIDGET_BLOCK_DATA = {
     sortOrder: undefined,
     attributes: {
       title: undefined,
-      refreshInterval: 120
+      refreshInterval: 120,
+      maxItems: 25,
+      timeframe: 'all'
     }
   },
   [WIDGET_BLOCK_TYPE.MAINTENANCE_LIST]: {
@@ -90,7 +92,9 @@ export const WIDGET_BLOCK_DATA = {
     sortOrder: undefined,
     attributes: {
       title: undefined,
-      refreshInterval: 120
+      refreshInterval: 120,
+      maxItems: 25,
+      timeframe: 'all'
     }
   },
   [WIDGET_BLOCK_TYPE.SERVICE_STATUS_OVERVIEW]: {

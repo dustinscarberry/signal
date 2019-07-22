@@ -86,12 +86,22 @@ class WidgetDataGenerator
 
   private function getIncidentsListData()
   {
-    $this->data['incidents'] = $this->incidentManager->getIncidents();
+    $options = $this->data['options']->getAttributes();
+
+    if ($options->timeframe == 'past')
+      $this->data['incidents'] = $this->incidentManager->getPastIncidents(true, $options->maxItems);
+    else
+      $this->data['incidents'] = $this->incidentManager->getIncidents(true, $options->maxItems);
   }
 
   private function getMaintenanceListData()
   {
-    $this->data['maintenance'] = $this->maintenanceManager->getMaintenances();
+    $options = $this->data['options']->getAttributes();
+
+    if ($options->timeframe == 'scheduled')
+      $this->data['maintenance'] = $this->maintenanceManager->getScheduledMaintenances(false, $options->maxItems);
+    else
+      $this->data['maintenance'] = $this->maintenanceManager->getMaintenances(false, $options->maxItems);
   }
 
   private function getServiceStatusOverviewData()
