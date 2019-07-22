@@ -14,7 +14,10 @@
                 {% for incident in incidents %}
 
                 <div class="incident-list-item is-open">
-                  <h3 class="incident-subject status-icon status-icon-{{ incident.status.type }}">{{ incident.name }}</h3>
+                  <h3 class="incident-subject status-icon status-icon-{{ incident.status.type }}">
+                    {{ incident.name }}
+                    <span class="status-name status-name-{{ incident.status.type }}">{{ incident.status.name }}</span>
+                  </h3>
                   <div class="incident-field">
                     <span class="incident-field-label">Occurred:</span>
                     <span>{{ incident.occurred|date("n/j/Y, g:i A", config.siteTimezone) }}</span>

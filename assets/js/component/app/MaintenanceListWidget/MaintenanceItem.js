@@ -39,7 +39,10 @@ class MaintenanceListItem extends React.Component
     return (
       <div className={classnames('maintenance-list-item', maintenanceClasses)}>
         <a href={'/maintenance/' + maintenance.id}>
-          <h3 className={classnames('maintenance-subject', maintenanceStatusClass)}>{maintenance.name}</h3>
+          <h3 className={classnames('maintenance-subject', maintenanceStatusClass)}>
+            {maintenance.name}
+            <span className={classnames('status-name', 'status-name-' + maintenance.statusType)}>{maintenance.statusName}</span>
+          </h3>
         </a>
         <div className="maintenance-field">
           <span className="maintenance-field-label">Scheduled For:</span>

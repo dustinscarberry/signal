@@ -66,3 +66,29 @@
     color: #0080ff;
   }
 }
+
+.status-name{
+  margin-left: 1rem;
+  font-size: 1.6rem;
+  font-style: italic;
+
+  &.status-name-ok{
+    color: #136207;
+  }
+
+  &.status-name-issues{
+    color: #cc8100;
+  }
+
+  &.status-name-error{
+    color: #aa0114;
+  }
+
+  &.status-name-progress{
+    color: #cc8100;
+  }
+
+  &.status-name-future{
+    color: #0080ff;
+  }
+}

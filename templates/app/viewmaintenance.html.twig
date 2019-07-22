@@ -10,7 +10,10 @@
             <div class="maintenance-list-widget">
               <div class="maintenance-list">
                 <div class="maintenance-list-item is-open">
-                  <h3 class="maintenance-subject status-icon status-icon-{{ maintenance.status.type }}">{{ maintenance.name }}</h3>
+                  <h3 class="maintenance-subject status-icon status-icon-{{ maintenance.status.type }}">
+                    {{ maintenance.name }}
+                    <span class="status-name status-name-{{ maintenance.status.type }}">{{ maintenance.status.name }}</span>
+                  </h3>
                   <div class="maintenance-field">
                     <span class="maintenance-field-label">Scheduled For:</span>
                     <span>{{ maintenance.scheduledFor|date("n/j/Y, g:i A", config.siteTimezone) }}</span>

@@ -39,7 +39,10 @@ class IncidentListItem extends React.Component
     return (
       <div className={classnames('incident-list-item', incidentClasses)}>
         <a href={'/incident/' + incident.id}>
-          <h3 className={classnames('incident-subject', incidentStatusClass)}>{incident.name}</h3>
+          <h3 className={classnames('incident-subject', incidentStatusClass)}>
+            {incident.name}
+            <span className={classnames('status-name', 'status-name-' + incident.statusType)}>{incident.statusName}</span>
+          </h3>
         </a>
         <div className="incident-field">
           <span className="incident-field-label">Occurred:</span>
