@@ -180,13 +180,14 @@ class MaintenanceManager
 
   private function sendNotificationEmails($action, $maintenance)
   {
+    //// TODO: add update email view
     //send email if services included
     if ($maintenance->getMaintenanceServices())
     {
       if ($action == 'create')
         $this->maintenanceCreatedMailer->send($maintenance);
-      else if ($action == 'update')
-        $this->maintenanceUpdatedMailer->send($maintenance);
+      //else if ($action == 'update')
+        //$this->maintenanceUpdatedMailer->send($maintenance);
     }
   }
 

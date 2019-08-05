@@ -9,5 +9,5 @@
 {%- endblock -%}
 
 {%- block editable_text -%}
-    <input type="number" class="editable-text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <input type="text" class="editable-text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
 {%- endblock -%}

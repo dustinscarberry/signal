@@ -83,10 +83,16 @@ class SubscriptionManagement
 
     foreach ($serviceCategories as $serviceCategory)
     {
+      $services = $serviceCategory->getServices();
+
+      //remove empty service categories
+      if (count($services) == 0)
+        continue;
+
       $indexer = 'serviceCategory-' . $serviceCategory->getId();
       $this->$indexer = [];
 
-      foreach ($serviceCategory->getServices() as $service)
+      foreach ($services as $service)
       {
         $blacklistedServiceFound = false;
 

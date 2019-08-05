@@ -53,7 +53,7 @@
 {%- block editable_text_widget -%}
   <div class="editable-text-wrapper">
     <button class="editable-text-action"></button>
-    <input type="text" class="form-control editable-text" disabled="disabled" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    <input type="text" class="form-control editable-text" readonly {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
   </div>
 {%- endblock editable_text_widget -%}
 

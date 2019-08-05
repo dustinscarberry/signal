@@ -9,13 +9,13 @@ const View = (props) =>
   const linkNodes = [];
 
   if (props.showPastMaintenance)
-    linkNodes.push(<Link href='/pastmaintenance' title='Past Maintenance'/>);
+    linkNodes.push(<Link key={0} href='/pastmaintenance' title='Past Maintenance'/>);
 
   if (props.showFutureMaintenance)
-    linkNodes.push(<Link href='/scheduledmaintenance' title='Scheduled Maintenance'/>);
+    linkNodes.push(<Link key={1} href='/scheduledmaintenance' title='Scheduled Maintenance'/>);
 
   if (props.showPastIncidents)
-    linkNodes.push(<Link href='/pastincidents' title='Past Incidents'/>);
+    linkNodes.push(<Link key={2} href='/pastincidents' title='Past Incidents'/>);
 
   return (
     <ContentBlock>

@@ -67,7 +67,7 @@ class MaintenanceUpdate implements JsonSerializable
     $currentTime = time();
     $this->setUpdated($currentTime);
 
-    if ($this->getCreated() == null)
+    if ($this->getCreated() === null)
       $this->setCreated($currentTime);
   }
 

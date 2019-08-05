@@ -27,6 +27,10 @@ class SubscriptionManagementType extends AbstractType
 
     foreach ($serviceCategories as $serviceCategory)
     {
+      //remove empty service categories
+      if (count($serviceCategory->getServices()) == 0)
+        continue;
+
       $builder->add('serviceCategory-' . $serviceCategory->getId(), SubscriptionGroupType::class, [
         'groupName' => $serviceCategory->getName(),
         'groupItems' => $serviceCategory->getServices(),

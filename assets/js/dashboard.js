@@ -3,6 +3,7 @@ import '../css/dashboard.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+const moment = require('moment');
 import AppWidgetCustomizer from './component/dashboard/AppWidgetCustomizerRedux';
 
 //render app widget customizer
@@ -53,7 +54,7 @@ $(document).ready(function(){
   $('body').click(function(e){
     $('.dashboard-profile').removeClass('is-open');
     $('.editable-text-wrapper').removeClass('is-unlocked');
-    $('.editable-text').prop('disabled', 'disabled');
+    $('.editable-text').prop('readonly', 'readonly');
   });
 
   //close feedback by user
@@ -136,15 +137,30 @@ $(document).ready(function(){
     $(this).prop('autocomplete', 'off');
   });
 
-  //editable text inputs
+  //editable text inputs keep body click from happening if on element
+  //so date can be changed
   $('.editable-text-wrapper').click(function(){
     event.stopPropagation();
   });
 
+  //for new fields, not sure why I need two still
+  $('form').on('click', '.editable-text-wrapper', function(){
+    event.stopPropagation();
+  })
+
+  //add editable text activation to existing rows
   $('.editable-text-action').on('click', function(){
     var textField = $(this).next('.editable-text');
     textField.parent().toggleClass('is-unlocked');
-    textField.prop('disabled', function (_, val) { return !val; });
+    textField.prop('readonly', function (_, val) { return !val; });
+    return false;
+  });
+
+  //add editable text activation to new rows
+  $('form').on('click', '.editable-text-action', function(){
+    var textField = $(this).next('.editable-text');
+    textField.parent().toggleClass('is-unlocked');
+    textField.prop('readonly', function (_, val) { return !val; });
     return false;
   });
 
@@ -510,9 +526,28 @@ class ServiceCollection
     //add [row] class
     let formRow = $(prototype).addClass('row');
 
+    //add row deletion button
     formRow.append('<button class="collection-delete-btn"></button>');
+
+    //add extra custom  attributes if needed to subform row
+    formRow = this.addExtraAttributes(formRow);
 
     //append to collection list
     this.collectionSubForm.append(formRow);
+  }
+
+  addExtraAttributes(formRow)
+  {
+    const subformId = this.collectionSubForm.parent().attr('id');
+
+    if (subformId == 'maintenance-updates-group'
+      || subformId == 'incident-updates-group'
+    )
+    {
+      const currentDatetime = moment().format('MM/DD/YYYY h:mm A');
+      formRow.find('.editable-text').val(currentDatetime);
+    }
+
+    return formRow;
   }
 }

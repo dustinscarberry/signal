@@ -13,13 +13,8 @@ class EditableTextType extends AbstractType
     return TextType::class;
   }
 
-  public function getName()
+  public function configureOptions(OptionsResolver $resolver)
   {
-    return 'editable_text';
-  }
-
-  public function getBlockPrefix()
-  {
-    return 'editable_text';
+    $resolver->setDefaults([]);
   }
 }
