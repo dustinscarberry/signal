@@ -9,8 +9,16 @@ class LogGenerator
     //load log lines
     $file = new \SplFileObject($path, 'r');
     $file->seek(PHP_INT_MAX);
-    $last_line = $file->key();
-    $lines = new \LimitIterator($file, $last_line - $maxLines, $last_line);
+    $lastLine = $file->key();
+
+    //get start line to read from
+    if ($lastLine <= $maxLines)
+      $startLine = 0;
+    else
+      $startLine = $lastLine - $maxLines;
+
+    //read log lines
+    $lines = new \LimitIterator($file, $startLine, $lastLine);
 
     //reverse logs
     if ($reverseLog)
@@ -28,7 +36,6 @@ class LogGenerator
       $line = str_replace($time, '', $line);
       $errorType = strtok($line, ':') . ':';
       $message = trim(str_replace($errorType, '', $line));
-      //$errorType = trim(rtrim($errorType, ':'));
 
       if (strpos($errorType, 'DEBUG') !== false)
         $data->type = 'debug';

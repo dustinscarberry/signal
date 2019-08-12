@@ -186,8 +186,8 @@ class MaintenanceManager
     {
       if ($action == 'create')
         $this->maintenanceCreatedMailer->send($maintenance);
-      //else if ($action == 'update')
-        //$this->maintenanceUpdatedMailer->send($maintenance);
+      else if ($action == 'update')
+        $this->maintenanceUpdatedMailer->send($maintenance);
     }
   }
 

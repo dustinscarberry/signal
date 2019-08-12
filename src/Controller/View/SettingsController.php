@@ -44,6 +44,9 @@ class SettingsController extends AbstractController
       else
         $appConfig->setLogo($previousLogo);
 
+      //strip last slash off of siteUrl
+      $appConfig->setSiteUrl(rtrim($appConfig->getSiteUrl(), '\\'));
+
       $appConfig->save();
 
       $this->addFlash('success', 'App settings updated');

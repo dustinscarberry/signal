@@ -249,7 +249,6 @@
   width: 100%;
   display: block;
   text-align: right;
-  padding: .5rem 0;
   background: none;
   border: 0;
   cursor: pointer;
@@ -257,8 +256,8 @@
   position: absolute;
   top: 2.5rem;
   right: 2.5rem;
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 50px;
 }
 
 .incident-details-toggle::before,

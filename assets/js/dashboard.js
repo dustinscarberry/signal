@@ -389,10 +389,10 @@ $(document).ready(function(){
     );
   });
 
-  $('#service-view-list').on('click', '.btn-delete', function(){
+  $('#service-view-table').on('click', '.btn-delete', function(){
     confirmDelete(
       async () => {
-        let parent = $(this).closest('.list-item');
+        let parent = $(this).closest('tr');
         let dataID = parent.data('id');
 
         let rsp = await axios.delete('/api/v1/services/' + dataID);
@@ -401,17 +401,17 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            parent.remove();
+            serviceViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }
     );
   });
 
-  $('#service-category-view-list').on('click', '.btn-delete', function(){
+  $('#service-category-view-table').on('click', '.btn-delete', function(){
     confirmDelete(
       async () => {
-        let parent = $(this).closest('.list-item');
+        let parent = $(this).closest('tr');
         let dataID = parent.data('id');
 
         let rsp = await axios.delete('/api/v1/servicecategories/' + dataID);
@@ -420,17 +420,17 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            parent.remove();
+            serviceCategoryViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }
     );
   });
 
-  $('#incident-view-list').on('click', '.btn-delete', function(){
+  $('#incident-view-table').on('click', '.btn-delete', function(){
     confirmDelete(
       async () => {
-        let parent = $(this).closest('.list-item');
+        let parent = $(this).closest('tr');
         let dataID = parent.data('id');
 
         let rsp = await axios.delete('/api/v1/incidents/' + dataID);
@@ -439,7 +439,7 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            parent.remove();
+            incidentViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }
@@ -540,12 +540,18 @@ class ServiceCollection
   {
     const subformId = this.collectionSubForm.parent().attr('id');
 
+    //extra actions for updates
     if (subformId == 'maintenance-updates-group'
       || subformId == 'incident-updates-group'
     )
     {
       const currentDatetime = moment().format('MM/DD/YYYY h:mm A');
-      formRow.find('.editable-text').val(currentDatetime);
+      const field = formRow.find('.editable-text');
+
+      //set datetimepicker because .on doesn't work for new ones, for some reason
+      field.datetimepicker();
+      //set starting value of field
+      field.val(currentDatetime);
     }
 
     return formRow;

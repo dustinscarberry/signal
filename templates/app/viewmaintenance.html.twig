@@ -16,7 +16,7 @@
                   </h3>
                   <div class="maintenance-field">
                     <span class="maintenance-field-label">Scheduled For:</span>
-                    <span>{{ maintenance.scheduledFor|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                    <span>{{ maintenance.scheduledFor|date("n/j/Y, g:i A T", config.siteTimezone) }}</span>
                   </div>
                   <div class="maintenance-field">
                     <p>{{ maintenance.purpose|nl2br }}</p>
@@ -25,7 +25,7 @@
                     <span class="maintenance-field-label">Anticipated Resolution:</span>
                     <span>
                       {% if maintenance.anticipatedEnd %}
-                        {{ maintenance.anticipatedEnd|date("n/j/Y, g:i A", config.siteTimezone) }}
+                        {{ maintenance.anticipatedEnd|date("n/j/Y, g:i A T", config.siteTimezone) }}
                       {% endif %}
                     </span>
                   </div>
@@ -47,7 +47,7 @@
                     {% for update in maintenance.maintenanceUpdates|reverse %}
 
                     <div class="maintenance-update">
-                      <span class="maintenance-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                      <span class="maintenance-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A T", config.siteTimezone) }}</span>
                       <p>{{ update.message|nl2br }}</p>
                     </div>
 

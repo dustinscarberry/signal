@@ -16,7 +16,7 @@
                   </h3>
                   <div class="incident-field">
                     <span class="incident-field-label">Occurred:</span>
-                    <span>{{ incident.occurred|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                    <span>{{ incident.occurred|date("n/j/Y, g:i A T", config.siteTimezone) }}</span>
                   </div>
                   <div class="incident-field">
                     <p>{{ incident.message|nl2br }}</p>
@@ -25,7 +25,7 @@
                     <span class="incident-field-label">Anticipated Resolution:</span>
                     <span>
                       {% if incident.anticipatedResolution %}
-                        {{ incident.anticipatedResolution|date("n/j/Y, g:i A", config.siteTimezone) }}
+                        {{ incident.anticipatedResolution|date("n/j/Y, g:i A T", config.siteTimezone) }}
                       {% endif %}
                     </span>
                   </div>
@@ -51,7 +51,7 @@
                     {% for update in incident.incidentUpdates|reverse %}
 
                     <div class="incident-update">
-                      <span class="incident-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A", config.siteTimezone) }}</span>
+                      <span class="incident-update-occurred status-icon status-icon-{{ update.status.type }}">{{ update.created|date("n/j/Y, g:i A T", config.siteTimezone) }}</span>
                       <p>{{ update.message|nl2br }}</p>
                     </div>
 

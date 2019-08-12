@@ -24,6 +24,11 @@ class MailManager
 
   public function sendEmail(string $template, $parameters, string $subject, string $to)
   {
+    //merge passed parameters with defaults
+    $siteUrl = rtrim($appConfig->getSiteUrl(), '/');
+    $parameters = array_merge($parameters, ['siteUrl' => $siteUrl]);
+
+    //compose email
     $message = (new Swift_Message($subject))
       ->setFrom([$this->appConfig->getMailFromAddress() => $this->appConfig->getMailFromName()])
       ->setTo($to)
@@ -35,6 +40,7 @@ class MailManager
         'text/html'
       );
 
+    //send email
     $this->mailer->send($message);
   }
 }

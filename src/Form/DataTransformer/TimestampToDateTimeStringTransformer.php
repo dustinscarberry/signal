@@ -25,9 +25,11 @@ class TimestampToDateTimeStringTransformer implements DataTransformerInterface
   }
 
   public function reverseTransform($datetimeString)
-  {  
+  {
     if (is_numeric($datetimeString))
       return $datetimeString;
+
+    date_default_timezone_set($this->timezone);
 
     return strtotime($datetimeString);
   }

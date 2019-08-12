@@ -17,7 +17,7 @@
   <tr>
     <td>
       <h2 style="color: #444444; font-family: Helvetica, Arial, sans-serif; font-size: 24px; font-weight: 400; line-height: 1.3; margin: 0px 0px 10px; padding: 0px; overflow-wrap: normal; text-align: center;">
-        Maintenance - {{ maintenance.name }} - scheduled</h2>
+        Maintenance - {{ maintenance.name }} - updated</h2>
     </td>
   </tr>
 </table>
@@ -29,7 +29,19 @@
       <b>Scheduled For:</b> {{ maintenance.scheduledFor|date("m/d/Y g:ia T", config.siteTimezone) }}<br>
       <b>Anticipated End:</b> {{ maintenance.anticipatedEnd|date("m/d/Y g:ia T", config.siteTimezone) }}<br>
       <b>Services Affected:</b> {{ maintenance.servicesString }}<br><br>
-      {{ maintenance.purpose }}
+      {{ maintenance.purpose }}<br><br>
+
+      {% if maintenance.updates is empty %}
+        <b>Updates:</b> N/A
+      {% else %}
+        <b>Updates:</b>
+      {% endif %}
+
+      {% for update in maintenance.updates %}
+        {{ update.created|date("m/d/Y g:ia T", config.siteTimezone) }}<br>
+        {{ update.message }}<br><br>
+      {% endfor %}
+
     </td>
   </tr>
 </table>

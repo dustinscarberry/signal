@@ -22,7 +22,7 @@
           <thead>
             <tr>
               <th>Title</th>
-              <th>Created</th>
+              <th>Occurred</th>
               <th></th>
             </tr>
           </thead>
@@ -42,7 +42,7 @@
                   </div>
                 </div>
               </td>
-              <td>{{ incident.created|date("m/d/Y g:ia", config.siteTimezone) }}</td>
+              <td>{{ incident.occurred|date("m/d/Y g:ia", config.siteTimezone) }}</td>
               <td>
                 <button class="btn btn-error btn-delete pull-right">Delete</button>
                 <a class="btn btn-primary pull-right" href="/dashboard/incidents/{{ incident.hashId }}">Update</a>
