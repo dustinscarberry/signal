@@ -8,7 +8,7 @@ export const WIDGET_BLOCK_TYPE = {
   SERVICE_UPTIME_CHART: 'service-uptime-chart',
   CUSTOM_METRIC_CHART: 'custom-metric-chart',
   PAST_FUTURE_LINKS: 'past-future-links',
-  CUSTOM_LINKS: 'custom-links'
+  //CUSTOM_LINKS: 'custom-links'
 }
 
 export const WIDGET_BLOCK_ATTRIBUTES = {
@@ -48,10 +48,10 @@ export const WIDGET_BLOCK_ATTRIBUTES = {
     title: 'Past & Future Links',
     iconClass: 'fas fa-link'
   },
-  [WIDGET_BLOCK_TYPE.CUSTOM_LINKS]: {
+  /*[WIDGET_BLOCK_TYPE.CUSTOM_LINKS]: {
     title: 'Custom Links',
     iconClass: 'fas fa-link'
-  }
+  }*/
 }
 
 export const WIDGET_BLOCK_DATA = {
@@ -119,9 +119,8 @@ export const WIDGET_BLOCK_DATA = {
     sortOrder: undefined,
     attributes: {
       title: undefined,
-      scale: undefined,
-      service: undefined,
-      useAllServices: undefined,
+      scale: 'minute',
+      service: 'all',
       refreshInterval: 60
     }
   },

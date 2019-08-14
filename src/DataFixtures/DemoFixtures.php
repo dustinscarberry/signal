@@ -13,14 +13,20 @@ use App\Entity\IncidentStatus;
 use App\Entity\IncidentType;
 use App\Entity\Incident;
 use App\Entity\MaintenanceStatus;
+use App\Service\Manager\UserManager;
 
-class AppFixtures extends Fixture
+class DemoFixtures extends Fixture
 {
   private $passwordEncoder;
+  private $userManager;
 
-  public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+  public function __construct(
+    UserPasswordEncoderInterface $passwordEncoder,
+    UserManager $userManager
+  )
   {
     $this->passwordEncoder = $passwordEncoder;
+    $this->userManager = $userManager;
   }
 
   public function load(ObjectManager $manager)
@@ -30,6 +36,7 @@ class AppFixtures extends Fixture
     $serviceCategory->setName('Default');
     $serviceCategory->setHint('Default category');
     $serviceCategory->setDeletable(false);
+    $serviceCategory->setEditable(false);
     $manager->persist($serviceCategory);
 
     //create default service statuses
@@ -105,9 +112,10 @@ class AppFixtures extends Fixture
     $user->setUsername('demo');
     $user->setPassword($this->passwordEncoder->encodePassword($user, 'demo'));
     $user->setEmail('demo@demo.com');
-    $user->setFirstName('John');
-    $user->setLastName('Doe');
+    $user->setFirstName('Demo');
+    $user->setLastName('Account');
     $user->setRoles(['ROLE_ADMIN']);
+    $user = $this->userManager->regenerateApiToken($user);
     $manager->persist($user);
 
     //create default settings
@@ -127,7 +135,6 @@ class AppFixtures extends Fixture
     $settings['mailFromAddress'] = 'statusbot@donotreply.com';
     $settings['mailFromName'] = 'Status Bot';
     $settings['enableExchangeCalendarSync'] = false;
-    $settings['enableGoogleCalendarSync'] = false;
     $settings['enableSaml2Login'] = false;
     $settings['saml2AppIdentifier'] = '';
     $settings['saml2IdpLoginUrl'] = '';

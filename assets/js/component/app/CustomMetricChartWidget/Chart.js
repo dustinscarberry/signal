@@ -53,23 +53,24 @@ const Chart = (props) =>
       colors={{
           "scheme": "dark2"
       }}
-      dotSize={10}
-      dotColor={{
+      pointSize={10}
+      pointColor={{
           from: 'color'
       }}
-      dotBorderWidth={2}
-      dotBorderColor={{
+      pointBorderWidth={2}
+      pointBorderColor={{
           "from": "color"
       }}
       enableDots={false}
       enableDotLabel={false}
-      dotLabel="y"
-      dotLabelYOffset={-12}
+      pointLabel="y"
+      pointLabelYOffset={-12}
       animate={true}
       motionStiffness={90}
       motionDamping={15}
       enableGridX={true}
       enableGridY={true}
+      enableSlices="x"
     />
   );
 }

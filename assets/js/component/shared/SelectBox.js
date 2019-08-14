@@ -11,7 +11,7 @@ const SelectBox = (props) =>
   });
 
   return (
-    <select className="form-control" onChange={props.handleChange} value={props.value}>
+    <select className="form-control" onChange={props.handleChange} value={props.value} name={props.name}>
       {optionNodes}
     </select>
   );
@@ -21,7 +21,8 @@ SelectBox.defaultProps = {
   options: [],
   value: undefined,
   handleChange: undefined,
-  useBlank: true
+  useBlank: true,
+  name: undefined
 };
 
 export default SelectBox;

@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -12,46 +13,15 @@ class IncidentsListWidgetBlock extends React.Component
   {
     super(props);
 
-    this.changeTitle = this.changeTitle.bind(this);
-    this.changeTimeframe = this.changeTimeframe.bind(this);
-    this.changeMaxItems = this.changeMaxItems.bind(this);
-    this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
-
     if (this.props.widget.isNew)
       this.props.toggleIsSaved(false);
   }
 
-  changeTitle(e)
+  @autobind
+  changeValue(e)
   {
     this.props.updateAttributes({
-      title: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeTimeframe(e)
-  {
-    this.props.updateAttributes({
-      timeframe: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeMaxItems(e)
-  {
-    this.props.updateAttributes({
-      maxItems: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeRefreshInterval(e)
-  {
-    this.props.updateAttributes({
-      refreshInterval: e.target.value
+      [e.target.name]: e.target.value
     });
 
     this.props.toggleIsSaved(false);
@@ -65,7 +35,8 @@ class IncidentsListWidgetBlock extends React.Component
           <Label title="Title"/>
           <TextInput
             value={this.props.widget.attributes.title}
-            handleChange={this.changeTitle}
+            handleChange={this.changeValue}
+            name="title"
           />
         </FormGroup>
         <FormGroup>
@@ -76,22 +47,25 @@ class IncidentsListWidgetBlock extends React.Component
               {key: 'all', value: 'All Incidents'},
               {key: 'past', value: 'Past Incidents'}
             ]}
-            handleChange={this.changeTimeframe}
+            handleChange={this.changeValue}
             useBlank={false}
+            name="timeframe"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Max Items" hint="max incidents to show"/>
           <NumberInput
             value={this.props.widget.attributes.maxItems}
-            handleChange={this.changeMaxItems}
+            handleChange={this.changeValue}
+            name="maxItems"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Refresh Interval" hint="in seconds"/>
           <NumberInput
             value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeRefreshInterval}
+            handleChange={this.changeValue}
+            name="refreshInterval"
           />
         </FormGroup>
       </div>

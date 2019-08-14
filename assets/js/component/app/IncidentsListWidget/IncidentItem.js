@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import IncidentItemUpdates from './IncidentItemUpdates';
 import IncidentItemServices from './IncidentItemServices';
 import { getFormattedDateTime, getStatusIconClasses, nl2br } from './actions';
@@ -13,10 +14,9 @@ class IncidentListItem extends React.Component
     this.state = {
       isOpen: false
     }
-
-    this.toggleDetails = this.toggleDetails.bind(this);
   }
 
+  @autobind
   toggleDetails()
   {
     this.setState({isOpen: !this.state.isOpen});

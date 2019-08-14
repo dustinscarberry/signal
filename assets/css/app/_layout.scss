@@ -59,6 +59,16 @@
 .app-subscribe-btn{
   float: right;
   margin: 2rem 0 0;
+  max-width: 100%;
+}
+
+@media (max-width: 400px)
+{
+  .app-logo,
+  .app-subscribe-btn{
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .app-footer{

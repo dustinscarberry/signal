@@ -123,7 +123,7 @@ class WidgetDataGenerator
 
     $scheduledMaintenance = $this->em
       ->getRepository(Maintenance::class)
-      ->findAllScheduledMaintenance();
+      ->findAllScheduledMaintenance(false, false);
 
     $this->data['scheduledMaintenance'] = count($scheduledMaintenance);
 

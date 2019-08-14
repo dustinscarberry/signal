@@ -10,4 +10,10 @@ const Toggle = (props) =>
   );
 }
 
+Toggle.defaultProps = {
+  value: false,
+  handleChange: undefined,
+  name: undefined
+};
+
 export default Toggle;

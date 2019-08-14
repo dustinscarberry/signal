@@ -16,6 +16,7 @@ function rootReducer(state = initialState, action)
   {
     let newState = Object.assign({}, state);
     newState.widgets[action.index] = action.widget;
+    newState.widgets[action.index].isNew = false;
     return newState;
   }
   else if (action.type == 'WIDGET_DELETE')

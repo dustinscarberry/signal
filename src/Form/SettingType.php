@@ -59,9 +59,6 @@ class SettingType extends AbstractType
       ->add('enableExchangeCalendarSync', CheckboxType::class, [
         'required' => false
       ])
-      ->add('enableGoogleCalendarSync', CheckboxType::class, [
-        'required' => false
-      ])
       ->add('enableSaml2Login', CheckboxType::class, [
         'required' => false
       ])

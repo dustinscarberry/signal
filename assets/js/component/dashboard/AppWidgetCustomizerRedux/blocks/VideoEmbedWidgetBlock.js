@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import ResponsiveIframe from '../../../shared/ResponsiveIframe';
 import FormGroup from '../../../shared/FormGroup';
@@ -10,10 +11,9 @@ class VideoEmbedWidgetBlock extends React.Component
   constructor(props)
   {
     super(props);
-
-    this.changeURL = this.changeURL.bind(this);
   }
 
+  @autobind
   changeURL(e)
   {
     let url = e.target.value.trim();

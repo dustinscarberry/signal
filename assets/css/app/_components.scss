@@ -119,15 +119,24 @@
 .past-future-links-widget{
   .custom-link{
     background: #ccc;
-    padding: .5rem 1.5rem;
+    padding: 1rem 1.5rem;
     border-radius: 1.5rem;
     color: #333;
     margin-right: 2rem;
+    margin-bottom: 2rem;
     transition: color .15s linear, background-color .15s linear;
+    display: inline-block;
 
     &:hover{
       background: #333;
       color: #eee;
+    }
+  }
+
+  @media (max-width: 400px)
+  {
+    .custom-link{
+      width: 100%;
     }
   }
 }
@@ -175,7 +184,6 @@
   background: #fff;
   border: 1px solid #ccc;
   padding: 1.5rem;
-  border-top-width: 0;
   margin-bottom: 2.5rem;
   border-radius: .5rem;
   position: relative;
@@ -228,13 +236,13 @@
 .incident-update .incident-update-occurred,
 .maintenance-update .maintenance-update-occurred{
   font-style: italic;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
 }
 
 .incident-update .incident-update-occurred::before,
 .maintenance-update .maintenance-update-occurred::before{
   margin-right: .5rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .incident-list-item .incident-field-label,

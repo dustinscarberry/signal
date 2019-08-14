@@ -22,7 +22,6 @@ class AppConfig
   private $mailFromAddress;
   private $mailFromName;
   private $enableExchangeCalendarSync;
-  private $enableGoogleCalendarSync;
   private $enableSaml2Login;
   private $saml2AppIdentifier;
   private $saml2IdpLoginUrl;
@@ -200,17 +199,6 @@ class AppConfig
   public function setEnableExchangeCalendarSync(bool $enableExchangeCalendarSync): self
   {
     $this->enableExchangeCalendarSync = $enableExchangeCalendarSync;
-    return $this;
-  }
-
-  public function getEnableGoogleCalendarSync(): bool
-  {
-    return $this->enableGoogleCalendarSync;
-  }
-
-  public function setEnableGoogleCalendarSync(bool $enableGoogleCalendarSync): self
-  {
-    $this->enableGoogleCalendarSync = $enableGoogleCalendarSync;
     return $this;
   }
 

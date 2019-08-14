@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -10,33 +11,15 @@ class PastFutureLinksWidgetBlock extends React.Component
   {
     super(props);
 
-    this.changeShowPastMaintenance = this.changeShowPastMaintenance.bind(this);
-    this.changeShowFutureMaintenance = this.changeShowFutureMaintenance.bind(this);
-    this.changeShowPastIncidents = this.changeShowPastIncidents.bind(this);
+    if (this.props.widget.isNew)
+      this.props.toggleIsSaved(false);
   }
 
-  changeShowPastMaintenance(e)
+  @autobind
+  changeCheckboxValue(e)
   {
     this.props.updateAttributes({
-      showPastMaintenance: e.target.checked
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeShowFutureMaintenance(e)
-  {
-    this.props.updateAttributes({
-      showFutureMaintenance: e.target.checked
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeShowPastIncidents(e)
-  {
-    this.props.updateAttributes({
-      showPastIncidents: e.target.checked
+      [e.target.name]: e.target.checked
     });
 
     this.props.toggleIsSaved(false);
@@ -50,21 +33,24 @@ class PastFutureLinksWidgetBlock extends React.Component
           <Label title="Show Past Maintenance" hint=""/>
           <Toggle
             value={this.props.widget.attributes.showPastMaintenance}
-            handleChange={this.changeShowPastMaintenance}
+            handleChange={this.changeCheckboxValue}
+            name="showPastMaintenance"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Show Future Maintenance" hint=""/>
           <Toggle
             value={this.props.widget.attributes.showFutureMaintenance}
-            handleChange={this.changeShowFutureMaintenance}
+            handleChange={this.changeCheckboxValue}
+            name="showFutureMaintenance"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Show Past Incidents" hint=""/>
           <Toggle
             value={this.props.widget.attributes.showPastIncidents}
-            handleChange={this.changeShowPastIncidents}
+            handleChange={this.changeCheckboxValue}
+            name="showPastIncidents"
           />
         </FormGroup>
       </div>

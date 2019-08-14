@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -18,15 +19,20 @@ class ServiceUptimeChartWidgetBlock extends React.Component
       services: undefined
     };
 
-    this.changeTitle = this.changeTitle.bind(this);
-    this.changeScale = this.changeScale.bind(this);
-    this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
-    this.changeService = this.changeService.bind(this);
-
     if (this.props.widget.isNew)
       this.props.toggleIsSaved(false);
 
     this.loadSelectionData();
+  }
+
+  @autobind
+  changeValue(e)
+  {
+    this.props.updateAttributes({
+      [e.target.name]: e.target.value
+    });
+
+    this.props.toggleIsSaved(false);
   }
 
   async loadSelectionData()
@@ -42,42 +48,6 @@ class ServiceUptimeChartWidgetBlock extends React.Component
     }
   }
 
-  changeTitle(e)
-  {
-    this.props.updateAttributes({
-      title: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeScale(e)
-  {
-    this.props.updateAttributes({
-      scale: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeRefreshInterval(e)
-  {
-    this.props.updateAttributes({
-      refreshInterval: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeService(e)
-  {
-    this.props.updateAttributes({
-      service: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
   render()
   {
     if (!this.state.services)
@@ -89,7 +59,8 @@ class ServiceUptimeChartWidgetBlock extends React.Component
           <Label title="Title"/>
           <TextInput
             value={this.props.widget.attributes.title}
-            handleChange={this.changeTitle}
+            handleChange={this.changeValue}
+            name="title"
           />
         </FormGroup>
         <FormGroup>
@@ -101,7 +72,8 @@ class ServiceUptimeChartWidgetBlock extends React.Component
               {key: 'hour', value: 'Hour'},
               {key: 'minute', value: 'Minute'}
             ]}
-            handleChange={this.changeScale}
+            handleChange={this.changeValue}
+            name="scale"
           />
         </FormGroup>
         <FormGroup>
@@ -109,15 +81,17 @@ class ServiceUptimeChartWidgetBlock extends React.Component
           <SelectBox
             value={this.props.widget.attributes.service}
             options={this.state.services}
-            handleChange={this.changeService}
+            handleChange={this.changeValue}
             useBlank={false}
+            name="service"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Refresh Interval" hint="in seconds"/>
           <NumberInput
             value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeRefreshInterval}
+            handleChange={this.changeValue}
+            name="refreshInterval"
           />
         </FormGroup>
       </div>

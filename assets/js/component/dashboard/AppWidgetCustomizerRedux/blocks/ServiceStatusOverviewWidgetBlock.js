@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -10,16 +11,15 @@ class ServiceStatusOverviewWidgetBlock extends React.Component
   {
     super(props);
 
-    this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
-
     if (this.props.widget.isNew)
       this.props.toggleIsSaved(false);
   }
 
-  changeRefreshInterval(e)
+  @autobind
+  changeValue(e)
   {
     this.props.updateAttributes({
-      refreshInterval: e.target.value
+      [e.target.name]: e.target.value
     });
 
     this.props.toggleIsSaved(false);
@@ -33,7 +33,8 @@ class ServiceStatusOverviewWidgetBlock extends React.Component
           <Label title="Refresh Interval" hint="in seconds"/>
           <NumberInput
             value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeRefreshInterval}
+            handleChange={this.changeValue}
+            name="refreshInterval"
           />
         </FormGroup>
       </div>

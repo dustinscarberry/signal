@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -12,34 +13,23 @@ class ServicesListWidgetBlock extends React.Component
   constructor(props)
   {
     super(props);
-
-    this.changeLayout = this.changeLayout.bind(this);
-    this.changeUseGroups = this.changeUseGroups.bind(this);
-    this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
   }
 
-  changeLayout(e)
+  @autobind
+  changeValue(e)
   {
     this.props.updateAttributes({
-      layout: e.target.value
+      [e.target.name]: e.target.value
     });
 
     this.props.toggleIsSaved(false);
   }
 
-  changeUseGroups(e)
+  @autobind
+  changeCheckboxValue(e)
   {
     this.props.updateAttributes({
-      useGroups: e.target.checked
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeRefreshInterval(e)
-  {
-    this.props.updateAttributes({
-      refreshInterval: e.target.value
+      [e.target.name]: e.target.checked
     });
 
     this.props.toggleIsSaved(false);
@@ -57,21 +47,24 @@ class ServicesListWidgetBlock extends React.Component
               {key: 'onecolumn', value: 'One Column'},
               {key: 'twocolumn', value: 'Two Column'}
             ]}
-            handleChange={this.changeLayout}
+            handleChange={this.changeValue}
+            name="layout"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Refresh Interval" hint="in seconds"/>
           <NumberInput
             value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeRefreshInterval}
+            handleChange={this.changeValue}
+            name="refreshInterval"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Group Services"/>
           <Toggle
             value={this.props.widget.attributes.useGroups}
-            handleChange={this.changeUseGroups}
+            handleChange={this.changeCheckboxValue}
+            name="useGroups"
           />
         </FormGroup>
       </div>

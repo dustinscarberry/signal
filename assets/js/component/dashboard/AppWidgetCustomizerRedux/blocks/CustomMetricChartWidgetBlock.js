@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetBlock from '../WidgetBlock';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
@@ -18,16 +19,20 @@ class CustomMetricChartWidgetBlock extends React.Component
       metrics: undefined
     };
 
-    this.changeTitle = this.changeTitle.bind(this);
-    this.changeYLegend = this.changeYLegend.bind(this);
-    this.changeScale = this.changeScale.bind(this);
-    this.changeRefreshInterval = this.changeRefreshInterval.bind(this);
-    this.changeMetric = this.changeMetric.bind(this);
-
     if (this.props.widget.isNew)
       this.props.toggleIsSaved(false);
 
     this.loadSelectionData();
+  }
+
+  @autobind
+  changeValue(e)
+  {
+    this.props.updateAttributes({
+      [e.target.name]: e.target.value
+    });
+
+    this.props.toggleIsSaved(false);
   }
 
   async loadSelectionData()
@@ -43,51 +48,6 @@ class CustomMetricChartWidgetBlock extends React.Component
     }
   }
 
-  changeTitle(e)
-  {
-    this.props.updateAttributes({
-      title: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeYLegend(e)
-  {
-    this.props.updateAttributes({
-      yLegend: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeScale(e)
-  {
-    this.props.updateAttributes({
-      scale: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeRefreshInterval(e)
-  {
-    this.props.updateAttributes({
-      refreshInterval: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
-  changeMetric(e)
-  {
-    this.props.updateAttributes({
-      metric: e.target.value
-    });
-
-    this.props.toggleIsSaved(false);
-  }
-
   render()
   {
     if (!this.state.metrics)
@@ -99,14 +59,16 @@ class CustomMetricChartWidgetBlock extends React.Component
           <Label title="Title"/>
           <TextInput
             value={this.props.widget.attributes.title}
-            handleChange={this.changeTitle}
+            handleChange={this.changeValue}
+            name="title"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Y Axis Legend"/>
           <TextInput
             value={this.props.widget.attributes.yLegend}
-            handleChange={this.changeYLegend}
+            handleChange={this.changeValue}
+            name="yLegend"
           />
         </FormGroup>
         <FormGroup>
@@ -118,7 +80,8 @@ class CustomMetricChartWidgetBlock extends React.Component
               {key: 'hour', value: 'Hour'},
               {key: 'minute', value: 'Minute'}
             ]}
-            handleChange={this.changeScale}
+            handleChange={this.changeValue}
+            name="scale"
           />
         </FormGroup>
         <FormGroup>
@@ -126,15 +89,17 @@ class CustomMetricChartWidgetBlock extends React.Component
           <SelectBox
             value={this.props.widget.attributes.metric}
             options={this.state.metrics}
-            handleChange={this.changeMetric}
+            handleChange={this.changeValue}
             useBlank={false}
+            name="metric"
           />
         </FormGroup>
         <FormGroup>
           <Label title="Refresh Interval" hint="in seconds"/>
           <NumberInput
             value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeRefreshInterval}
+            handleChange={this.changeValue}
+            name="refreshInterval"
           />
         </FormGroup>
       </div>

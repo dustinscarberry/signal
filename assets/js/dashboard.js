@@ -464,6 +464,60 @@ $(document).ready(function(){
       }
     );
   });
+
+  //saml2 settings initialization
+  const appIdentifier = $('#setting_saml2AppIdentifier');
+  const idpLoginUrl = $('#setting_saml2IdpLoginUrl');
+  const subjectIdentifier = $('#setting_saml2SubjectIdentifier');
+  const signingCertificate = $('#setting_saml2IdpSigningCertificate');
+
+  if ($('#setting_enableSaml2Login').is(':checked'))
+  {
+    appIdentifier.attr('required', true);
+    idpLoginUrl.attr('required', true);
+    subjectIdentifier.attr('required', true);
+    signingCertificate.attr('required', true);
+  }
+  else
+  {
+    appIdentifier.parent('.form-group').toggleClass('is-hidden');
+    idpLoginUrl.parent('.form-group').toggleClass('is-hidden');
+    subjectIdentifier.parent('.form-group').toggleClass('is-hidden');
+    signingCertificate.parent('.form-group').toggleClass('is-hidden');
+  }
+
+  //saml2 toggle on/off
+  $('#setting_enableSaml2Login').click(function(){
+    const appIdentifier = $('#setting_saml2AppIdentifier');
+    const idpLoginUrl = $('#setting_saml2IdpLoginUrl');
+    const subjectIdentifier = $('#setting_saml2SubjectIdentifier');
+    const signingCertificate = $('#setting_saml2IdpSigningCertificate');
+
+    appIdentifier.parent('.form-group').toggleClass('is-hidden');
+    idpLoginUrl.parent('.form-group').toggleClass('is-hidden');
+    subjectIdentifier.parent('.form-group').toggleClass('is-hidden');
+    signingCertificate.parent('.form-group').toggleClass('is-hidden');
+
+    if (appIdentifier.attr('required'))
+      appIdentifier.removeAttr('required');
+    else
+      appIdentifier.attr('required', true);
+
+    if (idpLoginUrl.attr('required'))
+      idpLoginUrl.removeAttr('required');
+    else
+      idpLoginUrl.attr('required', true);
+
+    if (subjectIdentifier.attr('required'))
+      subjectIdentifier.removeAttr('required');
+    else
+      subjectIdentifier.attr('required', true);
+
+    if (signingCertificate.attr('required'))
+      signingCertificate.removeAttr('required');
+    else
+      signingCertificate.attr('required', true);
+  });
 });
 
 function confirmDelete(success, cancel)

@@ -10,8 +10,6 @@ use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
 use App\Service\Generator\ExchangeEventGenerator;
 use App\Entity\Maintenance;
 use App\Entity\ServiceStatusHistory;
-use App\Entity\ExchangeCalendarEvent;
-use App\Entity\GoogleCalendarEvent;
 use App\Model\AppConfig;
 use Psr\Log\LoggerInterface;
 
@@ -79,9 +77,6 @@ class MaintenanceManager
 
     //sync to exchange calendar
     $this->syncToExchangeCalendar($maintenance);
-
-    //sync to google calendar
-    $this->syncToGoogleCalendar($maintenance);
   }
 
   public function updateMaintenance($maintenance, $updateServiceStatuses, $originalServices, $originalUpdates)
@@ -135,9 +130,6 @@ class MaintenanceManager
 
     //sync to exchange calendar
     $this->syncToExchangeCalendar($maintenance);
-
-    //sync to google calendar
-    $this->syncToGoogleCalendar($maintenance);
   }
 
   public function deleteMaintenance($maintenance)
@@ -230,11 +222,6 @@ class MaintenanceManager
       else
         $logger->error('Exchange Calendar Sync enabled, however .env.local credentials are invalid');
     }
-  }
-
-  private function syncToGoogleCalendar($maintenance)
-  {
-
   }
 
   public static function getCurrentServices($maintenance)
