@@ -22,8 +22,8 @@
         <div class="dashboard-panel-block">
           {{ form_start(userForm) }}
           {{ form_widget(userForm) }}
-          <button class="btn btn-primary" type="submit">Update User</button>
-          <button name="regenerateApiToken" class="btn btn-primary" type="submit" value="regenerateApiToken">Regenerate API Token</button>
+          <button class="btn btn-primary" type="submit" name="updateUser" value="updateUser">Update User</button>
+          <button class="btn btn-primary" type="submit" name="regenerateApiToken" value="regenerateApiToken">Regenerate API Token</button>
           {{ form_end(userForm) }}
         </div>
       </div>

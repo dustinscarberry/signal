@@ -31,7 +31,7 @@
             <tr data-id="{{ status.hashId }}">
               <td>{{ status.name }}</td>
               <td>
-                <button class="btn btn-error pull-right btn-delete">Delete</button>
+                <button class="btn btn-error pull-right btn-delete" {% if not status.deletable %}disabled{% endif %}>Delete</button>
                 <button class="btn btn-primary pull-right" onclick="window.location.href='/dashboard/statuses/incident/{{ status.hashId }}'" {% if not status.editable %}disabled{% endif %}>Edit</button>
               </td>
             </tr>

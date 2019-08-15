@@ -81,6 +81,17 @@
   a{
     color: #eee;
   }
+
+  //past future links widgets
+  .past-future-links-widget{
+    .custom-link{
+      background: #ccc;
+
+      &:hover{
+        background: #333;
+      }
+    }
+  }
 }
 
 //dark theme
@@ -170,5 +181,16 @@
 
   a{
     color: #eee;
+  }
+
+  //past future links widgets
+  .past-future-links-widget{
+    .custom-link{
+      background: #ccc;
+
+      &:hover{
+        background: #333;
+      }
+    }
   }
 }

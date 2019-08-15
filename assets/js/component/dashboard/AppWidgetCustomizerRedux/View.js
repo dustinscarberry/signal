@@ -1,4 +1,5 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import WidgetCreator from './WidgetCreator';
 import WidgetBlockList from './WidgetBlockList';
 import WidgetSelector from './WidgetSelector';
@@ -30,10 +31,6 @@ class View extends React.Component
     this.state = {
       isOpenWidgetSelector: false
     };
-
-    this.addWidget = this.addWidget.bind(this);
-    this.handleModalToggle = this.handleModalToggle.bind(this);
-    this.handleAddWidgetType = this.handleAddWidgetType.bind(this);
   }
 
   componentDidMount()
@@ -49,16 +46,19 @@ class View extends React.Component
       this.props.dispatchInitializeWidgets(rsp.data.data);
   }
 
+  @autobind
   handleModalToggle()
   {
     this.setState({isOpenWidgetSelector: !this.state.isOpenWidgetSelector});
   }
 
+  @autobind
   async addWidget()
   {
     this.setState({isOpenWidgetSelector: !this.state.isOpenWidgetSelector});
   }
 
+  @autobind
   handleAddWidgetType(type)
   {
     const newWidget = WIDGET_BLOCK_DATA[type];

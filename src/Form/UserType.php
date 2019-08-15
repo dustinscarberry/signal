@@ -21,15 +21,7 @@ class UserType extends AbstractType
       ->add('username', TextType::class)
       ->add('firstName', TextType::class)
       ->add('lastName', TextType::class)
-      ->add('email', TextType::class)
-      ->add('apiToken', TextType::class, [
-        'attr' => [
-          'readonly' => true
-        ]
-      ])
-      ->add('apiEnabled', CheckboxType::class, [
-        'required' => false
-      ]);
+      ->add('email', TextType::class);
 
     $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
     {
@@ -55,6 +47,14 @@ class UserType extends AbstractType
             'first_options' => ['label' => 'New Password'],
             'second_options' => ['label' => 'Confirm New Password'],
             'mapped' => false,
+            'required' => false
+          ])
+          ->add('apiToken', TextType::class, [
+            'attr' => [
+              'readonly' => true
+            ]
+          ])
+          ->add('apiEnabled', CheckboxType::class, [
             'required' => false
           ]);
       }

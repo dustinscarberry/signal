@@ -36,7 +36,7 @@
                 </div>
               </td>
               <td>
-                <button class="btn btn-error pull-right btn-delete" {% if not serviceCategory.editable %}disabled{% endif %}>Delete</button>
+                <button class="btn btn-error pull-right btn-delete" {% if not serviceCategory.deletable %}disabled{% endif %}>Delete</button>
                 <button class="btn btn-primary pull-right" onclick="window.location.href='/dashboard/servicecategories/{{ serviceCategory.hashId }}'" {% if not serviceCategory.editable %}disabled{% endif %}>Edit</button>
               </td>
             </tr>

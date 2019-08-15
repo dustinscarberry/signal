@@ -48,13 +48,14 @@
   margin: 0;
   border: 1px solid #ccc;
   border-top-width: 0;
-  background: #eee;
+  background: #ddd;
 }
 
 .service-list .service-list-item,
 .service-list-group .service-list-item{
   border: 1px solid #ccc;
   border-top-width: 0;
+  border-bottom-width: 0;
   padding: 1.5rem;
 }
 
@@ -69,6 +70,7 @@
 .service-list-group :last-child{
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  border-bottom-width: 1px;
 }
 
 .service-list-group:only-child{
@@ -118,7 +120,7 @@
 //past future links widgets
 .past-future-links-widget{
   .custom-link{
-    background: #ccc;
+    background: #ddd;
     padding: 1rem 1.5rem;
     border-radius: 1.5rem;
     color: #333;
@@ -128,7 +130,7 @@
     display: inline-block;
 
     &:hover{
-      background: #333;
+      background: #777;
       color: #eee;
     }
   }

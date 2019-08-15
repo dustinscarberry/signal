@@ -31,6 +31,7 @@ class UserManager
     $encodedPassword = $this->passwordEncoder->encodePassword($user, $user->getPassword());
     $user->setPassword($encodedPassword);
     $user->setRoles(['ROLE_ADMIN']);
+    $user = $this->regenerateApiToken($user);
     $this->em->persist($user);
     $this->em->flush();
   }
