@@ -4,16 +4,27 @@ There are many built-in statuses that can be given to various items throughout t
 
 ## Service Statuses ##
 
-Name - The name of the custom status.
-Type - The icon / color to use for this status.
-Metric Value - The value that is used in metric calculations when this status is encountered. Valid ranges are from [0 - 100] integers only.
+##### `Name`
+The name of the custom status.
+
+##### `Type`
+The icon / color to use for this status.
+
+##### `Metric Value`
+The value that is used in metric calculations when this status is encountered. Valid ranges are from [0 - 100] integers only.
 
 ## Incident Statues ##
 
-Name - The name of the custom status.
-Type - The icon / color to use for this status.
+##### `Name`
+The name of the custom status.
+
+##### `Type`
+The icon / color to use for this status.
 
 ## Maintenance Statuses ##
 
-Name - The name of the custom status.
-Type - The icon / color to use for this status.
+##### `Name`
+The name of the custom status.
+
+##### `Type`
+The icon / color to use for this status.
