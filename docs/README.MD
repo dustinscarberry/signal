@@ -5,5 +5,15 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 ## Documentation
 
 - [Getting Started](start.md)
-- [API Keys](api-keys.md)
-- [Auth](auth.md)
+- [Dashboard](dashboard.md)
+- [Services](services.md)
+- [Categories](service-categories.md)
+- [Incidents](incidents.md)
+- [Maintenance](maintenance.md)
+- [Statuses](statuses.md)
+- [Custom Metrics](custom-metrics.md)
+- [Users](users.md)
+- [Subscriptions](subscriptions.md)
+- [Settings](settings.md)
+- [Logs](logs.md)
+- [API](api.md)
