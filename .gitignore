@@ -240,3 +240,6 @@ $RECYCLE.BIN/
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+#project specific#
+MarshallDataLoadFixtures.php
