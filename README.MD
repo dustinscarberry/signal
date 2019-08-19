@@ -1,10 +1,10 @@
+[![Build Status](https://travis-ci.com/dustinscarberry/signal.svg?branch=master)](https://travis-ci.org/dustinscarberry/signal)
+
 # Signal
 
-[![Build Status](https://travis-ci.com/joemccann/signal.svg?branch=master)](https://travis-ci.org/dman25560/signal)
+Signal is a open source system status dashboard inspired by Cachet and others, built on Symfony and React.
 
-Signal is a open source system status dashboard inspired by Cachet and others, based on Symfony and React.
-
-### Tech
+## Tech ##
 
 * [React] - JS framework for responsive apps
 * [Symfony 4.2] - PHP MVC Framework
@@ -12,23 +12,69 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 * [npm] - JS Dependency Manager
 * [jQuery] - More JS stuff
 
-### Installation
+## Requirements ##
 
-Signal requires [PHP7.3](https://www.php.net/releases/7_3_0.php) and [MariaDB 10.0+](https://mariadb.org/) to run.
+* [PHP 7.3.0 or higher](https://www.php.net/)
+* [MariaDB 10.0+](https://mariadb.org/)
+* [Composer](https://getcomposer.org/)
+* [NodeJS](https://nodejs.org/)
 
-Install composer and nodeJS on the server. These are needed for compiling the project.
+## Documentation ##
 
-Clone this GIT repo.
+The [docs folder](docs/) provides detailed guides for the many features of signal.
+
+## Installation
+
+Clone repository.
 
 ```sh
-$ cd \var\www
-$ git clone https:\\github.com\dman25560\signal
+$ cd /var/www
+$ git clone https:\\github.com\dustinscarberry\signal
 ```
 
-Install the dependencies and devDependencies and start the server.
+Install dependencies.
 
 ```sh
 $ cd signal
 $ composer install
-$ npm install
+$ npm i
 ```
+
+Create and configure .env.local at root of project directory.
+
+```php
+#required properties
+APP_ENV=prod
+APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
+MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
+
+#optional properties
+EXCHANGE_CALENDAR_HOST=outlook.sample.com
+EXCHANGE_CALENDAR_USERNAME=username@sample.com
+EXCHANGE_CALENDAR_PASSWORD=password
+EXCHANGE_CALENDAR_VERSION=2013
+```
+
+Clear cache.
+
+> This will need to be ran before / after any upgrades to clear the production app cache.
+
+```sh
+$ rm -rf /var/www/signal/var/*
+```
+
+Run migrations.
+
+```sh
+$ php bin/console doctrine:migrations:migrate
+```
+
+Load basic data.
+```sh
+$ php bin/console doctrine:fixtures:load
+```
+
+Run server (if needed)
+
+//add nginx sample config here
