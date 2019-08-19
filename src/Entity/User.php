@@ -103,6 +103,11 @@ class User implements UserInterface
    */
   private $apiToken;
 
+  /**
+   * @ORM\Column(type="boolean")
+   */
+  private $deletable;
+
   public function __construct()
   {
     $this->incidents = new ArrayCollection();
@@ -122,6 +127,16 @@ class User implements UserInterface
 
     if ($this->getCreated() == null)
       $this->setCreated($currentTime);
+  }
+
+  /**
+  * @ORM\PrePersist
+  * @ORM\PreUpdate
+  */
+  public function ensureDefaults()
+  {
+    if ($this->deletable === null)
+      $this->deletable = true;
   }
 
   /**
@@ -448,5 +463,17 @@ class User implements UserInterface
     }
 
     return $this;
+  }
+
+  public function getDeletable(): ?bool
+  {
+      return $this->deletable;
+  }
+
+  public function setDeletable(bool $deletable): self
+  {
+      $this->deletable = $deletable;
+
+      return $this;
   }
 }

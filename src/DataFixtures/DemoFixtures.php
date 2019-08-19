@@ -115,6 +115,7 @@ class DemoFixtures extends Fixture
     $user->setFirstName('Demo');
     $user->setLastName('Account');
     $user->setRoles(['ROLE_ADMIN']);
+    $user->setDeletable(false);
     $user = $this->userManager->regenerateApiToken($user);
     $manager->persist($user);
 

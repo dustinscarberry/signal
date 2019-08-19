@@ -363,7 +363,26 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            subscriptionDataTable.row(parent).remove().draw();
+            subscriptionViewDataTable.row(parent).remove().draw();
+          }, 200);
+        }
+      }
+    );
+  });
+
+  $('#custommetric-view-table').on('click', '.btn-delete', function(){
+    confirmDelete(
+      async () => {
+        let parent = $(this).closest('tr');
+        let dataID = parent.data('id');
+
+        let rsp = await axios.delete('/api/v1/custommetrics/' + dataID);
+
+        if (rsp.status == 200 && !rsp.data.error)
+        {
+          parent.addClass('is-deleting');
+          setTimeout(function(){
+            custommetricViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }
@@ -382,7 +401,7 @@ $(document).ready(function(){
         {
           parent.addClass('is-deleting');
           setTimeout(function(){
-            userDataTable.row(parent).remove().draw();
+            userViewDataTable.row(parent).remove().draw();
           }, 200);
         }
       }

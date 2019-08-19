@@ -33,7 +33,7 @@
               <td>{{ user.firstName }} {{ user.lastName }}</td>
               <td>{{ user.username }}</td>
               <td>
-                <button class="btn btn-error pull-right btn-delete">Delete</button>
+                <button class="btn btn-error pull-right btn-delete" {% if not user.deletable %}disabled{% endif %}>Delete</button>
                 <a href="/dashboard/users/{{ user.hashId }}" class="btn btn-primary pull-right">Edit</a>
               </td>
             </tr>
