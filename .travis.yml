@@ -6,6 +6,7 @@ dist: bionic
 addons:
   - mariadb: '10.0'
 before_install:
+  - systemctl start mysqld
   - mysql -e 'CREATE SCHEMA IF NOT EXISTS demo;'
   - mysql -e 'USE mysql;'
   - mysql -e 'CREATE USER "vagrant"@"localhost" IDENTIFIED BY "vagrant";'
