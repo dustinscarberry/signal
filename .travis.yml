@@ -1,12 +1,11 @@
 language: php
 php:
   - '7.3'
-sudo: true
+sudo: false
 dist: bionic
 addons:
-  - mariadb: '10.0'
+  - mariadb: '10.1'
 before_install:
-  - sudo systemctl start mysqld
   - mysql -e 'CREATE SCHEMA IF NOT EXISTS demo;'
   - mysql -e 'USE mysql;'
   - mysql -e 'CREATE USER "vagrant"@"localhost" IDENTIFIED BY "vagrant";'
