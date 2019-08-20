@@ -4,7 +4,7 @@ Customize application widgets for the application.
 
 ## Adding Widgets ##
 
-Clicking Add Widget will bring up a selection to add new widgets.
+Clicking "Add Widget" will bring up a selection to add new widgets.
 
 - Video Embed - Allows embedding a YouTube or Vimeo video.
 - Services List - Displays services and their current status. [auto refreshes]

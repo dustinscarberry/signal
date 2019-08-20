@@ -13,4 +13,27 @@
   .widget-selector-item-inner:hover{
     color: #243949;
   }
+
+  .separator{
+    border-color: #005ab7d1;
+  }
+}
+
+.theme-white{
+  .dashboard-header{
+    background: #fff;
+  }
+
+  .quicklink,
+  .profile-name{
+    color: #333;
+  }
+
+  .dashboard-logo{
+    color: #333;
+  }
+
+  .dashboard-quicklinks .quicklink:hover{
+    color: #000;
+  }
 }

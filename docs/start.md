@@ -2,9 +2,9 @@
 
 ## First Steps ##
 
-Once logged in via the demo | demo account at http://localhost/dashboard please remember to change the default username and password. Failure to do so will leave your application open for attackers.
+Once logged in via the "demo|demo" account at http://localhost/dashboard, please remember to change the default username and password. Failure to do so will leave your application open for attackers.
 
-Afterward you will want to add categories and services and setup your dashboard widgets to your liking.
+Afterward you will want to add categories, services and setup your dashboard widgets to your liking.
 
 ## Settings ##
 
