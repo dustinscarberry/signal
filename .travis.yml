@@ -2,6 +2,7 @@ language: php
 php:
   - '7.3'
 sudo: false
+dist: bionic
 addons:
   - mariadb: '10.0'
 before_install:
