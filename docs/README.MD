@@ -16,4 +16,4 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 - [Subscriptions](subscriptions.md)
 - [Settings](settings.md)
 - [Logs](logs.md)
-- [API](api.md)
+- [API](https://documenter.getpostman.com/view/7642165/SVfJTAjF?version=latest)
