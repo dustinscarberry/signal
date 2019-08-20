@@ -42,7 +42,8 @@ class SamlLoginController extends AbstractController
   public function samlValidate(
     Request $req,
     UserManager $userManager,
-    SSOLoginGenerator $ssoLoginGenerator
+    SSOLoginGenerator $ssoLoginGenerator,
+    AppConfig $appConfig
   )
   {
     $samlResponseData = base64_decode($req->request->get('SAMLResponse'));
@@ -51,7 +52,10 @@ class SamlLoginController extends AbstractController
       throw new InvalidPropertyException('No valid IDP SAML Response');
 
     //get authenticated user
-    $authenticatedUsername = SAML2Generator::getValidatedUser($samlResponseData);
+    $authenticatedUsername = SAML2Generator::getValidatedUser(
+      $samlResponseData,
+      $appConfig->getSaml2IdpSigningCertificate()
+    );
     $authenticatedUser = $userManager->getUserByUsername($authenticatedUsername);
 
     if (!$authenticatedUser)

@@ -11,9 +11,13 @@ class SAML2Response
 {
   private $response;
   private $assertion;
+  private $publicCert;
 
-  public function loadFromString($responseString)
+  public function loadFromString($responseString, $publicCert)
   {
+    //set public cert
+    $this->publicCert = $publicCert;
+
     //parse response to object
     $deserializationContext = new DeserializationContext();
     $deserializationContext->getDocument()->loadXML($responseString);
@@ -56,7 +60,7 @@ class SAML2Response
   {
     //public key to verify signature
     $publicCert = new \LightSaml\Credential\X509Certificate();
-    $publicCert->setData('MIIC8DCCAdigAwIBAgIQWS5zI5MYVrNDbvtp/xhY8jANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQD
+    /*$publicCert->setData('MIIC8DCCAdigAwIBAgIQWS5zI5MYVrNDbvtp/xhY8jANBgkqhkiG9w0BAQsFADA0MTIwMAYDVQQD
 EylNaWNyb3NvZnQgQXp1cmUgRmVkZXJhdGVkIFNTTyBDZXJ0aWZpY2F0ZTAeFw0xOTA3MTIxNjQ4
 MDFaFw0yMjA3MTIxNjQ4MDFaMDQxMjAwBgNVBAMTKU1pY3Jvc29mdCBBenVyZSBGZWRlcmF0ZWQg
 U1NPIENlcnRpZmljYXRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxOe4eBJOKkly
@@ -70,7 +74,9 @@ xMoBjEsEP9m3C58SVj9+FPZJOURDldlo0DIm+TnYP1V76A2ozfrVvZ9ndDLFTQA1/fPwEUpXLyO3
 QWe9qrfv9Nw9vMTnynmCxQ9rBItoWrlFFjY1VNAvW+orFGj/WbLixCwa1Js/L1bK0+F3coAfy1tQ
 3Qo0qlMO47VrPJZTo6/IiiN1LMUBkzE1A0pAmvCk4cM8HUWJe5wtSphHnm1rOEUSlo9G0yPlQ8od
 DQJdpidUV42J+tgCzSzs'
-    );
+);*/
+
+    $publicCert->setData($this->publicCert);
     $key = KeyHelper::createPublicKey($publicCert);
 
     //get signature from assertion

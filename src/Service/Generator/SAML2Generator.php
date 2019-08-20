@@ -32,11 +32,11 @@ class SAML2Generator
     return $destinationURL . '?SAMLRequest=' . $samlEncoded;
   }
 
-  public static function getValidatedUser($samlResponseData)
+  public static function getValidatedUser($samlResponseData, $publicCert)
   {
     //create saml response object
     $samlResponse = new SAML2Response();
-    $samlResponse->loadFromString($samlResponseData);
+    $samlResponse->loadFromString($samlResponseData, $publicCert);
     $samlResponse->validate();
 
     //get subject of response
