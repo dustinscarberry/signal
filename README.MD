@@ -77,4 +77,31 @@ $ php bin/console doctrine:fixtures:load
 
 Run server (if needed)
 
-//add nginx sample config here
+Nginx Basic Config
+
+```nginx
+server {
+    listen 443 ssl http2;
+    ssl_certificate /etc/nginx/ssl/cert.cer;
+    ssl_certificate_key /etc/nginx/ssl/cert.key;
+    server_name __;
+    root /var/www/signal/public;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+       fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+       fastcgi_param DOCUMENT_ROOT $realpath_root;
+       internal;
+   }
+
+   location ~ \.php$ {
+     return 404;
+   }
+}
+```
