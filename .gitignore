@@ -243,3 +243,4 @@ yarn-error.log
 
 #project specific#
 MarshallDataLoadFixtures.php
+marshalldata.sql

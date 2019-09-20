@@ -86,7 +86,7 @@ const View = (props) =>
     return (
       <ContentBlock>
         <div className="container-fluid">
-          <h2>Services</h2>
+          <h2 className="widget-header">Services</h2>
           <div className="row">
             <div className="col-lg-6">
               {serviceWidgetNodesOne}
