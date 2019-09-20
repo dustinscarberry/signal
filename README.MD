@@ -105,3 +105,27 @@ server {
    }
 }
 ```
+
+## Upgrades
+
+1. Get updates from repo.
+
+```sh
+git pull
+```
+
+2. Run database migrations.
+
+```sh
+php bin/console doctrine:migrations:migrate
+```
+
+> WARNING: Do not install fixtures unless needed. Failure to do so will result in total loss of data!
+
+3. Install new fixtures (if needed) - None currently
+
+4. Clear cache.
+
+```sh
+rm -rf var/cache/*
+```
