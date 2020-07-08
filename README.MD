@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/dustinscarberry/signal.svg?branch=master)](https://travis-ci.org/dustinscarberry/signal)
-
 # Signal
 
 Signal is a open source system status dashboard inspired by Cachet and others, built on Symfony and React.
@@ -7,7 +5,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 ## Tech ##
 
 * [React] - JS framework for responsive apps
-* [Symfony 4.3] - PHP MVC Framework
+* [Symfony 4.4] - PHP MVC Framework
 * [composer] - PHP Dependency Manager
 * [npm] - JS Dependency Manager
 * [jQuery] - More JS stuff

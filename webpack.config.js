@@ -30,11 +30,6 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
-
-    //.configureBabel(function(babelConfig) {
-      //babelConfig.presets.push('@babel/preset-env');
-    //})
-    //.enableReactPreset()
 ;
 
 module.exports = Encore.getWebpackConfig();
