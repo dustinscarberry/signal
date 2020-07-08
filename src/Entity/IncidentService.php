@@ -48,7 +48,7 @@ class IncidentService implements JsonSerializable
   private $updated;
 
   /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\Incident", inversedBy="incidentServiceStatuses")
+  * @ORM\ManyToOne(targetEntity="App\Entity\Incident", inversedBy="incidentServices")
   * @ORM\JoinColumn(nullable=false)
   */
   private $incident;
