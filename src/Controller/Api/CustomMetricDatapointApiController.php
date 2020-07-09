@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\CustomMetricDatapoint;
 use App\Form\CustomMetricDatapointType;
-use App\Service\Manager\CustomMetricDatapointManager;
+use App\Service\Factory\CustomMetricDatapointFactory;
 
 class CustomMetricDatapointApiController extends ApiController
 {
@@ -15,7 +15,7 @@ class CustomMetricDatapointApiController extends ApiController
    * @Route("/api/v1/custommetricdatapoints", name="createCustomMetricDatapoint", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createCustomMetricDatapoint(Request $req, CustomMetricDatapointManager $customMetricDatapointManager)
+  public function createCustomMetricDatapoint(Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
     try
     {
@@ -34,7 +34,7 @@ class CustomMetricDatapointApiController extends ApiController
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid())
       {
-        $customMetricDatapointManager->createCustomMetricDatapoint($datapoint);
+        $customMetricDatapointFactory->createCustomMetricDatapoint($datapoint);
 
         return $this->respond($datapoint);
       }
@@ -51,19 +51,19 @@ class CustomMetricDatapointApiController extends ApiController
    * @Route("/api/v1/custommetricdatapoints/{hashId}", name="deleteCustomMetricDatapoint", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteCustomMetricDatapoint($hashId, Request $req, CustomMetricDatapointManager $customMetricDatapointManager)
+  public function deleteCustomMetricDatapoint($hashId, Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
     try
     {
       //get datapoint
-      $datapoint = $customMetricDatapointManager->getCustomMetricDatapoint($hashId);
+      $datapoint = $customMetricDatapointFactory->getCustomMetricDatapoint($hashId);
 
       //check for valid datapoint
       if (!$datapoint)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete datapoint
-      $customMetricDatapointManager->deleteCustomMetricDatapoint($datapoint);
+      $customMetricDatapointFactory->deleteCustomMetricDatapoint($datapoint);
 
       //respond with object
       return $this->respond($datapoint);

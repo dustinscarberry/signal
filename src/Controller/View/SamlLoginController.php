@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\Generator\SAML2Generator;
 use App\Service\Generator\SSOLoginGenerator;
 use App\Model\AppConfig;
-use App\Service\Manager\UserManager;
+use App\Service\Factory\UserFactory;
 use Symfony\Form\Exception\InvalidPropertyException;
 
 class SamlLoginController extends AbstractController
@@ -41,7 +41,7 @@ class SamlLoginController extends AbstractController
    */
   public function samlValidate(
     Request $req,
-    UserManager $userManager,
+    UserFactory $userFactory,
     SSOLoginGenerator $ssoLoginGenerator,
     AppConfig $appConfig
   )
@@ -56,7 +56,7 @@ class SamlLoginController extends AbstractController
       $samlResponseData,
       $appConfig->getSaml2IdpSigningCertificate()
     );
-    $authenticatedUser = $userManager->getUserByUsername($authenticatedUsername);
+    $authenticatedUser = $userFactory->getUserByUsername($authenticatedUsername);
 
     if (!$authenticatedUser)
       $this->redirectToRoute('dashboardLogin');

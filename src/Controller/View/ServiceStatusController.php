@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\ServiceStatus;
 use App\Form\ServiceStatusType;
-use App\Service\Manager\ServiceStatusManager;
+use App\Service\Factory\ServiceStatusFactory;
 
 class ServiceStatusController extends AbstractController
 {
   /**
    * @Route("/dashboard/statuses/service", name="viewServiceStatuses")
    */
-  public function viewall(ServiceStatusManager $serviceStatusManager)
+  public function viewall(ServiceStatusFactory $serviceStatusFactory)
   {
-    $statuses = $serviceStatusManager->getServiceStatuses();
+    $statuses = $serviceStatusFactory->getServiceStatuses();
 
     return $this->render('dashboard/servicestatus/viewall.html.twig', [
       'serviceStatuses' => $statuses
@@ -26,7 +26,7 @@ class ServiceStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/service/add", name="addServiceStatus")
    */
-  public function add(Request $req, ServiceStatusManager $serviceStatusManager)
+  public function add(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     //create status object
     $status = new ServiceStatus();
@@ -40,7 +40,7 @@ class ServiceStatusController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceStatusManager->createServiceStatus($status);
+      $serviceStatusFactory->createServiceStatus($status);
 
       $this->addFlash('success', 'Service Status created');
       return $this->redirectToRoute('viewServiceStatuses');
@@ -55,10 +55,10 @@ class ServiceStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/service/{hashId}", name="editServiceStatus")
    */
-  public function edit($hashId, Request $req, ServiceStatusManager $serviceStatusManager)
+  public function edit($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     //get status from database
-    $status = $serviceStatusManager->getServiceStatus($hashId);
+    $status = $serviceStatusFactory->getServiceStatus($hashId);
 
     //create form object for status
     $form = $this->createForm(ServiceStatusType::class, $status);
@@ -69,7 +69,7 @@ class ServiceStatusController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceStatusManager->updateServiceStatus();
+      $serviceStatusFactory->updateServiceStatus();
 
       $this->addFlash('success', 'Service Status updated');
       return $this->redirectToRoute('viewServiceStatuses');

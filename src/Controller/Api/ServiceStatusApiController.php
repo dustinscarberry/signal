@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\ServiceStatus;
 use App\Form\ServiceStatusType;
-use App\Service\Manager\ServiceStatusManager;
+use App\Service\Factory\ServiceStatusFactory;
 
 class ServiceStatusApiController extends ApiController
 {
@@ -15,11 +15,11 @@ class ServiceStatusApiController extends ApiController
    * @Route("/api/v1/servicestatuses", name="getServiceStatuses", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getServiceStatuses(ServiceStatusManager $serviceStatusManager)
+  public function getServiceStatuses(ServiceStatusFactory $serviceStatusFactory)
   {
     try
     {
-      $serviceStatuses = $serviceStatusManager->getServiceStatuses();
+      $serviceStatuses = $serviceStatusFactory->getServiceStatuses();
       return $this->respond($serviceStatuses);
     }
     catch (\Exception $e)
@@ -32,12 +32,12 @@ class ServiceStatusApiController extends ApiController
    * @Route("/api/v1/servicestatuses/{hashId}", name="getServiceStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getServiceStatus($hashId, ServiceStatusManager $serviceStatusManager)
+  public function getServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
     try
     {
       //get service status
-      $serviceStatus = $serviceStatusManager->getServiceStatus($hashId);
+      $serviceStatus = $serviceStatusFactory->getServiceStatus($hashId);
 
       //check for valid service status
       if (!$serviceStatus)
@@ -56,7 +56,7 @@ class ServiceStatusApiController extends ApiController
    * @Route("/api/v1/servicestatuses", name="createServiceStatus", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createServiceStatus(Request $req, ServiceStatusManager $serviceStatusManager)
+  public function createServiceStatus(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     try
     {
@@ -75,7 +75,7 @@ class ServiceStatusApiController extends ApiController
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceStatusManager->createServiceStatus($serviceStatus);
+        $serviceStatusFactory->createServiceStatus($serviceStatus);
 
         return $this->respond($serviceStatus);
       }
@@ -92,12 +92,12 @@ class ServiceStatusApiController extends ApiController
    * @Route("/api/v1/servicestatuses/{hashId}", name="updateServiceStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateServiceStatus($hashId, Request $req, ServiceStatusManager $serviceStatusManager)
+  public function updateServiceStatus($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     try
     {
       //get status from database
-      $status = $serviceStatusManager->getServiceStatus($hashId);
+      $status = $serviceStatusFactory->getServiceStatus($hashId);
 
       if (!$status)
         throw new \Exception('Object not found');
@@ -116,7 +116,7 @@ class ServiceStatusApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceStatusManager->updateServiceStatus();
+        $serviceStatusFactory->updateServiceStatus();
 
         return $this->respond($status);
       }
@@ -133,19 +133,19 @@ class ServiceStatusApiController extends ApiController
    * @Route("/api/v1/servicestatuses/{hashId}", name="deleteServiceStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteServiceStatus($hashId, ServiceStatusManager $serviceStatusManager)
+  public function deleteServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
     try
     {
       //get service status
-      $serviceStatus = $serviceStatusManager->getServiceStatus($hashId);
+      $serviceStatus = $serviceStatusFactory->getServiceStatus($hashId);
 
       //check for valid service status
       if (!$serviceStatus)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete service status
-      $serviceStatusManager->deleteServiceStatus($serviceStatus);
+      $serviceStatusFactory->deleteServiceStatus($serviceStatus);
       
       //respond with object
       return $this->respond($serviceStatus);

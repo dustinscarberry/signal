@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\IncidentStatus;
 use App\Form\IncidentStatusType;
-use App\Service\Manager\IncidentStatusManager;
+use App\Service\Factory\IncidentStatusFactory;
 
 class IncidentStatusController extends AbstractController
 {
   /**
    * @Route("/dashboard/statuses/incident", name="viewIncidentStatuses")
    */
-  public function viewall(IncidentStatusManager $incidentStatusManager)
+  public function viewall(IncidentStatusFactory $incidentStatusFactory)
   {
-    $statuses = $incidentStatusManager->getIncidentStatuses();
+    $statuses = $incidentStatusFactory->getIncidentStatuses();
 
     return $this->render('dashboard/incidentstatus/viewall.html.twig', [
       'incidentStatuses' => $statuses
@@ -26,7 +26,7 @@ class IncidentStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/incident/add", name="addIncidentStatus")
    */
-  public function add(Request $req, IncidentStatusManager $incidentStatusManager)
+  public function add(Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     //create status object
     $status = new IncidentStatus();
@@ -40,7 +40,7 @@ class IncidentStatusController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $incidentStatusManager->createIncidentStatus($status);
+      $incidentStatusFactory->createIncidentStatus($status);
 
       $this->addFlash('success', 'Incident Status created');
       return $this->redirectToRoute('viewIncidentStatuses');
@@ -55,10 +55,10 @@ class IncidentStatusController extends AbstractController
   /**
    * @Route("/dashboard/statuses/incident/{hashId}", name="editIncidentStatus")
    */
-  public function edit($hashId, Request $req, IncidentStatusManager $incidentStatusManager)
+  public function edit($hashId, Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     //get status from database
-    $status = $incidentStatusManager->getIncidentStatus($hashId);
+    $status = $incidentStatusFactory->getIncidentStatus($hashId);
 
     //create form object for status
     $form = $this->createForm(IncidentStatusType::class, $status);
@@ -69,7 +69,7 @@ class IncidentStatusController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $incidentStatusManager->updateIncidentStatus();
+      $incidentStatusFactory->updateIncidentStatus();
 
       $this->addFlash('success', 'Incident Status updated');
       return $this->redirectToRoute('viewIncidentStatuses');

@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Maintenance;
 use App\Form\MaintenanceType;
-use App\Service\Manager\MaintenanceManager;
+use App\Service\Factory\MaintenanceFactory;
 
 class MaintenanceController extends AbstractController
 {
   /**
    * @Route("/dashboard/maintenance", name="viewAllMaintenance")
    */
-  public function viewall(MaintenanceManager $maintenanceManager)
+  public function viewall(MaintenanceFactory $maintenanceFactory)
   {
-    $maintenance = $maintenanceManager->getMaintenances();
+    $maintenance = $maintenanceFactory->getMaintenances();
 
     return $this->render('dashboard/maintenance/viewall.html.twig', [
       'maintenance' => $maintenance
@@ -26,7 +26,7 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance/add", name="addMaintenance")
    */
-  public function add(Request $req, MaintenanceManager $maintenanceManager)
+  public function add(Request $req, MaintenanceFactory $maintenanceFactory)
   {
     //create maintenance object
     $maintenance = new Maintenance();
@@ -40,7 +40,7 @@ class MaintenanceController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $maintenanceManager->createMaintenance(
+      $maintenanceFactory->createMaintenance(
         $maintenance,
         $form->get('updateServiceStatuses')->getData()
       );
@@ -58,7 +58,7 @@ class MaintenanceController extends AbstractController
   /**
    * @Route("/dashboard/maintenance/{hashId}", name="editMaintenance")
    */
-  public function edit($hashId, Request $req, MaintenanceManager $maintenanceManager)
+  public function edit($hashId, Request $req, MaintenanceFactory $maintenanceFactory)
   {
     //get maintenance from database
     $maintenance = $this->getDoctrine()
@@ -66,8 +66,8 @@ class MaintenanceController extends AbstractController
       ->findByHashId($hashId);
 
     //get original updates and services to compare against
-    $originalServices = MaintenanceManager::getCurrentServices($maintenance);
-    $originalUpdates = MaintenanceManager::getCurrentUpdates($maintenance);
+    $originalServices = MaintenanceFactory::getCurrentServices($maintenance);
+    $originalUpdates = MaintenanceFactory::getCurrentUpdates($maintenance);
 
     //create form object for maintenance
     $form = $this->createForm(MaintenanceType::class, $maintenance);
@@ -78,7 +78,7 @@ class MaintenanceController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $maintenanceManager->updateMaintenance(
+      $maintenanceFactory->updateMaintenance(
         $maintenance,
         $form->get('updateServiceStatuses')->getData(),
         $originalServices,

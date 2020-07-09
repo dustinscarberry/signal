@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Form\WidgetAPIType;
 use App\Entity\Widget;
-use App\Service\Manager\WidgetManager;
+use App\Service\Factory\WidgetFactory;
 
 class WidgetApiController extends ApiController
 {
@@ -15,9 +15,9 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets", name="readWidgets", methods={"GET"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function readWidgets(WidgetManager $widgetManager)
+  public function readWidgets(WidgetFactory $widgetFactory)
   {
-    $widgets = $widgetManager->getWidgets();
+    $widgets = $widgetFactory->getWidgets();
     return $this->respond($widgets);
   }
 
@@ -25,9 +25,9 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets/{hashId}", name="readWidget", methods={"GET"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function readWidget($hashId, WidgetManager $widgetManager)
+  public function readWidget($hashId, WidgetFactory $widgetFactory)
   {
-    $widget = $widgetManager->getWidget($hashId);
+    $widget = $widgetFactory->getWidget($hashId);
     return $this->respond($widget);
   }
 
@@ -36,7 +36,7 @@ class WidgetApiController extends ApiController
    * @Security("is_granted('ROLE_ADMIN')")
    * Pass {type, sortorder, attributes}
    */
-  public function createWidget(Request $req, WidgetManager $widgetManager)
+  public function createWidget(Request $req, WidgetFactory $widgetFactory)
   {
     $widget = new Widget();
     $form = $this->createForm(WidgetAPIType::class, $widget);
@@ -50,7 +50,7 @@ class WidgetApiController extends ApiController
     //save new widget to database if valid
     if ($form->isSubmitted() && $form->isValid())
     {
-      $widgetManager->createWidget($widget);
+      $widgetFactory->createWidget($widget);
       return $this->respond($widget);
     }
 
@@ -63,9 +63,9 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets/{hashId}", name="updateWidget", methods={"PATCH"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function updateWidget($hashId, Request $req, WidgetManager $widgetManager)
+  public function updateWidget($hashId, Request $req, WidgetFactory $widgetFactory)
   {
-    $widget = $widgetManager->getWidget($hashId);
+    $widget = $widgetFactory->getWidget($hashId);
 
     if (!$widget)
       throw $this->createNotFoundException(
@@ -83,7 +83,7 @@ class WidgetApiController extends ApiController
     //save widget updates to database if valid
     if ($form->isSubmitted() && $form->isValid())
     {
-      $widgetManager->updateWidget();
+      $widgetFactory->updateWidget();
       
       return $this->respond($widget);
     }
@@ -97,9 +97,9 @@ class WidgetApiController extends ApiController
    * @Route("/api/v1/widgets/{hashId}", name="deleteWidget", methods={"DELETE"})
    * @Security("is_granted('ROLE_ADMIN')")
    */
-  public function deleteWidget($hashId, WidgetManager $widgetManager)
+  public function deleteWidget($hashId, WidgetFactory $widgetFactory)
   {
-    $widget = $widgetManager->getWidget($hashId);
+    $widget = $widgetFactory->getWidget($hashId);
 
     if (!$widget)
       throw $this->createNotFoundException(
@@ -107,7 +107,7 @@ class WidgetApiController extends ApiController
       );
 
     //delete widget
-    $widgetManager->deleteWidget($widget);
+    $widgetFactory->deleteWidget($widget);
 
     return $this->respondWithNull();
   }

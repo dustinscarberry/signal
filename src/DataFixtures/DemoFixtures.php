@@ -13,20 +13,20 @@ use App\Entity\IncidentStatus;
 use App\Entity\IncidentType;
 use App\Entity\Incident;
 use App\Entity\MaintenanceStatus;
-use App\Service\Manager\UserManager;
+use App\Service\Factory\UserFactory;
 
 class DemoFixtures extends Fixture
 {
   private $passwordEncoder;
-  private $userManager;
+  private $userFactory;
 
   public function __construct(
     UserPasswordEncoderInterface $passwordEncoder,
-    UserManager $userManager
+    UserFactory $userFactory
   )
   {
     $this->passwordEncoder = $passwordEncoder;
-    $this->userManager = $userManager;
+    $this->userFactory = $userFactory;
   }
 
   public function load(ObjectManager $manager)
@@ -116,7 +116,7 @@ class DemoFixtures extends Fixture
     $user->setLastName('Account');
     $user->setRoles(['ROLE_ADMIN']);
     $user->setDeletable(false);
-    $user = $this->userManager->regenerateApiToken($user);
+    $user = $this->userFactory->regenerateApiToken($user);
     $manager->persist($user);
 
     //create default settings

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\Service;
 use App\Form\ServiceType;
-use App\Service\Manager\ServiceManager;
+use App\Service\Factory\ServiceFactory;
 
 class ServiceApiController extends ApiController
 {
@@ -15,11 +15,11 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services", name="getServices", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getServices(ServiceManager $serviceManager)
+  public function getServices(ServiceFactory $serviceFactory)
   {
     try
     {
-      $services = $serviceManager->getServices();
+      $services = $serviceFactory->getServices();
       return $this->respond($services);
     }
     catch (\Exception $e)
@@ -32,12 +32,12 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="getService", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getService($hashId, ServiceManager $serviceManager)
+  public function getService($hashId, ServiceFactory $serviceFactory)
   {
     try
     {
       //get service
-      $service = $serviceManager->getService($hashId);
+      $service = $serviceFactory->getService($hashId);
 
       //check for valid service
       if (!$service)
@@ -56,7 +56,7 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services", name="createService", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createService(Request $req, ServiceManager $serviceManager)
+  public function createService(Request $req, ServiceFactory $serviceFactory)
   {
     try
     {
@@ -73,7 +73,7 @@ class ServiceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceManager->createService($service);
+        $serviceFactory->createService($service);
 
         //respond with object
         return $this->respond($service);
@@ -91,18 +91,18 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="updateService", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateService($hashId, Request $req, ServiceManager $serviceManager)
+  public function updateService($hashId, Request $req, ServiceFactory $serviceFactory)
   {
     try
     {
       //get service from database
-      $service = $serviceManager->getService($hashId);
+      $service = $serviceFactory->getService($hashId);
 
       if (!$service)
         throw new \Exception('No service found');
 
       //get previous status
-      $currentServiceStatus = $serviceManager->getCurrentServiceStatus($service);
+      $currentServiceStatus = $serviceFactory->getCurrentServiceStatus($service);
 
       //create form object for service
       $form = $this->createForm(ServiceType::class, $service, ['csrf_protection' => false]);
@@ -114,7 +114,7 @@ class ServiceApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $serviceManager->updateService($service, $currentServiceStatus);
+        $serviceFactory->updateService($service, $currentServiceStatus);
 
         //respond with object
         return $this->respond($service);
@@ -132,19 +132,19 @@ class ServiceApiController extends ApiController
    * @Route("/api/v1/services/{hashId}", name="deleteService", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteService($hashId, ServiceManager $serviceManager)
+  public function deleteService($hashId, ServiceFactory $serviceFactory)
   {
     try
     {
       //get service
-      $service = $serviceManager->getService($hashId);
+      $service = $serviceFactory->getService($hashId);
 
       //check for valid service
       if (!$service)
         return $this->respondWithErrors(['Invalid service']);
 
       //delete service
-      $serviceManager->deleteService($service);
+      $serviceFactory->deleteService($service);
 
       //respond with object
       return $this->respond($service);

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\MaintenanceStatus;
 use App\Form\MaintenanceStatusType;
-use App\Service\Manager\MaintenanceStatusManager;
+use App\Service\Factory\MaintenanceStatusFactory;
 
 class MaintenanceStatusApiController extends ApiController
 {
@@ -15,12 +15,12 @@ class MaintenanceStatusApiController extends ApiController
    * @Route("/api/v1/maintenancestatuses", name="getMaintenanceStatuses", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getMaintenanceStatuses(MaintenanceStatusManager $maintenanceStatusManager)
+  public function getMaintenanceStatuses(MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
     {
       //get maintenance statuses
-      $maintenanceStatuses = $maintenanceStatusManager->getMaintenanceStatuses();
+      $maintenanceStatuses = $maintenanceStatusFactory->getMaintenanceStatuses();
       return $this->respond($maintenanceStatuses);
     }
     catch (\Exception $e)
@@ -33,12 +33,12 @@ class MaintenanceStatusApiController extends ApiController
    * @Route("/api/v1/maintenancestatuses/{hashId}", name="getMaintenanceStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getMaintenanceStatus($hashId, MaintenanceStatusManager $maintenanceStatusManager)
+  public function getMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
     {
       //get maintenance status
-      $maintenanceStatus = $maintenanceStatusManager->getMaintenanceStatus($hashId);
+      $maintenanceStatus = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
       //check for valid maintenance status
       if (!$maintenanceStatus)
@@ -57,7 +57,7 @@ class MaintenanceStatusApiController extends ApiController
    * @Route("/api/v1/maintenancestatuses", name="createMaintenanceStatus", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createMaintenanceStatus(Request $req, MaintenanceStatusManager $maintenanceStatusManager)
+  public function createMaintenanceStatus(Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
     {
@@ -78,7 +78,7 @@ class MaintenanceStatusApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $maintenanceStatusManager->createMaintenanceStatus($status);
+        $maintenanceStatusFactory->createMaintenanceStatus($status);
 
         //respond with object
         return $this->respond($status);
@@ -96,12 +96,12 @@ class MaintenanceStatusApiController extends ApiController
    * @Route("/api/v1/maintenancestatuses/{hashId}", name="updateMaintenanceStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateMaintenanceStatus($hashId, Request $req, MaintenanceStatusManager $maintenanceStatusManager)
+  public function updateMaintenanceStatus($hashId, Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
     {
       //get status from database
-      $status = $maintenanceStatusManager->getMaintenanceStatus($hashId);
+      $status = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
       if (!$status)
         return $this->respondWithErrors(['Invalid data']);
@@ -120,7 +120,7 @@ class MaintenanceStatusApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $maintenanceStatusManager->updateMaintenanceStatus();
+        $maintenanceStatusFactory->updateMaintenanceStatus();
 
         //respond with object
         return $this->respond($status);
@@ -138,19 +138,19 @@ class MaintenanceStatusApiController extends ApiController
    * @Route("/api/v1/maintenancestatuses/{hashId}", name="deleteMaintenanceStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteMaintenanceStatus($hashId, MaintenanceStatusManager $maintenanceStatusManager)
+  public function deleteMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
     {
       //get maintenance status
-      $maintenanceStatus = $maintenanceStatusManager->getMaintenanceStatus($hashId);
+      $maintenanceStatus = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
       //check for valid maintenance status
       if (!$maintenanceStatus)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete maintenance status
-      $maintenanceStatusManager->deleteMaintenanceStatus($maintenanceStatus);
+      $maintenanceStatusFactory->deleteMaintenanceStatus($maintenanceStatus);
 
       //respond with object
       return $this->respond($maintenanceStatus);

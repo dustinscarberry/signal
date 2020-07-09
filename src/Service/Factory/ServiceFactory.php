@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -8,7 +8,7 @@ use App\Service\Mail\Mailer\ServiceUpdatedMailer;
 use App\Entity\Service;
 use App\Entity\ServiceStatusHistory;
 
-class ServiceManager
+class ServiceFactory
 {
   private $em;
   private $security;

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\CustomMetric;
 use App\Form\CustomMetricType;
-use App\Service\Manager\CustomMetricManager;
+use App\Service\Factory\CustomMetricFactory;
 
 class CustomMetricApiController extends ApiController
 {
@@ -15,11 +15,11 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics", name="getCustomMetrics", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getCustomMetrics(CustomMetricManager $customMetricManager)
+  public function getCustomMetrics(CustomMetricFactory $customMetricFactory)
   {
     try
     {
-      $metrics = $customMetricManager->getCustomMetrics();
+      $metrics = $customMetricFactory->getCustomMetrics();
       return $this->respond($metrics);
     }
     catch (\Exception $e)
@@ -32,12 +32,12 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="getCustomMetric", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function getCustomMetric($hashId, CustomMetricManager $customMetricManager)
+  public function getCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
     try
     {
       //get item
-      $metric = $customMetricManager->getCustomMetric($hashId);
+      $metric = $customMetricFactory->getCustomMetric($hashId);
 
       //check for valid item
       if (!$metric)
@@ -56,7 +56,7 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics", name="createCustomMetric", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createCustomMetric(Request $req, CustomMetricManager $customMetricManager)
+  public function createCustomMetric(Request $req, CustomMetricFactory $customMetricFactory)
   {
     try
     {
@@ -75,7 +75,7 @@ class CustomMetricApiController extends ApiController
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid())
       {
-        $customMetricManager->createCustomMetric($metric);
+        $customMetricFactory->createCustomMetric($metric);
 
         return $this->respond($metric);
       }
@@ -92,12 +92,12 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="updateCustomMetric", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateCustomMetric($hashId, Request $req, CustomMetricManager $customMetricManager)
+  public function updateCustomMetric($hashId, Request $req, CustomMetricFactory $customMetricFactory)
   {
     try
     {
       //get metric from database
-      $metric = $customMetricManager->getCustomMetric($hashId);
+      $metric = $customMetricFactory->getCustomMetric($hashId);
 
       if (!$metric)
         throw new \Exception('Object not found');
@@ -116,7 +116,7 @@ class CustomMetricApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $customMetricManager->updateCustomMetric();
+        $customMetricFactory->updateCustomMetric();
 
         return $this->respond($metric);
       }
@@ -133,19 +133,19 @@ class CustomMetricApiController extends ApiController
    * @Route("/api/v1/custommetrics/{hashId}", name="deleteCustomMetric", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function deleteCustomMetric($hashId, CustomMetricManager $customMetricManager)
+  public function deleteCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
     try
     {
       //get metric
-      $metric = $customMetricManager->getCustomMetric($hashId);
+      $metric = $customMetricFactory->getCustomMetric($hashId);
 
       //check for valid metric
       if (!$metric)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete metric
-      $customMetricManager->deleteCustomMetric($metric);
+      $customMetricFactory->deleteCustomMetric($metric);
       
       //respond with object
       return $this->respond($metric);

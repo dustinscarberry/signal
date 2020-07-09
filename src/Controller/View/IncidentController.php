@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Incident;
 use App\Form\IncidentType;
-use App\Service\Manager\IncidentManager;
+use App\Service\Factory\IncidentFactory;
 
 class IncidentController extends AbstractController
 {
   /**
    * @Route("/dashboard/incidents", name="viewIncidents")
    */
-  public function viewall(IncidentManager $incidentManager)
+  public function viewall(IncidentFactory $incidentFactory)
   {
-    $incidents = $incidentManager->getIncidents();
+    $incidents = $incidentFactory->getIncidents();
 
     return $this->render('dashboard/incident/viewall.html.twig', [
       'incidents' => $incidents
@@ -26,7 +26,7 @@ class IncidentController extends AbstractController
   /**
    * @Route("/dashboard/incidents/add", name="addIncident")
    */
-  public function add(Request $req, IncidentManager $incidentManager)
+  public function add(Request $req, IncidentFactory $incidentFactory)
   {
     //create incident object
     $incident = new Incident();
@@ -40,7 +40,7 @@ class IncidentController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $incidentManager->createIncident($incident);
+      $incidentFactory->createIncident($incident);
 
       $this->addFlash('success', 'Incident created');
       return $this->redirectToRoute('viewIncidents');
@@ -55,17 +55,17 @@ class IncidentController extends AbstractController
   /**
    * @Route("/dashboard/incidents/{hashId}", name="editIncident")
    */
-  public function edit($hashId, Request $req, IncidentManager $incidentManager)
+  public function edit($hashId, Request $req, IncidentFactory $incidentFactory)
   {
     //get incident from database
-    $incident = $incidentManager->getIncident($hashId);
+    $incident = $incidentFactory->getIncident($hashId);
 
     if (!$incident)
       throw new \Exception('Incident not found');
 
     //get original updates and services to compare against
-    $originalServices = IncidentManager::getCurrentServices($incident);
-    $originalUpdates = IncidentManager::getCurrentUpdates($incident);
+    $originalServices = IncidentFactory::getCurrentServices($incident);
+    $originalUpdates = IncidentFactory::getCurrentUpdates($incident);
 
     //create form object for incident
     $form = $this->createForm(IncidentType::class, $incident);
@@ -76,7 +76,7 @@ class IncidentController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $incidentManager->updateIncident(
+      $incidentFactory->updateIncident(
         $incident,
         $originalServices,
         $originalUpdates

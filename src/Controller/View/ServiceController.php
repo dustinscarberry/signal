@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Service;
 use App\Form\ServiceType;
-use App\Service\Manager\ServiceManager;
+use App\Service\Factory\ServiceFactory;
 
 class ServiceController extends AbstractController
 {
   /**
    * @Route("/dashboard/services", name="viewServices")
    */
-  public function viewall(ServiceManager $serviceManager)
+  public function viewall(ServiceFactory $serviceFactory)
   {
-    $services = $serviceManager->getServices();
+    $services = $serviceFactory->getServices();
 
     return $this->render('dashboard/service/viewall.html.twig', [
       'services' => $services
@@ -26,7 +26,7 @@ class ServiceController extends AbstractController
   /**
    * @Route("/dashboard/services/add", name="addService")
    */
-  public function add(Request $req, ServiceManager $serviceManager)
+  public function add(Request $req, ServiceFactory $serviceFactory)
   {
     //create service object
     $service = new Service();
@@ -40,7 +40,7 @@ class ServiceController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceManager->createService($service);
+      $serviceFactory->createService($service);
 
       $this->addFlash('success', 'Service created');
       return $this->redirectToRoute('viewServices');
@@ -55,13 +55,13 @@ class ServiceController extends AbstractController
   /**
    * @Route("/dashboard/services/{hashId}", name="editService")
    */
-  public function edit($hashId, Request $req, ServiceManager $serviceManager)
+  public function edit($hashId, Request $req, ServiceFactory $serviceFactory)
   {
     //get service from database
-    $service = $serviceManager->getService($hashId);
+    $service = $serviceFactory->getService($hashId);
 
     //get previous status
-    $currentServiceStatus = $serviceManager->getCurrentServiceStatus($service);
+    $currentServiceStatus = $serviceFactory->getCurrentServiceStatus($service);
 
     //create form object for service
     $form = $this->createForm(ServiceType::class, $service);
@@ -72,7 +72,7 @@ class ServiceController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $serviceManager->updateService($service, $currentServiceStatus);
+      $serviceFactory->updateService($service, $currentServiceStatus);
 
       $this->addFlash('success', 'Service updated');
       return $this->redirectToRoute('viewServices');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +10,7 @@ use App\Entity\ServiceStatusHistory;
 use App\Service\Mail\Mailer\IncidentCreatedMailer;
 use App\Service\Mail\Mailer\IncidentUpdatedMailer;
 
-class IncidentManager
+class IncidentFactory
 {
   private $em;
   private $security;

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\ServiceCategory;
 
-class ServiceCategoryManager
+class ServiceCategoryFactory
 {
   private $em;
   private $security;

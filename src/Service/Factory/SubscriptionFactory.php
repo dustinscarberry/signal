@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Subscription;
 use App\Service\Mail\Mailer\SubscriptionCreatedMailer;
 
-class SubscriptionManager
+class SubscriptionFactory
 {
   private $em;
   private $subscriptionCreatedMailer;

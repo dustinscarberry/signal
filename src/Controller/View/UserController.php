@@ -7,16 +7,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\User;
 use App\Form\UserType;
-use App\Service\Manager\UserManager;
+use App\Service\Factory\UserFactory;
 
 class UserController extends AbstractController
 {
   /**
    * @Route("/dashboard/users", name="viewUsers")
    */
-  public function viewall(UserManager $userManager)
+  public function viewall(UserFactory $userFactory)
   {
-    $users = $userManager->getUsers();
+    $users = $userFactory->getUsers();
 
     return $this->render('dashboard/user/viewall.html.twig', [
       'users' => $users
@@ -26,7 +26,7 @@ class UserController extends AbstractController
   /**
    * @Route("/dashboard/users/add")
    */
-  public function add(Request $req, UserManager $userManager)
+  public function add(Request $req, UserFactory $userFactory)
   {
     //create user object
     $user = new User();
@@ -40,7 +40,7 @@ class UserController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $userManager->createUser($user);
+      $userFactory->createUser($user);
 
       $this->addFlash('success', 'User added');
       return $this->redirectToRoute('viewUsers');
@@ -55,10 +55,10 @@ class UserController extends AbstractController
   /**
    * @Route("/dashboard/users/{hashId}", name="editUser")
    */
-  public function edit($hashId, Request $req, UserManager $userManager)
+  public function edit($hashId, Request $req, UserFactory $userFactory)
   {
     //get user from database
-    $user = $userManager->getUser($hashId);
+    $user = $userFactory->getUser($hashId);
 
     //create form object for user
     $form = $this->createForm(UserType::class, $user);
@@ -75,7 +75,7 @@ class UserController extends AbstractController
 
       if ($action == 'regenerateApiToken')
       {
-        $user = $userManager->regenerateApiToken($user);
+        $user = $userFactory->regenerateApiToken($user);
 
         //refresh form with new api token included for user
         $form = $this->createForm(UserType::class, $user);
@@ -86,7 +86,7 @@ class UserController extends AbstractController
       {
         //get new password field and update user
         $newPassword = $form->get('password')->getData();
-        $userManager->updateUser($user, $newPassword);
+        $userFactory->updateUser($user, $newPassword);
 
         $this->addFlash('success', 'User updated');
         return $this->redirectToRoute('viewUsers');

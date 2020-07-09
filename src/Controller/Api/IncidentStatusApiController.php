@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\IncidentStatus;
 use App\Form\IncidentStatusType;
-use App\Service\Manager\IncidentStatusManager;
+use App\Service\Factory\IncidentStatusFactory;
 
 class IncidentStatusApiController extends ApiController
 {
@@ -15,12 +15,12 @@ class IncidentStatusApiController extends ApiController
    * @Route("/api/v1/incidentstatuses", name="getIncidentStatuses", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncidentStatuses(IncidentStatusManager $incidentStatusManager)
+  public function getIncidentStatuses(IncidentStatusFactory $incidentStatusFactory)
   {
     try
     {
       //get incident statuses
-      $incidentStatuses = $incidentStatusManager->getIncidentStatuses();
+      $incidentStatuses = $incidentStatusFactory->getIncidentStatuses();
 
       //respond with object
       return $this->respond($incidentStatuses);
@@ -35,12 +35,12 @@ class IncidentStatusApiController extends ApiController
    * @Route("/api/v1/incidentstatuses/{hashId}", name="getIncidentStatus", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncidentStatus($hashId, IncidentStatusManager $incidentStatusManager)
+  public function getIncidentStatus($hashId, IncidentStatusFactory $incidentStatusFactory)
   {
     try
     {
       //get incident status
-      $incidentStatus = $incidentStatusManager->getIncidentStatus($hashId);
+      $incidentStatus = $incidentStatusFactory->getIncidentStatus($hashId);
 
       //check for valid incident status
       if (!$incidentStatus)
@@ -59,7 +59,7 @@ class IncidentStatusApiController extends ApiController
    * @Route("/api/v1/incidentstatuses", name="createIncidentStatus", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function createIncidentStatus(Request $req, IncidentStatusManager $incidentStatusManager)
+  public function createIncidentStatus(Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     try
     {
@@ -80,7 +80,7 @@ class IncidentStatusApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $incidentStatusManager->createIncidentStatus($status);
+        $incidentStatusFactory->createIncidentStatus($status);
 
         //respond with object
         return $this->respond($status);
@@ -98,12 +98,12 @@ class IncidentStatusApiController extends ApiController
    * @Route("/api/v1/incidentstatuses/{hashId}", name="updateIncidentStatus", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
    */
-  public function updateIncidentStatus($hashId, Request $req, IncidentStatusManager $incidentStatusManager)
+  public function updateIncidentStatus($hashId, Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     try
     {
       //get status from database
-      $status = $incidentStatusManager->getIncidentStatus($hashId);
+      $status = $incidentStatusFactory->getIncidentStatus($hashId);
 
       if (!$status)
         throw new \Exception('Invalid object');
@@ -122,7 +122,7 @@ class IncidentStatusApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $incidentStatusManager->updateIncidentStatus();
+        $incidentStatusFactory->updateIncidentStatus();
 
         //respond with object
         return $this->respond($status);
@@ -143,19 +143,19 @@ class IncidentStatusApiController extends ApiController
    * @Route("/api/v1/incidentstatuses/{hashId}", name="deleteIncidentStatus", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteIncidentStatus($hashId, IncidentStatusManager $incidentStatusManager)
+  public function deleteIncidentStatus($hashId, IncidentStatusFactory $incidentStatusFactory)
   {
     try
     {
       //get incident status
-      $incidentStatus = $incidentStatusManager->getIncidentStatus($hashId);
+      $incidentStatus = $incidentStatusFactory->getIncidentStatus($hashId);
 
       //check for valid incident status
       if (!$incidentStatus)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete incident status
-      $incidentStatusManager->deleteIncidentStatus($incidentStatus);
+      $incidentStatusFactory->deleteIncidentStatus($incidentStatus);
 
       //respond with object
       return $this->respond($incidentStatus);

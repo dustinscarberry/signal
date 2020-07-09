@@ -7,39 +7,39 @@ use App\Entity\Incident;
 use App\Entity\Maintenance;
 use App\Service\Api\ChartDataGenerator;
 use App\Service\Api\CustomMetricChartDataGenerator;
-use App\Service\Manager\ServiceManager;
-use App\Service\Manager\MaintenanceManager;
-use App\Service\Manager\IncidentManager;
-use App\Service\Manager\CustomMetricManager;
+use App\Service\Factory\ServiceFactory;
+use App\Service\Factory\MaintenanceFactory;
+use App\Service\Factory\IncidentFactory;
+use App\Service\Factory\CustomMetricFactory;
 
 class WidgetDataGenerator
 {
   private $em;
   private $serviceStatusChartDataGenerator;
   private $customMetricChartDataGenerator;
-  private $maintenanceManager;
-  private $incidentManager;
-  private $customMetricManager;
-  private $serviceManager;
+  private $maintenanceFactory;
+  private $incidentFactory;
+  private $customMetricFactory;
+  private $serviceFactory;
   private $data;
 
   public function __construct(
     EntityManagerInterface $em,
     ServiceStatusChartDataGenerator $serviceStatusChartDataGenerator,
     CustomMetricChartDataGenerator $customMetricChartDataGenerator,
-    MaintenanceManager $maintenanceManager,
-    IncidentManager $incidentManager,
-    CustomMetricManager $customMetricManager,
-    ServiceManager $serviceManager
+    MaintenanceFactory $maintenanceFactory,
+    IncidentFactory $incidentFactory,
+    CustomMetricFactory $customMetricFactory,
+    ServiceFactory $serviceFactory
   )
   {
     $this->em = $em;
     $this->serviceStatusChartDataGenerator = $serviceStatusChartDataGenerator;
     $this->customMetricChartDataGenerator = $customMetricChartDataGenerator;
-    $this->maintenanceManager = $maintenanceManager;
-    $this->incidentManager = $incidentManager;
-    $this->customMetricManager = $customMetricManager;
-    $this->serviceManager = $serviceManager;
+    $this->maintenanceFactory = $maintenanceFactory;
+    $this->incidentFactory = $incidentFactory;
+    $this->customMetricFactory = $customMetricFactory;
+    $this->serviceFactory = $serviceFactory;
   }
 
   //returns data for widget passed in
@@ -69,7 +69,7 @@ class WidgetDataGenerator
 
   private function getServicesListData()
   {
-    $services = $this->serviceManager->getServices();
+    $services = $this->serviceFactory->getServices();
 
     $this->data['services'] = [];
 
@@ -89,9 +89,9 @@ class WidgetDataGenerator
     $options = $this->data['options']->getAttributes();
 
     if ($options->timeframe == 'past')
-      $this->data['incidents'] = $this->incidentManager->getPastIncidents(true, $options->maxItems);
+      $this->data['incidents'] = $this->incidentFactory->getPastIncidents(true, $options->maxItems);
     else
-      $this->data['incidents'] = $this->incidentManager->getIncidents(true, $options->maxItems);
+      $this->data['incidents'] = $this->incidentFactory->getIncidents(true, $options->maxItems);
   }
 
   private function getMaintenanceListData()
@@ -99,14 +99,14 @@ class WidgetDataGenerator
     $options = $this->data['options']->getAttributes();
 
     if ($options->timeframe == 'scheduled')
-      $this->data['maintenance'] = $this->maintenanceManager->getScheduledMaintenances(false, $options->maxItems);
+      $this->data['maintenance'] = $this->maintenanceFactory->getScheduledMaintenances(false, $options->maxItems);
     else
-      $this->data['maintenance'] = $this->maintenanceManager->getMaintenances(false, $options->maxItems);
+      $this->data['maintenance'] = $this->maintenanceFactory->getMaintenances(false, $options->maxItems);
   }
 
   private function getServiceStatusOverviewData()
   {
-    $services = $this->serviceManager->getServices();
+    $services = $this->serviceFactory->getServices();
 
     $this->data['serviceStatuses'] = array_map(function($item){
       return $item->getStatus()->getType();
@@ -162,7 +162,7 @@ class WidgetDataGenerator
     );
 
     //get start and end scale of metric
-    $metric = $this->customMetricManager->getCustomMetric(
+    $metric = $this->customMetricFactory->getCustomMetric(
       $this->data['options']->getAttributes()->metric
     );
 

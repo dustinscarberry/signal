@@ -8,10 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
 use App\Form\SubscriptionManagementType;
-use App\Service\Manager\SubscriptionManager;
-use App\Service\Manager\WidgetManager;
-use App\Service\Manager\IncidentManager;
-use App\Service\Manager\MaintenanceManager;
+use App\Service\Factory\SubscriptionFactory;
+use App\Service\Factory\WidgetFactory;
+use App\Service\Factory\IncidentFactory;
+use App\Service\Factory\MaintenanceFactory;
 use App\Model\SubscriptionManagement;
 
 class AppController extends AbstractController
@@ -21,11 +21,11 @@ class AppController extends AbstractController
    */
   public function home(
     Request $req,
-    SubscriptionManager $subscriptionManager,
-    WidgetManager $widgetManager
+    SubscriptionFactory $subscriptionFactory,
+    WidgetFactory $widgetFactory
   )
   {
-    $widgets = $widgetManager->getWidgets();
+    $widgets = $widgetFactory->getWidgets();
 
     //create subscription object
     $subscription = new Subscription();
@@ -39,7 +39,7 @@ class AppController extends AbstractController
     //save form data to database if posted and validated
     if ($form->isSubmitted() && $form->isValid())
     {
-      $subscriptionManager->createSubscription($subscription);
+      $subscriptionFactory->createSubscription($subscription);
 
       $this->addFlash('success', 'Congrats! Your subscribed');
 
@@ -85,9 +85,9 @@ class AppController extends AbstractController
   /**
    * @Route("/incident/{incidentId}", name="viewIncident")
    */
-  public function viewIncident($incidentId, IncidentManager $incidentManager)
+  public function viewIncident($incidentId, IncidentFactory $incidentFactory)
   {
-    $incident = $incidentManager->getIncident($incidentId);
+    $incident = $incidentFactory->getIncident($incidentId);
 
     return $this->render('app/viewincident.html.twig', [
       'incident' => $incident
@@ -97,9 +97,9 @@ class AppController extends AbstractController
   /**
    * @Route("/pastincidents", name="viewPastIncidents")
    */
-  public function viewPastIncidents(IncidentManager $incidentManager)
+  public function viewPastIncidents(IncidentFactory $incidentFactory)
   {
-    $incidents = $incidentManager->getPastIncidents(true);
+    $incidents = $incidentFactory->getPastIncidents(true);
 
     return $this->render('app/viewpastincidents.html.twig', [
       'incidents' => $incidents
@@ -109,9 +109,9 @@ class AppController extends AbstractController
   /**
    * @Route("/maintenance/{maintenanceId}", name="viewMaintenance")
    */
-  public function viewMaintenance($maintenanceId, MaintenanceManager $maintenanceManager)
+  public function viewMaintenance($maintenanceId, MaintenanceFactory $maintenanceFactory)
   {
-    $maintenance = $maintenanceManager->getMaintenance($maintenanceId);
+    $maintenance = $maintenanceFactory->getMaintenance($maintenanceId);
 
     return $this->render('app/viewmaintenance.html.twig', [
       'maintenance' => $maintenance
@@ -121,9 +121,9 @@ class AppController extends AbstractController
   /**
    * @Route("/pastmaintenance", name="viewPastMaintenance")
    */
-  public function viewPastMaintenance(MaintenanceManager $maintenanceManager)
+  public function viewPastMaintenance(MaintenanceFactory $maintenanceFactory)
   {
-    $maintenances = $maintenanceManager->getPastMaintenances(true);
+    $maintenances = $maintenanceFactory->getPastMaintenances(true);
 
     return $this->render('app/viewpastmaintenance.html.twig', [
       'maintenances' => $maintenances
@@ -133,9 +133,9 @@ class AppController extends AbstractController
   /**
    * @Route("/scheduledmaintenance", name="viewScheduledMaintenance")
    */
-  public function viewScheduledMaintenance(MaintenanceManager $maintenanceManager)
+  public function viewScheduledMaintenance(MaintenanceFactory $maintenanceFactory)
   {
-    $maintenances = $maintenanceManager->getScheduledMaintenances();
+    $maintenances = $maintenanceFactory->getScheduledMaintenances();
 
     return $this->render('app/viewscheduledmaintenance.html.twig', [
       'maintenances' => $maintenances

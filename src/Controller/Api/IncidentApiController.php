@@ -7,7 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use App\Entity\Incident;
 use App\Form\IncidentType;
-use App\Service\Manager\IncidentManager;
+use App\Service\Factory\IncidentFactory;
 
 class IncidentApiController extends ApiController
 {
@@ -15,11 +15,11 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents", name="getIncidents", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncidents(IncidentManager $incidentManager)
+  public function getIncidents(IncidentFactory $incidentFactory)
   {
     try
     {
-      $incidents = $incidentManager->getIncidents();
+      $incidents = $incidentFactory->getIncidents();
       return $this->respond($incidents);
     }
     catch (\Exception $e)
@@ -32,12 +32,12 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="getIncident", methods={"GET"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function getIncident($hashId, IncidentManager $incidentManager)
+  public function getIncident($hashId, IncidentFactory $incidentFactory)
   {
     try
     {
       //get incident
-      $incident = $incidentManager->getIncident($hashId);
+      $incident = $incidentFactory->getIncident($hashId);
 
       //check for valid incident
       if (!$incident)
@@ -55,7 +55,7 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents", name="createIncident", methods={"POST"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function createIncident(Request $req, IncidentManager $incidentManager)
+  public function createIncident(Request $req, IncidentFactory $incidentFactory)
   {
     try
     {
@@ -76,7 +76,7 @@ class IncidentApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $incidentManager->createIncident($incident);
+        $incidentFactory->createIncident($incident);
 
         return $this->respond($incident);
       }
@@ -93,7 +93,7 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="updateIncident", methods={"PATCH"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function updateIncident($hashId, Request $req, IncidentManager $incidentManager)
+  public function updateIncident($hashId, Request $req, IncidentFactory $incidentFactory)
   {
     try
     {
@@ -106,8 +106,8 @@ class IncidentApiController extends ApiController
         throw new \Exception('Item not found');
 
       //get original updates and services to compare against
-      $originalServices = IncidentManager::getCurrentServices($incident);
-      $originalUpdates = IncidentManager::getCurrentUpdates($incident);
+      $originalServices = IncidentFactory::getCurrentServices($incident);
+      $originalUpdates = IncidentFactory::getCurrentUpdates($incident);
 
       //create form object for incident
       $form = $this->createForm(
@@ -123,7 +123,7 @@ class IncidentApiController extends ApiController
       //save form data to database if posted and validated
       if ($form->isSubmitted() && $form->isValid())
       {
-        $incidentManager->updateIncident(
+        $incidentFactory->updateIncident(
           $incident,
           $originalServices,
           $originalUpdates
@@ -144,19 +144,19 @@ class IncidentApiController extends ApiController
    * @Route("/api/v1/incidents/{hashId}", name="deleteIncident", methods={"DELETE"})
    * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
   */
-  public function deleteIncident($hashId, IncidentManager $incidentManager)
+  public function deleteIncident($hashId, IncidentFactory $incidentFactory)
   {
     try
     {
       //get incident
-      $incident = $incidentManager->getIncident($hashId);
+      $incident = $incidentFactory->getIncident($hashId);
 
       //check for valid incident
       if (!$incident)
         return $this->respondWithErrors(['Invalid data']);
 
       //delete incident
-      $incidentManager->deleteIncident($incident);
+      $incidentFactory->deleteIncident($incident);
 
       //respond with object
       return $this->respond($incident);

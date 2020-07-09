@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +13,7 @@ use App\Entity\ServiceStatusHistory;
 use App\Model\AppConfig;
 use Psr\Log\LoggerInterface;
 
-class MaintenanceManager
+class MaintenanceFactory
 {
   private $em;
   private $security;

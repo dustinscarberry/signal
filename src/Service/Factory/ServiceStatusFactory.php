@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service\Manager;
+namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use App\Entity\ServiceStatus;
 
-class ServiceStatusManager
+class ServiceStatusFactory
 {
   private $em;
   private $security;

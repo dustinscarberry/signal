@@ -6,14 +6,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\UserType;
-use App\Service\Manager\UserManager;
+use App\Service\Factory\UserFactory;
 
 class AccountController extends AbstractController
 {
   /**
    * @Route("/dashboard/account", name="viewAccount")
    */
-  public function view(Request $req, UserManager $userManager)
+  public function view(Request $req, UserFactory $userFactory)
   {
     $user = $this->getUser();
 
@@ -32,7 +32,7 @@ class AccountController extends AbstractController
 
       if ($action == 'regenerateApiToken')
       {
-        $user = $userManager->regenerateApiToken($user);
+        $user = $userFactory->regenerateApiToken($user);
 
         //refresh form with new api token included for user
         $form = $this->createForm(UserType::class, $user);
@@ -43,7 +43,7 @@ class AccountController extends AbstractController
       {
         //get new password field and update user
         $newPassword = $form->get('password')->getData();
-        $userManager->updateUser($user, $newPassword);
+        $userFactory->updateUser($user, $newPassword);
 
         $this->addFlash('success', 'Account updated');
       }
