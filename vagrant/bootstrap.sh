@@ -94,6 +94,7 @@ mysql -e "FLUSH PRIVILEGES;"
 
 #setup database
 mysql -e "CREATE DATABASE demo;"
+mysql -e "CREATE DATABASE demo_test;"
 
 #change user accounts for web stack
 sed -i 's/www-data/vagrant/g' /etc/nginx/nginx.conf
