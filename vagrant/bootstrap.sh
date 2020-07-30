@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-#add repos for php7.3
+# add repos for php7.4
 add-apt-repository ppa:ondrej/php
 apt-get update
 
-#install needed packages
-apt-get install -y php7.3-fpm
-apt-get install -y nginx php7.3 php7.3-cli php7.3-mysql php7.3-gd php7.3-gmp php7.3-bcmath php7.3-imagick php7.3-xml php7.3-curl php7.3-mbstring mariadb-server mariadb-client
+# install needed packages
+apt-get install -y php7.4-fpm
+apt-get install -y nginx php7.4 php7.4-cli php7.4-mysql php7.4-gd php7.4-gmp php7.4-bcmath php7.4-imagick php7.4-xml php7.4-curl php7.4-mbstring mariadb-server mariadb-client
 apt-get upgrade -y
 
-#write out nginx config files
+# write out nginx config files
 >/etc/nginx/sites-enabled/default
 cat >> /etc/nginx/sites-enabled/vagrant << 'EOF'
 upstream php-fpm {
-        server unix:/var/run/php/php7.3-fpm.sock;
+        server unix:/var/run/php/php7.4-fpm.sock;
 }
 
 server {
@@ -80,30 +80,26 @@ EOF
 
 systemctl reload nginx
 
-#install composer
+# install composer
 cd /home/vagrant
 curl -sS https://getcomposer.org/installer -o composer-setup.php
 php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 rm -rf composer-setup.php
 
-#setup mariadb user account
+# setup mariadb user account
 mysql -e "USE mysql;"
 mysql -e "CREATE USER 'vagrant'@'localhost' IDENTIFIED BY 'vagrant';"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 
-#setup database
+# setup database
 mysql -e "CREATE DATABASE demo;"
 mysql -e "CREATE DATABASE demo_test;"
 
-#change user accounts for web stack
+# change user accounts for web stack
 sed -i 's/www-data/vagrant/g' /etc/nginx/nginx.conf
-sed -i 's/www-data/vagrant/g' /etc/php/7.3/fpm/pool.d/www.conf
+sed -i 's/www-data/vagrant/g' /etc/php/7.4/fpm/pool.d/www.conf
 
-#restart services
-systemctl restart php7.3-fpm
+# restart services
+systemctl restart php7.4-fpm
 systemctl restart nginx
-
-#last minute updates and upgrades
-apt-get update
-apt-get upgrade -y
