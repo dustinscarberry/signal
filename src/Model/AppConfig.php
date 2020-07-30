@@ -7,29 +7,30 @@ use App\Entity\Setting;
 
 class AppConfig
 {
-  private $logo;
-  private $locale;
-  private $language;
-  private $siteName;
-  private $siteUrl;
-  private $siteAbout;
-  private $allowSubscriptions;
-  private $cssOverrides;
-  private $siteTimezone;
-  private $analyticsGoogleID;
-  private $dashboardTheme;
-  private $appTheme;
-  private $mailFromAddress;
-  private $mailFromName;
-  private $enableExchangeCalendarSync;
-  private $enableSaml2Login;
-  private $saml2AppIdentifier;
-  private $saml2IdpLoginUrl;
-  private $saml2IdpSigningCertificate;
-  private $saml2SubjectIdentifier;
-
   private $em;
-  private $loadedSettings;
+
+  private $settingList = [
+    'logo' => '',
+    'locale' => 'en',
+    'language' => 'en',
+    'siteName' => 'Signal',
+    'siteUrl' => 'localhost',
+    'siteAbout' => '',
+    'allowSubscriptions' => false,
+    'cssOverrides' => '',
+    'siteTimezone' => 'America/New_York',
+    'analyticsGoogleID' => '',
+    'dashboardTheme' => '',
+    'appTheme' => '',
+    'mailFromAddress' => '',
+    'mailFromName' => 'Signal',
+    'enableExchangeCalendarSync' => false,
+    'enableSaml2Login' => false,
+    'saml2AppIdentifier' => '',
+    'saml2IdpLoginUrl' => '',
+    'saml2IdpSigningCertificate' => '',
+    'saml2SubjectIdentifier' => ''
+  ];
 
   public function __construct(EntityManagerInterface $em)
   {
@@ -39,261 +40,255 @@ class AppConfig
 
   public function getLogo()
   {
-    return $this->logo;
+    return $this->settingList['logo'];
   }
 
   public function setLogo($logo): self
   {
-    $this->logo = $logo;
+    $this->settingList['logo'] = $logo;
     return $this;
   }
 
   public function getLanguage(): string
   {
-    return $this->language;
+    return $this->settingList['language'];
   }
 
   public function setLanguage(string $language): self
   {
-    $this->language = $language;
+    $this->settingList['language'] = $language;
     return $this;
   }
 
   public function getLocale(): string
   {
-    return $this->locale;
+    return $this->settingList['locale'];
   }
 
   public function setLocale(string $locale): self
   {
-    $this->locale = $locale;
+    $this->settingList['locale'] = $locale;
     return $this;
   }
 
   public function getSiteName(): ?string
   {
-    return $this->siteName;
+    return $this->settingList['siteName'];
   }
 
   public function setSiteName(?string $siteName): self
   {
-    $this->siteName = $siteName;
+    $this->settingList['siteName'] = $siteName;
     return $this;
   }
 
   public function getSiteUrl(): string
   {
-    return $this->siteUrl;
+    return $this->settingList['siteUrl'];
   }
 
   public function setSiteUrl(string $siteUrl): self
   {
-    $this->siteUrl = rtrim($siteUrl, '/');
+    $this->settingList['siteUrl'] = rtrim($siteUrl, '/');
     return $this;
   }
 
   public function getSiteAbout(): ?string
   {
-    return $this->siteAbout;
+    return $this->settingList['siteAbout'];
   }
 
   public function setSiteAbout(?string $siteAbout): self
   {
-    $this->siteAbout = $siteAbout;
+    $this->settingList['siteAbout'] = $siteAbout;
     return $this;
   }
 
   public function getAllowSubscriptions(): bool
   {
-    return $this->allowSubscriptions ? true : false;
+    return $this->settingList['allowSubscriptions'] ? true : false;
   }
 
   public function setAllowSubscriptions(bool $allowSubscriptions): self
   {
-    $this->allowSubscriptions = $allowSubscriptions;
+    $this->settingList['allowSubscriptions'] = $allowSubscriptions;
     return $this;
   }
 
   public function getCSSOverrides(): ?string
   {
-    return $this->cssOverrides;
+    return $this->settingList['cssOverrides'];
   }
 
   public function setCSSOverrides(?string $cssOverrides): self
   {
-    $this->cssOverrides = $cssOverrides;
+    $this->settingList['cssOverrides'] = $cssOverrides;
     return $this;
   }
 
   public function getSiteTimezone(): string
   {
-    return $this->siteTimezone;
+    return $this->settingList['siteTimezone'];
   }
 
   public function setSiteTimezone(string $siteTimezone): self
   {
-    $this->siteTimezone = $siteTimezone;
+    $this->settingList['siteTimezone'] = $siteTimezone;
     return $this;
   }
 
   public function getAnalyticsGoogleID(): ?string
   {
-    return $this->analyticsGoogleID;
+    return $this->settingList['analyticsGoogleID'];
   }
 
   public function setAnalyticsGoogleID(?string $analyticsGoogleID): self
   {
-    $this->analyticsGoogleID = $analyticsGoogleID;
+    $this->settingList['analyticsGoogleID'] = $analyticsGoogleID;
     return $this;
   }
 
   public function getDashboardTheme(): string
   {
-    return $this->dashboardTheme;
+    return $this->settingList['dashboardTheme'];
   }
 
   public function setDashboardTheme(string $dashboardTheme): self
   {
-    $this->dashboardTheme = $dashboardTheme;
+    $this->settingList['dashboardTheme'] = $dashboardTheme;
     return $this;
   }
 
   public function getAppTheme(): string
   {
-    return $this->appTheme;
+    return $this->settingList['appTheme'];
   }
 
   public function setAppTheme(string $appTheme): self
   {
-    $this->appTheme = $appTheme;
+    $this->settingList['appTheme'] = $appTheme;
     return $this;
   }
 
   public function getMailFromAddress(): ?string
   {
-    return $this->mailFromAddress;
+    return $this->settingList['mailFromAddress'];
   }
 
   public function setMailFromAddress(?string $mailFromAddress): self
   {
-    $this->mailFromAddress = $mailFromAddress;
+    $this->settingList['mailFromAddress'] = $mailFromAddress;
     return $this;
   }
 
   public function getMailFromName(): ?string
   {
-    return $this->mailFromName;
+    return $this->settingList['mailFromName'];
   }
 
   public function setMailFromName(?string $mailFromName): self
   {
-    $this->mailFromName = $mailFromName;
+    $this->settingList['mailFromName'] = $mailFromName;
     return $this;
   }
 
   public function getEnableExchangeCalendarSync(): bool
   {
-    return $this->enableExchangeCalendarSync;
+    return $this->settingList['enableExchangeCalendarSync'];
   }
 
   public function setEnableExchangeCalendarSync(bool $enableExchangeCalendarSync): self
   {
-    $this->enableExchangeCalendarSync = $enableExchangeCalendarSync;
+    $this->settingList['enableExchangeCalendarSync'] = $enableExchangeCalendarSync;
     return $this;
   }
 
   public function getEnableSaml2Login(): bool
   {
-    return $this->enableSaml2Login;
+    return $this->settingList['enableSaml2Login'];
   }
 
   public function setEnableSaml2Login(bool $enableSaml2Login): self
   {
-    $this->enableSaml2Login = $enableSaml2Login;
+    $this->settingList['enableSaml2Login'] = $enableSaml2Login;
     return $this;
   }
 
   public function getSaml2AppIdentifier(): ?string
   {
-    return $this->saml2AppIdentifier;
+    return $this->settingList['saml2AppIdentifier'];
   }
 
   public function setSaml2AppIdentifier(?string $saml2AppIdentifier): self
   {
-    $this->saml2AppIdentifier = $saml2AppIdentifier;
+    $this->settingList['saml2AppIdentifier'] = $saml2AppIdentifier;
     return $this;
   }
 
   public function getSaml2IdpLoginUrl(): ?string
   {
-    return $this->saml2IdpLoginUrl;
+    $this->settingList['saml2IdpLoginUrl'];
   }
 
   public function setSaml2IdpLoginUrl(?string $saml2IdpLoginUrl): self
   {
-    $this->saml2IdpLoginUrl = $saml2IdpLoginUrl;
+    $this->settingList['saml2IdpLoginUrl'] = $saml2IdpLoginUrl;
     return $this;
   }
 
   public function getSaml2IdpSigningCertificate(): ?string
   {
-    return $this->saml2IdpSigningCertificate;
+    return $this->settingList['saml2IdpSigningCertificate'];
   }
 
   public function setSaml2IdpSigningCertificate(?string $saml2IdpSigningCertificate): self
   {
-    $this->saml2IdpSigningCertificate = $saml2IdpSigningCertificate;
+    $this->settingList['saml2IdpSigningCertificate'] = $saml2IdpSigningCertificate;
     return $this;
   }
 
   public function getSaml2SubjectIdentifier(): ?string
   {
-    return $this->saml2SubjectIdentifier;
+    return $this->settingList['saml2SubjectIdentifier'];
   }
 
   public function setSaml2SubjectIdentifier(?string $saml2SubjectIdentifier): self
   {
-    $this->saml2SubjectIdentifier = $saml2SubjectIdentifier;
+    $this->settingList['saml2SubjectIdentifier'] = $saml2SubjectIdentifier;
     return $this;
   }
 
-  //load settings from database
+  // load settings from database
   private function load(): self
   {
     $allSettings = $this->em
       ->getRepository(Setting::class)
       ->findAll();
-    $this->loadedSettings = [];
 
     foreach ($allSettings as $setting)
-      $this->loadedSettings[$setting->getName()] = $setting->getValue();
-
-    $this->assign();
+      $this->settingList[$setting->getName()] = $setting->getValue();
 
     return $this;
   }
 
-  //save settings to database
+  // save settings to database
   public function save(): self
   {
     $repository = $this->em->getRepository(Setting::class);
 
-    foreach ($this->loadedSettings as $key => $value)
-    {
+    foreach ($this->settingList as $key => $value) {
       $setting = $repository->findOneByName($key);
 
-      if ($setting)
-        $setting->setValue($this->$key);
+      if (!$setting) {
+        $setting = new Setting();
+        $setting->setName($key);
+        $this->em->persist($setting);
+      }
+
+      $setting->setValue($value);
     }
 
     $this->em->flush();
-
     return $this;
-  }
-
-  private function assign()
-  {
-    foreach ($this->loadedSettings as $key => $value)
-      $this->$key = $value;
   }
 }
