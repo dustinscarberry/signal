@@ -14,7 +14,8 @@ Vagrant.configure("2") do |config|
   #config.vm.network :private_network, ip: "192.168.3.10"
   #config.vm.hostname = "signal.marshall.edu"
   config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--uartmode1", "disconnected"]
+      vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
   end
 #  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/", rsync__auto: true
 end
