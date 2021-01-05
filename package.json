@@ -22,7 +22,7 @@
     "dependencies": {
         "@nivo/line": "^0.59.3",
         "autobind-decorator": "^2.4.0",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "classnames": "^2.2.6",
         "immutability-helper": "^3.1.1",
         "moment": "^2.27.0",
