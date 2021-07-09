@@ -227,7 +227,7 @@ class AppConfig
 
   public function getSaml2IdpLoginUrl(): ?string
   {
-    $this->settingList['saml2IdpLoginUrl'];
+    return $this->settingList['saml2IdpLoginUrl'];
   }
 
   public function setSaml2IdpLoginUrl(?string $saml2IdpLoginUrl): self
