@@ -1,6 +1,6 @@
 import React from 'react';
-import HTML5Backend from 'react-dnd-html5-backend';
-import { DragDropContext } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { connect } from 'react-redux';
 import WidgetBlockContainer from './WidgetBlockContainer';
 
@@ -19,11 +19,11 @@ const WidgetBlockList = (props) =>
     />;
   });
 
-  return (
+  return <DndProvider backend={HTML5Backend}>
     <div>
       {widgetNodes}
     </div>
-  );
+  </DndProvider>
 }
 
-export default connect(mapStateToProps)(DragDropContext(HTML5Backend)(WidgetBlockList));
+export default connect(mapStateToProps)(WidgetBlockList);
