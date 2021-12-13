@@ -241,10 +241,6 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-#project specific#
-MarshallDataLoadFixtures.php
-marshalldata.sql
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
