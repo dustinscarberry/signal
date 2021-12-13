@@ -7,13 +7,14 @@ use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(indexes={@ORM\Index(name="user_hashid_idx", columns={"hash_id"})})
  * @ORM\HasLifecycleCallbacks
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
   /**
    * @ORM\Id()

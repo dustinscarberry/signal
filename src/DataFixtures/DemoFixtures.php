@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\ServiceCategory;
 use App\Entity\ServiceStatus;
 use App\Entity\User;
@@ -21,7 +21,7 @@ class DemoFixtures extends Fixture
   private $userFactory;
 
   public function __construct(
-    UserPasswordEncoderInterface $passwordEncoder,
+    UserPasswordHasherInterface $passwordEncoder,
     UserFactory $userFactory
   )
   {
@@ -110,7 +110,7 @@ class DemoFixtures extends Fixture
     //create default users
     $user = new User();
     $user->setUsername('demo');
-    $user->setPassword($this->passwordEncoder->encodePassword($user, 'demo'));
+    $user->setPassword($this->passwordEncoder->hashPassword($user, 'demo'));
     $user->setEmail('demo@demo.com');
     $user->setFirstName('Demo');
     $user->setLastName('Account');

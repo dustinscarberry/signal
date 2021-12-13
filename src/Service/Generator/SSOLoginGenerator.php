@@ -7,22 +7,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SSOLoginGenerator
 {
-  private $session;
+  private $requestStack;
   private $securityTokenStorage;
   private $eventDispatcher;
 
   public function __construct(
-    SessionInterface $session,
+    RequestStack $requestStack,
     TokenStorageInterface $securityTokenStorage,
     EventDispatcherInterface $eventDispatcher
   )
   {
-    $this->session = $session;
+    $this->requestStack = $requestStack;
     $this->securityTokenStorage = $securityTokenStorage;
     $this->eventDispatcher = $eventDispatcher;
   }
@@ -34,7 +34,8 @@ class SSOLoginGenerator
     $this->securityTokenStorage->setToken($token);
 
     //main in first parameter references firewall name
-    $this->session->set('_security_main', serialize($token));
+    $session = $this->requestStack->getSession();
+    $session->set('_security_main', serialize($token));
 
     //fire the login event manually
     $event = new InteractiveLoginEvent($req, $token);

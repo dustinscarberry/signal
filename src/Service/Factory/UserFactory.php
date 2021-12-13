@@ -4,7 +4,7 @@ namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
 use App\Service\Generator\ApiTokenGenerator;
 
@@ -17,7 +17,7 @@ class UserFactory
   public function __construct(
     EntityManagerInterface $em,
     Security $security,
-    UserPasswordEncoderInterface $passwordEncoder
+    UserPasswordHasherInterface $passwordEncoder
   )
   {
     $this->em = $em;
@@ -28,7 +28,7 @@ class UserFactory
   public function createUser($user)
   {
     //encode password and add roles
-    $encodedPassword = $this->passwordEncoder->encodePassword($user, $user->getPassword());
+    $encodedPassword = $this->passwordEncoder->hashPassword($user, $user->getPassword());
     $user->setPassword($encodedPassword);
     $user->setRoles(['ROLE_ADMIN']);
     $user = $this->regenerateApiToken($user);
@@ -40,7 +40,7 @@ class UserFactory
   {
     //change password if new provided
     if ($newPassword)
-      $user->setPassword($this->passwordEncoder->encodePassword($user, $newPassword));
+      $user->setPassword($this->passwordEncoder->hashPassword($user, $newPassword));
 
     //flush user object
     $this->em->flush();
