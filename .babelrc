@@ -5,8 +5,8 @@
       {
         "targets": ">1%, not ie 11",
         "useBuiltIns": "usage",
-        "debug": true,
-        "corejs": 2
+        "debug": false,
+        "corejs": 3
       }
     ],
     [
@@ -14,6 +14,7 @@
     ]
   ],
   "plugins": [
-    ["@babel/plugin-proposal-decorators", {"legacy": true}]
+    ["@babel/plugin-proposal-decorators", {"legacy": true}],
+    "@babel/plugin-proposal-class-properties"
   ]
 }

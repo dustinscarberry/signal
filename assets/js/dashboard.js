@@ -1,4 +1,3 @@
-import '@babel/polyfill';
 import '../css/dashboard.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
