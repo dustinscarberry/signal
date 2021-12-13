@@ -1,0 +1,83 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Testing
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-20.04
+    services:
+      # https://docs.docker.com/samples/library/mysql/
+      mysql:
+        image: mariadb:10.6.2
+        env:
+          MARIADB_USER: vagrant
+          MARIADB_PASSWORD: vagrant
+          MARIADB_DATABASE: demo_test
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: [8.0, 8.1]
+    env:
+      APP_ENV: test
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # —— Setup Github actions 🐙 —————————————————————————————————————————————
+      - name: Checkout Git Repo
+        uses: actions/checkout@v2
+
+      # —— Setup PHP 🛠 —————————————————————————————————————————————
+      - name: Setup PHP, extensions and composer with shivammathur/setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, mysql, dom, filter, gd, iconv, json, mbstring, pdo
+        env:
+          update: true
+
+      - name: Check PHP version
+        run: php -v
+
+      ## —— Composer 🧙‍️ —————————————————————————————————————————————————————————
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install Composer dependencies
+        run: composer i --no-scripts
+
+      ## —— NodeJS 🧰‍️ —————————————————————————————————————————————————————————
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build scripts
+        run: npm run prod --if-present
+
+      ## —— Tests ✅ ———————————————————————————————————————————————————————————
+      - name: Check MariaDB version
+        run: mysql --host 127.0.0.1 --port 3306 -u vagrant -pvagrant -e "show variables where Variable_name = 'version';"
+
+      - name: Setup database schema
+        run: php bin/console doctrine:migrations:migrate
+
+      - name: Load Doctrine fixtures
+        run: php bin/console doctrine:fixtures:load --group=TestFixtures -n
+
+      - name: Run functional and unit tests
+        run: ./vendor/bin/phpunit --testsuite='main'
