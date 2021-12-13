@@ -1,4 +1,6 @@
 {
+    "name": "dustinscarberry/signal",
+    "description": "Signal is a open source system status dashboard inspired by Cachet and others, built on Symfony and React.",
     "type": "project",
     "license": "proprietary",
     "require": {
