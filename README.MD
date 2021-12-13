@@ -5,14 +5,14 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 ## Tech ##
 
 * [React] - JS framework for responsive apps
-* [Symfony 4.4] - PHP MVC Framework
+* [Symfony 5.4] - PHP MVC Framework
 * [composer] - PHP Dependency Manager
 * [npm] - JS Dependency Manager
 * [jQuery] - More JS stuff
 
 ## Requirements ##
 
-* [PHP 7.2.0 or higher](https://www.php.net/)
+* [PHP 8.0 or higher](https://www.php.net/)
 * [MariaDB 10.0+](https://mariadb.org/)
 * [Composer](https://getcomposer.org/)
 * [NodeJS](https://nodejs.org/)
@@ -21,59 +21,107 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 The [docs folder](docs/) provides detailed guides for the many features of signal.
 
-## Installation
+## Development
 
-Clone repository.
+1. Clone repository
 
 ```sh
 $ cd /var/www
-$ git clone https:\\github.com\dustinscarberry\signal
+$ git clone git@github.com:dustinscarberry/signal.git
 ```
 
-Install dependencies.
+2. Install dependencies
 
 ```sh
 $ cd signal
-$ composer install
-$ npm i
+$ composer i --no-scripts
+$ npm ci
 ```
 
-Create and configure .env.local at root of project directory.
+3. Build dependencies
+
+```sh
+$ npm run dev
+```
+
+4. Create and configure .env.local at root of project directory
 
 ```php
-#required properties
+# required properties
 APP_ENV=prod
 APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
 MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
 
-#optional properties
+# optional properties - needed for exchange calendar sync
 EXCHANGE_CALENDAR_HOST=outlook.sample.com
 EXCHANGE_CALENDAR_USERNAME=username@sample.com
 EXCHANGE_CALENDAR_PASSWORD=password
 EXCHANGE_CALENDAR_VERSION=2013
 ```
 
-Clear cache.
-
-> This will need to be ran before / after any upgrades to clear the production app cache.
-
-```sh
-$ rm -rf /var/www/signal/var/*
-```
-
-Run migrations.
+5. Run migrations (from server)
 
 ```sh
 $ php bin/console doctrine:migrations:migrate
 ```
 
-Load basic data.
+6. Load basic data
 ```sh
 $ php bin/console doctrine:fixtures:load
 ```
 
-Run server (if needed)
+## Installation (Standard)
+
+1. Clone repository
+
+```sh
+$ cd /var/www
+$ git clone git@github.com:dustinscarberry/signal.git
+```
+
+2. Install dependencies
+
+```sh
+$ cd signal
+$ composer i --no-scripts --no-dev
+$ npm ci
+```
+
+3. Build dependencies
+
+```sh
+$ npm run prod
+```
+
+4. Create and configure .env.local at root of project directory
+
+```php
+# required properties
+APP_ENV=prod
+APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
+MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
+
+# optional properties - needed for exchange calendar sync
+EXCHANGE_CALENDAR_HOST=outlook.sample.com
+EXCHANGE_CALENDAR_USERNAME=username@sample.com
+EXCHANGE_CALENDAR_PASSWORD=password
+EXCHANGE_CALENDAR_VERSION=2013
+```
+
+5. Run migrations (from VM)
+
+```sh
+$ php bin/console doctrine:migrations:migrate
+```
+
+6. Load basic data
+```sh
+$ php bin/console doctrine:fixtures:load
+```
+
+7. Start server (nginx, if needed)
 
 Nginx Basic Config
 
@@ -90,7 +138,7 @@ server {
     }
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
@@ -106,23 +154,19 @@ server {
 
 ## Upgrades
 
-1. Get updates from repo.
+1. Get updates from repo
 
 ```sh
 git pull
 ```
 
-2. Run database migrations.
+2. Run database migrations
 
 ```sh
 php bin/console doctrine:migrations:migrate
 ```
 
-> WARNING: Do not install fixtures unless needed. Failure to do so will result in total loss of data!
-
-3. Install new fixtures (if needed) - None currently
-
-4. Clear cache.
+3. Clear cache
 
 ```sh
 rm -rf var/cache/*
