@@ -1,12 +1,10 @@
 version: '3'
 services:
-  signal_app:
+  app:
     build:
       context: ../
       dockerfile: docker/Dockerfile
     restart: unless-stopped
-    env_file:
-      - ../.env.local
     volumes:
       - ./logs/server:/var/log/nginx/
       - ./logs/app:/var/www/html/var/log/

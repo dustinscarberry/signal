@@ -8,7 +8,7 @@ COPY --chown=www-data:www-data . /var/www/html
 
 # build app dependencies
 RUN apk add --no-cache make gcc g++ python3 npm && \
-  composer i --no-scripts --no-dev && \
+  composer i --no-scripts && \
   npm ci && \
   npm run prod && \
   apk del make gcc g++ python3 npm && \
