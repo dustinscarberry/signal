@@ -1,4 +1,5 @@
 .vagrant
+vagrant
 .git
 docs
 .gitignore
@@ -11,3 +12,5 @@ tests
 public/build
 node_modules
 vendor
+var/cache/*
+var/log/*
