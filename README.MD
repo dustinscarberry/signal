@@ -152,7 +152,70 @@ server {
 }
 ```
 
-## Upgrades
+## Installation (Docker)
+
+1. Clone repository
+
+```sh
+$ cd /var/www/docker
+$ git clone git@github.com:dustinscarberry/signal.git
+```
+
+2. Create and configure .env.local at root of project directory
+
+```php
+# required properties
+APP_ENV=prod
+APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
+MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
+
+# optional properties - needed for exchange calendar sync
+EXCHANGE_CALENDAR_HOST=outlook.sample.com
+EXCHANGE_CALENDAR_USERNAME=username@sample.com
+EXCHANGE_CALENDAR_PASSWORD=password
+EXCHANGE_CALENDAR_VERSION=2013
+```
+
+3. Create docker-compose.override.yml and modify ports to your environment
+```sh
+$ cd apollo/docker
+$ cp docker-compose.override.example.yml docker-compose.override.yml
+```
+
+4. Run docker container
+
+```sh
+$ cd apollo/docker
+# test
+$ docker-compose -p test up -d --build
+# production
+$ docker-compose -p prod up -d --build
+```
+
+5. Start server (nginx, if needed)
+
+Nginx Basic Proxy Config
+
+```nginx
+server {
+    listen 443 ssl http2;
+    ssl_certificate /etc/nginx/ssl/cert.cer;
+    ssl_certificate_key /etc/nginx/ssl/cert.key;
+    server_name __;
+
+    location / {
+        proxy_pass http://127.0.0.1:8001;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $server_name;
+    }
+}
+```
+
+## Upgrades (Standard)
 
 1. Get updates from repo
 
