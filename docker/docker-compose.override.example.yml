@@ -1,5 +1,5 @@
 version: '3'
 services:
-  app:
+  signal_app:
     ports:
       - "127.0.0.1:8002:80"
