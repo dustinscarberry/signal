@@ -20,7 +20,7 @@
     "@nivo/line": "^0.74.1",
     "@symfony/webpack-encore": "^1.5.0",
     "autobind-decorator": "^2.4.0",
-    "axios": "^0.26.0",
+    "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "core-js": "^3.15.2",
     "immutability-helper": "^3.1.1",
