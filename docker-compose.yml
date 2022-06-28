@@ -2,8 +2,8 @@ version: '3'
 services:
   signal_app:
     build:
-      context: ../
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
       - ./logs/server:/var/log/nginx/

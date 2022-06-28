@@ -157,7 +157,7 @@ server {
 1. Clone repository
 
 ```sh
-$ cd /var/www/docker
+$ cd /var/docker
 $ git clone git@github.com:dustinscarberry/signal.git
 ```
 
@@ -179,14 +179,13 @@ EXCHANGE_CALENDAR_VERSION=2013
 
 3. Create docker-compose.override.yml and modify ports to your environment
 ```sh
-$ cd apollo/docker
+$ cd signal
 $ cp docker-compose.override.example.yml docker-compose.override.yml
 ```
 
 4. Run docker container
 
 ```sh
-$ cd apollo/docker
 # test
 $ docker-compose -p test up -d --build
 # production

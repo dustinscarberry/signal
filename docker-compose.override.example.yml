@@ -1,0 +1,13 @@
+version: '3'
+services:
+  signal_app:
+    ports:
+      - "127.0.0.1:8002:80"
+    environment:
+      - APP_ENV=prod
+      - APP_SECRET=xxxxxxxxxxxxxxxxxxxxxx
+      - DATABASE_URL=mysql://vagrant:vagrant@127.0.0.1:3306/demo
+      - EXCHANGE_CALENDAR_HOST=examplehost.com
+      - EXCHANGE_CALENDAR_USERNAME=example
+      - EXCHANGE_CALENDAR_PASSWORD=example
+      - EXCHANGE_CALENDAR_VERSION=2013
