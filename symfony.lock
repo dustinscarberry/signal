@@ -111,9 +111,6 @@
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
-    "lightsaml/lightsaml": {
-        "version": "1.4.1"
-    },
     "monolog/monolog": {
         "version": "1.25.5"
     },
