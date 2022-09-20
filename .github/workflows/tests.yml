@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [8.0, 8.1]
+        php-versions: [8.1]
     env:
       APP_ENV: test
     # Steps represent a sequence of tasks that will be executed as part of the job

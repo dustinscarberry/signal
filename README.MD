@@ -12,7 +12,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 ## Requirements ##
 
-* [PHP 8.0 or higher](https://www.php.net/)
+* [PHP 8.1 or higher](https://www.php.net/)
 * [MariaDB 10.0+](https://mariadb.org/)
 * [Composer](https://getcomposer.org/)
 * [NodeJS](https://nodejs.org/)
