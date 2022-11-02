@@ -6,8 +6,8 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 * [React] - JS framework for responsive apps
 * [Symfony 5.4] - PHP MVC Framework
-* [composer] - PHP Dependency Manager
-* [npm] - JS Dependency Manager
+* [Composer] - PHP Package Manager
+* [Yarn] - JS Package Manager
 * [jQuery] - More JS stuff
 
 ## Requirements ##
@@ -15,7 +15,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 * [PHP 8.1 or higher](https://www.php.net/)
 * [MariaDB 10.0+](https://mariadb.org/)
 * [Composer](https://getcomposer.org/)
-* [NodeJS](https://nodejs.org/)
+* [Yarn](https://yarnpkg.com/)
 
 ## Documentation ##
 
@@ -35,13 +35,13 @@ $ git clone git@github.com:dustinscarberry/signal.git
 ```sh
 $ cd signal
 $ composer i --no-scripts
-$ npm ci
+$ yarn install --immutable
 ```
 
 3. Build dependencies
 
 ```sh
-$ npm run dev
+$ yarn dev
 ```
 
 4. Create and configure .env.local at root of project directory
@@ -85,13 +85,13 @@ $ git clone git@github.com:dustinscarberry/signal.git
 ```sh
 $ cd signal
 $ composer i --no-scripts --no-dev
-$ npm ci
+$ yarn install --immutable
 ```
 
 3. Build dependencies
 
 ```sh
-$ npm run prod
+$ yarn prod
 ```
 
 4. Create and configure .env.local at root of project directory

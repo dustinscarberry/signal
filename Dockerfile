@@ -7,12 +7,11 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . /var/www/html
 
 # build app dependencies
-RUN apk add --no-cache make gcc g++ python3 npm && \
+RUN apk add --no-cache yarn && \
   composer i --no-scripts && \
-  npm ci && \
-  npm run prod && \
-  apk del make gcc g++ python3 npm && \
-  rm -rf node_modules
+  yarn install --immutable && \
+  yarn prod && \
+  apk del yarn
 
 # fix web permissions
 RUN chown -R www-data:www-data *
