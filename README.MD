@@ -52,12 +52,6 @@ APP_ENV=prod
 APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
 MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
-
-# optional properties - needed for exchange calendar sync
-EXCHANGE_CALENDAR_HOST=outlook.sample.com
-EXCHANGE_CALENDAR_USERNAME=username@sample.com
-EXCHANGE_CALENDAR_PASSWORD=password
-EXCHANGE_CALENDAR_VERSION=2013
 ```
 
 5. Run migrations (from server)
@@ -102,12 +96,6 @@ APP_ENV=prod
 APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
 MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
-
-# optional properties - needed for exchange calendar sync
-EXCHANGE_CALENDAR_HOST=outlook.sample.com
-EXCHANGE_CALENDAR_USERNAME=username@sample.com
-EXCHANGE_CALENDAR_PASSWORD=password
-EXCHANGE_CALENDAR_VERSION=2013
 ```
 
 5. Run migrations (from VM)
@@ -169,12 +157,6 @@ APP_ENV=prod
 APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 DATABASE_URL=mysql://username:password@127.0.0.1:3306/databasename
 MAILER_URL=emailConnectionString - https://symfony.com/doc/current/email.html#configuration
-
-# optional properties - needed for exchange calendar sync
-EXCHANGE_CALENDAR_HOST=outlook.sample.com
-EXCHANGE_CALENDAR_USERNAME=username@sample.com
-EXCHANGE_CALENDAR_PASSWORD=password
-EXCHANGE_CALENDAR_VERSION=2013
 ```
 
 3. Create docker-compose.override.yml and modify ports to your environment
