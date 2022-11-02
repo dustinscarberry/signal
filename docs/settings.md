@@ -52,11 +52,6 @@ Email address to send email from for automated emails, notifications, etc.
 #### `Mail From Name`
 Name to send email from for automated emails, notifications, etc.
 
-## Calendar ##
-
-##### `Enable Exchange Calendar Sync`
-Enable / Disable Exchange Calendar Sync (requires valid exchange settings in .env.local file)
-
 ## SSO ##
 
 ##### `Enable SAML2 Login`

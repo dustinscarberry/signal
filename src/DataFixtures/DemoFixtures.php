@@ -135,7 +135,6 @@ class DemoFixtures extends Fixture
     $settings['appTheme'] = 'light';
     $settings['mailFromAddress'] = 'statusbot@donotreply.com';
     $settings['mailFromName'] = 'Status Bot';
-    $settings['enableExchangeCalendarSync'] = false;
     $settings['enableSaml2Login'] = false;
     $settings['saml2AppIdentifier'] = '';
     $settings['saml2IdpLoginUrl'] = '';

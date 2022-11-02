@@ -56,9 +56,6 @@ class SettingType extends AbstractType
       ->add('language', LanguageType::class)
       ->add('mailFromAddress', TextType::class)
       ->add('mailFromName', TextType::class)
-      ->add('enableExchangeCalendarSync', CheckboxType::class, [
-        'required' => false
-      ])
       ->add('enableSaml2Login', CheckboxType::class, [
         'required' => false
       ])

@@ -24,7 +24,6 @@ class AppConfig
     'appTheme' => '',
     'mailFromAddress' => '',
     'mailFromName' => 'Signal',
-    'enableExchangeCalendarSync' => false,
     'enableSaml2Login' => false,
     'saml2AppIdentifier' => '',
     'saml2IdpLoginUrl' => '',
@@ -189,17 +188,6 @@ class AppConfig
   public function setMailFromName(?string $mailFromName): self
   {
     $this->settingList['mailFromName'] = $mailFromName;
-    return $this;
-  }
-
-  public function getEnableExchangeCalendarSync(): bool
-  {
-    return $this->settingList['enableExchangeCalendarSync'];
-  }
-
-  public function setEnableExchangeCalendarSync(bool $enableExchangeCalendarSync): self
-  {
-    $this->settingList['enableExchangeCalendarSync'] = $enableExchangeCalendarSync;
     return $this;
   }
 

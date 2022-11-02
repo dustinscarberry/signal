@@ -97,11 +97,6 @@ class Maintenance implements JsonSerializable
   /**
    * @ORM\Column(type="string", length=255, nullable=true)
    */
-  private $exchangeCalendarEventId;
-
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   */
   private $googleCalendarEventId;
 
   public function __construct()
@@ -259,17 +254,6 @@ class Maintenance implements JsonSerializable
   public function setCreatedBy(?User $createdBy): self
   {
     $this->createdBy = $createdBy;
-    return $this;
-  }
-
-  public function getExchangeCalendarEventId(): ?string
-  {
-    return $this->exchangeCalendarEventId;
-  }
-
-  public function setExchangeCalendarEventId(?string $exchangeCalendarEventId): self
-  {
-    $this->exchangeCalendarEventId = $exchangeCalendarEventId;
     return $this;
   }
 

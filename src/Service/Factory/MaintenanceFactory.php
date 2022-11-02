@@ -74,9 +74,6 @@ class MaintenanceFactory
 
     //send notification emails
     $this->sendNotificationEmails('create', $maintenance);
-
-    //sync to exchange calendar
-    $this->syncToExchangeCalendar($maintenance);
   }
 
   public function updateMaintenance($maintenance, $updateServiceStatuses, $originalServices, $originalUpdates)
@@ -127,15 +124,10 @@ class MaintenanceFactory
 
     //send notification emails
     $this->sendNotificationEmails('update', $maintenance);
-
-    //sync to exchange calendar
-    $this->syncToExchangeCalendar($maintenance);
   }
 
   public function deleteMaintenance($maintenance)
   {
-    $this->syncToExchangeCalendar($maintenance, true);
-
     //delete maintenance
     $maintenance->setDeletedOn(time());
     $maintenance->setDeletedBy($this->security->getUser());
@@ -180,47 +172,6 @@ class MaintenanceFactory
         $this->maintenanceCreatedMailer->send($maintenance);
       else if ($action == 'update')
         $this->maintenanceUpdatedMailer->send($maintenance);
-    }
-  }
-
-  private function syncToExchangeCalendar($maintenance, $remove = false)
-  {
-    if ($this->appConfig->getEnableExchangeCalendarSync())
-    {
-      if ($_ENV['EXCHANGE_CALENDAR_HOST'] != ''
-        && $_ENV['EXCHANGE_CALENDAR_USERNAME'] != ''
-        && $_ENV['EXCHANGE_CALENDAR_PASSWORD'] != ''
-        && $_ENV['EXCHANGE_CALENDAR_VERSION'] != ''
-      )
-      {
-        $exchangeEventId = $maintenance->getExchangeCalendarEventId();
-
-        try
-        {
-          if ($exchangeEventId)
-          {
-            if ($remove)
-              ExchangeEventGenerator::deleteEvent($exchangeEventId);
-            else
-              ExchangeEventGenerator::updateEvent($maintenance, $exchangeEventId);
-          }
-
-          else
-          {
-            $eventId = ExchangeEventGenerator::createEvent($maintenance);
-
-            //save to database
-            $maintenance->setExchangeCalendarEventId($eventId);
-            $this->em->flush();
-          }
-        }
-        catch (\Exception $e)
-        {
-          $logger->error('Exchange Calendar Sync issue', $e);
-        }
-      }
-      else
-        $logger->error('Exchange Calendar Sync enabled, however .env.local credentials are invalid');
     }
   }
 
