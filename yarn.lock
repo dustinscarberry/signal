@@ -25,6 +25,7 @@ __metadata:
   linkType: hard
 
 "@babel/compat-data@npm:^7.17.7, @babel/compat-data@npm:^7.20.0":
+"@babel/compat-data@npm:^7.17.7, @babel/compat-data@npm:^7.20.0":
   version: 7.20.1
   resolution: "@babel/compat-data@npm:7.20.1"
   checksum: 989b9b7a6fe43c547bb8329241bd0ba6983488b83d29cc59de35536272ee6bb4cc7487ba6c8a4bceebb3a57f8c5fea1434f80bbbe75202bc79bc1110f955ff25
@@ -61,6 +62,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/generator@npm:^7.20.1":
 "@babel/generator@npm:^7.20.1":
   version: 7.20.1
   resolution: "@babel/generator@npm:7.20.1"
@@ -311,6 +313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-plugin-utils@npm:^7.20.2":
+  version: 7.20.2
+  resolution: "@babel/helper-plugin-utils@npm:7.20.2"
+  checksum: f6cae53b7fdb1bf3abd50fa61b10b4470985b400cc794d92635da1e7077bb19729f626adc0741b69403d9b6e411cddddb9c0157a709cc7c4eeb41e663be5d74b
+  languageName: node
+  linkType: hard
+
 "@babel/helper-remap-async-to-generator@npm:^7.18.6, @babel/helper-remap-async-to-generator@npm:^7.18.9":
   version: 7.18.9
   resolution: "@babel/helper-remap-async-to-generator@npm:7.18.9"
@@ -443,6 +452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/parser@npm:^7.18.10, @babel/parser@npm:^7.20.1":
 "@babel/parser@npm:^7.18.10, @babel/parser@npm:^7.20.1":
   version: 7.20.1
   resolution: "@babel/parser@npm:7.20.1"
@@ -756,6 +766,7 @@ __metadata:
   linkType: hard
 
 "@babel/plugin-syntax-import-assertions@npm:^7.20.0":
+"@babel/plugin-syntax-import-assertions@npm:^7.20.0":
   version: 7.20.0
   resolution: "@babel/plugin-syntax-import-assertions@npm:7.20.0"
   dependencies:
@@ -916,6 +927,7 @@ __metadata:
   resolution: "@babel/plugin-transform-block-scoping@npm:7.20.11"
   dependencies:
     "@babel/helper-plugin-utils": ^7.20.2
+    "@babel/helper-plugin-utils": ^7.20.2
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: b33fe53f42f83f14d1d73d6bfc058d3311ac314809de504fd4e7c99ef3a411b2d25211d7ca23aadd6530f73a8df070eaae6d202c07422ffc36f5507917e35f58
@@ -956,6 +968,7 @@ __metadata:
   version: 7.20.7
   resolution: "@babel/plugin-transform-destructuring@npm:7.20.7"
   dependencies:
+    "@babel/helper-plugin-utils": ^7.20.2
     "@babel/helper-plugin-utils": ^7.20.2
   peerDependencies:
     "@babel/core": ^7.0.0-0
@@ -1135,6 +1148,7 @@ __metadata:
   resolution: "@babel/plugin-transform-parameters@npm:7.20.7"
   dependencies:
     "@babel/helper-plugin-utils": ^7.20.2
+    "@babel/helper-plugin-utils": ^7.20.2
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 6ffe0dd9afb2d2b9bc247381aa2e95dd9997ff5568a0a11900528919a4e073ac68f46409431455badb8809644d47cff180045bc2b9700e3f36e3b23554978947
@@ -1306,13 +1320,20 @@ __metadata:
 "@babel/preset-env@npm:^7.20.2":
   version: 7.20.2
   resolution: "@babel/preset-env@npm:7.20.2"
+"@babel/preset-env@npm:^7.20.2":
+  version: 7.20.2
+  resolution: "@babel/preset-env@npm:7.20.2"
   dependencies:
+    "@babel/compat-data": ^7.20.1
+    "@babel/helper-compilation-targets": ^7.20.0
+    "@babel/helper-plugin-utils": ^7.20.2
     "@babel/compat-data": ^7.20.1
     "@babel/helper-compilation-targets": ^7.20.0
     "@babel/helper-plugin-utils": ^7.20.2
     "@babel/helper-validator-option": ^7.18.6
     "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": ^7.18.6
     "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": ^7.18.9
+    "@babel/plugin-proposal-async-generator-functions": ^7.20.1
     "@babel/plugin-proposal-async-generator-functions": ^7.20.1
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/plugin-proposal-class-static-block": ^7.18.6
@@ -1322,6 +1343,7 @@ __metadata:
     "@babel/plugin-proposal-logical-assignment-operators": ^7.18.9
     "@babel/plugin-proposal-nullish-coalescing-operator": ^7.18.6
     "@babel/plugin-proposal-numeric-separator": ^7.18.6
+    "@babel/plugin-proposal-object-rest-spread": ^7.20.2
     "@babel/plugin-proposal-object-rest-spread": ^7.20.2
     "@babel/plugin-proposal-optional-catch-binding": ^7.18.6
     "@babel/plugin-proposal-optional-chaining": ^7.18.9
@@ -1333,6 +1355,7 @@ __metadata:
     "@babel/plugin-syntax-class-static-block": ^7.14.5
     "@babel/plugin-syntax-dynamic-import": ^7.8.3
     "@babel/plugin-syntax-export-namespace-from": ^7.8.3
+    "@babel/plugin-syntax-import-assertions": ^7.20.0
     "@babel/plugin-syntax-import-assertions": ^7.20.0
     "@babel/plugin-syntax-json-strings": ^7.8.3
     "@babel/plugin-syntax-logical-assignment-operators": ^7.10.4
@@ -1348,7 +1371,10 @@ __metadata:
     "@babel/plugin-transform-block-scoped-functions": ^7.18.6
     "@babel/plugin-transform-block-scoping": ^7.20.2
     "@babel/plugin-transform-classes": ^7.20.2
+    "@babel/plugin-transform-block-scoping": ^7.20.2
+    "@babel/plugin-transform-classes": ^7.20.2
     "@babel/plugin-transform-computed-properties": ^7.18.9
+    "@babel/plugin-transform-destructuring": ^7.20.2
     "@babel/plugin-transform-destructuring": ^7.20.2
     "@babel/plugin-transform-dotall-regex": ^7.18.6
     "@babel/plugin-transform-duplicate-keys": ^7.18.9
@@ -1360,10 +1386,14 @@ __metadata:
     "@babel/plugin-transform-modules-amd": ^7.19.6
     "@babel/plugin-transform-modules-commonjs": ^7.19.6
     "@babel/plugin-transform-modules-systemjs": ^7.19.6
+    "@babel/plugin-transform-modules-amd": ^7.19.6
+    "@babel/plugin-transform-modules-commonjs": ^7.19.6
+    "@babel/plugin-transform-modules-systemjs": ^7.19.6
     "@babel/plugin-transform-modules-umd": ^7.18.6
     "@babel/plugin-transform-named-capturing-groups-regex": ^7.19.1
     "@babel/plugin-transform-new-target": ^7.18.6
     "@babel/plugin-transform-object-super": ^7.18.6
+    "@babel/plugin-transform-parameters": ^7.20.1
     "@babel/plugin-transform-parameters": ^7.20.1
     "@babel/plugin-transform-property-literals": ^7.18.6
     "@babel/plugin-transform-regenerator": ^7.18.6
@@ -1377,6 +1407,7 @@ __metadata:
     "@babel/plugin-transform-unicode-regex": ^7.18.6
     "@babel/preset-modules": ^0.1.5
     "@babel/types": ^7.20.2
+    "@babel/types": ^7.20.2
     babel-plugin-polyfill-corejs2: ^0.3.3
     babel-plugin-polyfill-corejs3: ^0.6.0
     babel-plugin-polyfill-regenerator: ^0.4.1
@@ -1384,6 +1415,7 @@ __metadata:
     semver: ^6.3.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
+  checksum: ece2d7e9c7789db6116e962b8e1a55eb55c110c44c217f0c8f6ffea4ca234954e66557f7bd019b7affadf7fbb3a53ccc807e93fc935aacd48146234b73b6947e
   checksum: ece2d7e9c7789db6116e962b8e1a55eb55c110c44c217f0c8f6ffea4ca234954e66557f7bd019b7affadf7fbb3a53ccc807e93fc935aacd48146234b73b6947e
   languageName: node
   linkType: hard
@@ -1923,6 +1955,7 @@ __metadata:
     "@symfony/stimulus-bridge": ^3.0.0
     "@vue/babel-helper-vue-jsx-merge-props": ^1.0.0
     "@vue/babel-preset-jsx": ^1.0.0
+    "@vue/compiler-sfc": ^2.6 || ^3.0.2
     "@vue/compiler-sfc": ^2.6 || ^3.0.2
     eslint: ^8.0.0
     eslint-webpack-plugin: ^3.1.0
@@ -2487,6 +2520,8 @@ __metadata:
   version: 2.0.1
   resolution: "@webpack-cli/serve@npm:2.0.1"
   peerDependencies:
+    webpack: 5.x.x
+    webpack-cli: 5.x.x
     webpack: 5.x.x
     webpack-cli: 5.x.x
   peerDependenciesMeta:
@@ -3184,9 +3219,17 @@ __metadata:
   linkType: hard
 
 "commander@npm:^7.2.0":
+"commander@npm:^7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.4.1":
+  version: 9.4.1
+  resolution: "commander@npm:9.4.1"
+  checksum: bfb18e325a5bdf772763c2213d5c7d9e77144d944124e988bcd8e5e65fb6d45d5d4e86b09155d0f2556c9a59c31e428720e57968bcd050b2306e910a0bf3cf13
   languageName: node
   linkType: hard
 
@@ -4711,6 +4754,10 @@ __metadata:
   languageName: node
   linkType: hard
 
+"interpret@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "interpret@npm:3.1.1"
+  checksum: 35cebcf48c7351130437596d9ab8c8fe131ce4038da4561e6d665f25640e0034702a031cf7e3a5cea60ac7ac548bf17465e0571ede126f3d3a6933152171ac82
 "interpret@npm:^3.1.1":
   version: 3.1.1
   resolution: "interpret@npm:3.1.1"
@@ -6323,6 +6370,9 @@ __metadata:
 "react-redux@npm:^8.0.5":
   version: 8.0.5
   resolution: "react-redux@npm:8.0.5"
+"react-redux@npm:^8.0.5":
+  version: 8.0.5
+  resolution: "react-redux@npm:8.0.5"
   dependencies:
     "@babel/runtime": ^7.12.1
     "@types/hoist-non-react-statics": ^3.3.1
@@ -6349,9 +6399,13 @@ __metadata:
     redux:
       optional: true
   checksum: a108f4f7ead6ac005e656d46051474a2bbdb31ede481bbbb3d8d779c1a35e1940b8655577cc5021313411864d305f67fc719aa48d6e5ed8288cf9cbe8b7042e4
+  checksum: a108f4f7ead6ac005e656d46051474a2bbdb31ede481bbbb3d8d779c1a35e1940b8655577cc5021313411864d305f67fc719aa48d6e5ed8288cf9cbe8b7042e4
   languageName: node
   linkType: hard
 
+"react-tooltip@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "react-tooltip@npm:4.5.1"
 "react-tooltip@npm:^4.5.1":
   version: 4.5.1
   resolution: "react-tooltip@npm:4.5.1"
@@ -6361,6 +6415,7 @@ __metadata:
   peerDependencies:
     react: ">=16.0.0"
     react-dom: ">=16.0.0"
+  checksum: bb2065b6aec5d860627e1459cd193889a236093c484f32a021b7b3c8c36c2144d1077932b5d74bc0262f1e24a3e0fd8251df2107c348a913a9b236467ed2185d
   checksum: bb2065b6aec5d860627e1459cd193889a236093c484f32a021b7b3c8c36c2144d1077932b5d74bc0262f1e24a3e0fd8251df2107c348a913a9b236467ed2185d
   languageName: node
   linkType: hard
@@ -6412,7 +6467,12 @@ __metadata:
 "rechoir@npm:^0.8.0":
   version: 0.8.0
   resolution: "rechoir@npm:0.8.0"
+"rechoir@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "rechoir@npm:0.8.0"
   dependencies:
+    resolve: ^1.20.0
+  checksum: ad3caed8afdefbc33fbc30e6d22b86c35b3d51c2005546f4e79bcc03c074df804b3640ad18945e6bef9ed12caedc035655ec1082f64a5e94c849ff939dc0a788
     resolve: ^1.20.0
   checksum: ad3caed8afdefbc33fbc30e6d22b86c35b3d51c2005546f4e79bcc03c074df804b3640ad18945e6bef9ed12caedc035655ec1082f64a5e94c849ff939dc0a788
   languageName: node
@@ -6555,6 +6615,7 @@ __metadata:
   linkType: hard
 
 "resolve@npm:^1.14.2, resolve@npm:^1.20.0":
+"resolve@npm:^1.14.2, resolve@npm:^1.20.0":
   version: 1.22.1
   resolution: "resolve@npm:1.22.1"
   dependencies:
@@ -6567,6 +6628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+"resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
 "resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
   version: 1.22.1
   resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=07638b"
@@ -6640,11 +6702,15 @@ __metadata:
 "sass-loader@npm:^13.2.0":
   version: 13.2.0
   resolution: "sass-loader@npm:13.2.0"
+"sass-loader@npm:^13.2.0":
+  version: 13.2.0
+  resolution: "sass-loader@npm:13.2.0"
   dependencies:
     klona: ^2.0.4
     neo-async: ^2.6.2
   peerDependencies:
     fibers: ">= 3.1.0"
+    node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     sass: ^1.3.0
     sass-embedded: "*"
@@ -6658,6 +6724,7 @@ __metadata:
       optional: true
     sass-embedded:
       optional: true
+  checksum: ed6cdb5f5508e1a8a020d1451160a5e94805d0c2a97be5719c6a44ed28a258b5f37a1478d01b9d545f269367ae91ccb88adc93bd6202bfd609dbe3193228d51e
   checksum: ed6cdb5f5508e1a8a020d1451160a5e94805d0c2a97be5719c6a44ed28a258b5f37a1478d01b9d545f269367ae91ccb88adc93bd6202bfd609dbe3193228d51e
   languageName: node
   linkType: hard
@@ -6909,6 +6976,8 @@ __metadata:
     react-dnd-html5-backend: ^14.1.0
     react-dom: ^18.2.0
     react-modal: ^3.16.1
+    react-redux: ^8.0.5
+    react-tooltip: ^4.5.1
     react-redux: ^8.0.5
     react-tooltip: ^4.5.1
     redux: ^4.2.0
@@ -7451,14 +7520,19 @@ __metadata:
     "@webpack-cli/serve": ^2.0.1
     colorette: ^2.0.14
     commander: ^9.4.1
+    commander: ^9.4.1
     cross-spawn: ^7.0.3
+    envinfo: ^7.7.3
     envinfo: ^7.7.3
     fastest-levenshtein: ^1.0.12
     import-local: ^3.0.2
     interpret: ^3.1.1
     rechoir: ^0.8.0
+    interpret: ^3.1.1
+    rechoir: ^0.8.0
     webpack-merge: ^5.7.3
   peerDependencies:
+    webpack: 5.x.x
     webpack: 5.x.x
   peerDependenciesMeta:
     "@webpack-cli/generators":
@@ -7567,6 +7641,9 @@ __metadata:
 "webpack@npm:^5.75.0":
   version: 5.75.0
   resolution: "webpack@npm:5.75.0"
+"webpack@npm:^5.75.0":
+  version: 5.75.0
+  resolution: "webpack@npm:5.75.0"
   dependencies:
     "@types/eslint-scope": ^3.7.3
     "@types/estree": ^0.0.51
@@ -7597,6 +7674,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
+  checksum: 2bcc5f3c195f375944e8af2f00bf2feea39cb9fda5f763b0d1b00077f1c51783db25c94d3fae96a07dead9fa085e6ae7474417e5ab31719c9776ea5969ceb83a
   checksum: 2bcc5f3c195f375944e8af2f00bf2feea39cb9fda5f763b0d1b00077f1c51783db25c94d3fae96a07dead9fa085e6ae7474417e5ab31719c9776ea5969ceb83a
   languageName: node
   linkType: hard
