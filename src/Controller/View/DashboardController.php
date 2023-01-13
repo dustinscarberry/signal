@@ -7,9 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DashboardController extends AbstractController
 {
-  /**
-   * @Route("/dashboard", name="dashboardHome")
-   */
+  #[Route('/dashboard', name: 'dashboardHome')]
   public function home()
   {
     return $this->render('dashboard/home.html.twig');

@@ -11,9 +11,7 @@ use App\Service\Factory\IncidentStatusFactory;
 
 class IncidentStatusController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/statuses/incident", name="viewIncidentStatuses")
-   */
+  #[Route('/dashboard/statuses/incident', name: 'viewIncidentStatuses')]
   public function viewall(IncidentStatusFactory $incidentStatusFactory)
   {
     $statuses = $incidentStatusFactory->getIncidentStatuses();
@@ -23,9 +21,7 @@ class IncidentStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/incident/add", name="addIncidentStatus")
-   */
+  #[Route('/dashboard/statuses/incident/add', name: 'addIncidentStatus')]
   public function add(Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     //create status object
@@ -52,9 +48,7 @@ class IncidentStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/incident/{hashId}", name="editIncidentStatus")
-   */
+  #[Route('/dashboard/statuses/incident/{hashId}', name: 'editIncidentStatus')]
   public function edit($hashId, Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
     //get status from database

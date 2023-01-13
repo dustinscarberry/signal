@@ -8,9 +8,7 @@ use App\Service\Generator\LogGenerator;
 
 class LogController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/logs", name="dashboardLogs")
-   */
+  #[Route('/dashboard/logs', name: 'dashboardLogs')]
   public function logs()
   {
     $path = $this->getParameter('kernel.logs_dir') . '/'

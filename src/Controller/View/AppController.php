@@ -16,15 +16,12 @@ use App\Model\SubscriptionManagement;
 
 class AppController extends AbstractController
 {
-  /**
-   * @Route("/")
-   */
+  #[Route('/')]
   public function home(
     Request $req,
     SubscriptionFactory $subscriptionFactory,
     WidgetFactory $widgetFactory
-  )
-  {
+  ) {
     $widgets = $widgetFactory->getWidgets();
 
     //create subscription object
@@ -55,9 +52,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/subscription/{subscriptionID}", name="manageSubscription")
-   */
+  #[Route('/subscription/{subscriptionID}', name: 'manageSubscription')]
   public function manageSubscription($subscriptionID, Request $req, SubscriptionManagement $subscriptionManagement)
   {
     //initialize subscription management fields
@@ -70,10 +65,8 @@ class AppController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $subscriptionManagement->update($subscriptionID);
-
       $this->addFlash('success', 'Subscription updated');
     }
 
@@ -82,9 +75,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/incident/{incidentId}", name="viewIncident")
-   */
+  #[Route('/incident/{incidentId}', name: 'viewIncident')]
   public function viewIncident($incidentId, IncidentFactory $incidentFactory)
   {
     $incident = $incidentFactory->getIncident($incidentId);
@@ -94,9 +85,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/pastincidents", name="viewPastIncidents")
-   */
+  #[Route('/pastincidents', name: 'viewPastIncidents')]
   public function viewPastIncidents(IncidentFactory $incidentFactory)
   {
     $incidents = $incidentFactory->getPastIncidents(true);
@@ -106,9 +95,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/maintenance/{maintenanceId}", name="viewMaintenance")
-   */
+  #[Route('/maintenance/{maintenanceId}', name: 'viewMaintenance')]
   public function viewMaintenance($maintenanceId, MaintenanceFactory $maintenanceFactory)
   {
     $maintenance = $maintenanceFactory->getMaintenance($maintenanceId);
@@ -118,9 +105,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/pastmaintenance", name="viewPastMaintenance")
-   */
+  #[Route('/pastmaintenance', name: 'viewPastMaintenance')]
   public function viewPastMaintenance(MaintenanceFactory $maintenanceFactory)
   {
     $maintenances = $maintenanceFactory->getPastMaintenances(true);
@@ -130,9 +115,7 @@ class AppController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/scheduledmaintenance", name="viewScheduledMaintenance")
-   */
+  #[Route('/scheduledmaintenance', name: 'viewScheduledMaintenance')]
   public function viewScheduledMaintenance(MaintenanceFactory $maintenanceFactory)
   {
     $maintenances = $maintenanceFactory->getScheduledMaintenances();

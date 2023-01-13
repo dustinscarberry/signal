@@ -11,9 +11,7 @@ use App\Service\Factory\MaintenanceStatusFactory;
 
 class MaintenanceStatusController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/statuses/maintenance", name="viewMaintenanceStatuses")
-   */
+  #[Route('/dashboard/statuses/maintenance', name: 'viewMaintenanceStatuses')]
   public function viewall(MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     $statuses = $maintenanceStatusFactory->getMaintenanceStatuses();
@@ -23,9 +21,7 @@ class MaintenanceStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/maintenance/add", name="addMaintenanceStatus")
-   */
+  #[Route('/dashboard/statuses/maintenance/add', name: 'addMaintenanceStatus')]
   public function add(Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     //create status object
@@ -52,9 +48,7 @@ class MaintenanceStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/maintenance/{hashId}", name="editMaintenanceStatus")
-   */
+  #[Route('/dashboard/statuses/maintenance/{hashId}', name: 'editMaintenanceStatus')]
   public function edit($hashId, Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     //get status from database

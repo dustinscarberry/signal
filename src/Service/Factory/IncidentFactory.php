@@ -4,7 +4,7 @@ namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\Entity\Incident;
 use App\Entity\ServiceStatusHistory;
 use App\Service\Mail\Mailer\IncidentCreatedMailer;

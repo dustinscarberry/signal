@@ -11,9 +11,7 @@ use App\Service\Factory\ServiceFactory;
 
 class ServiceController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/services", name="viewServices")
-   */
+  #[Route('/dashboard/services', name: 'viewServices')]
   public function viewall(ServiceFactory $serviceFactory)
   {
     $services = $serviceFactory->getServices();
@@ -23,9 +21,7 @@ class ServiceController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/services/add", name="addService")
-   */
+  #[Route('/dashboard/services/add', name: 'addService')]
   public function add(Request $req, ServiceFactory $serviceFactory)
   {
     //create service object
@@ -52,9 +48,7 @@ class ServiceController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/services/{hashId}", name="editService")
-   */
+  #[Route('/dashboard/services/{hashId}', name: 'editService')]
   public function edit($hashId, Request $req, ServiceFactory $serviceFactory)
   {
     //get service from database

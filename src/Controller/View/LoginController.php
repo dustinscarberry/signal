@@ -8,9 +8,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/login", name="dashboardLogin")
-   */
+  #[Route('/dashboard/login', name: 'dashboardLogin')]
   public function login(AuthenticationUtils $authenticationUtils)
   {
     //get login error
@@ -24,9 +22,7 @@ class LoginController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/logout", name="dashboardLogout")
-   */
+  #[Route('/dashboard/logout', name: 'dashboardLogout')]
   public function logout()
   {
     //this is handled by configuration in security.yaml

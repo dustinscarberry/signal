@@ -11,9 +11,7 @@ use App\Service\Factory\ServiceCategoryFactory;
 
 class ServiceCategoryController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/servicecategories", name="viewServiceCategories")
-   */
+  #[Route('/dashboard/servicecategories', name: 'viewServiceCategories')]
   public function viewall(ServiceCategoryFactory $serviceCategoryFactory)
   {
     $serviceCategories = $serviceCategoryFactory->getServiceCategories();
@@ -23,9 +21,7 @@ class ServiceCategoryController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/servicecategories/add", name="addServiceCategory")
-   */
+  #[Route('/dashboard/servicecategories/add', name: 'addServiceCategory')]
   public function add(Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
     //create service category object
@@ -52,9 +48,7 @@ class ServiceCategoryController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/servicecategories/{hashId}", name="editServiceCategory")
-   */
+  #[Route('/dashboard/servicecategories/{hashId}', name: 'editServiceCategory')]
   public function edit($hashId, Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
     //get service from database

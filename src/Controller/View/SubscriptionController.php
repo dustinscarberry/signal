@@ -9,9 +9,7 @@ use App\Service\Factory\SubscriptionFactory;
 
 class SubscriptionController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/subscriptions", name="viewSubscriptions")
-   */
+  #[Route('/dashboard/subscriptions', name: 'viewSubscriptions')]
   public function viewall(SubscriptionFactory $subscriptionFactory)
   {
     $subscriptions = $subscriptionFactory->getSubscriptions();

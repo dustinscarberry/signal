@@ -3,7 +3,7 @@
 namespace App\Service\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use App\Entity\MaintenanceStatus;
 
 class MaintenanceStatusFactory

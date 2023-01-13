@@ -11,9 +11,7 @@ use App\Service\Factory\UserFactory;
 
 class UserController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/users", name="viewUsers")
-   */
+  #[Route('/dashboard/users', name: 'viewUsers')]
   public function viewall(UserFactory $userFactory)
   {
     $users = $userFactory->getUsers();
@@ -23,9 +21,7 @@ class UserController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/users/add")
-   */
+  #[Route('/dashboard/users/add')]
   public function add(Request $req, UserFactory $userFactory)
   {
     //create user object
@@ -52,9 +48,7 @@ class UserController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/users/{hashId}", name="editUser")
-   */
+  #[Route('/dashboard/users/{hashId}', name: 'editUser')]
   public function edit($hashId, Request $req, UserFactory $userFactory)
   {
     //get user from database

@@ -11,9 +11,7 @@ use App\Service\Factory\CustomMetricFactory;
 
 class CustomMetricController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/custommetrics", name="viewCustomMetrics")
-   */
+  #[Route('/dashboard/custommetrics', name: 'viewCustomMetrics')]
   public function customMetrics(CustomMetricFactory $customMetricFactory)
   {
     $metrics = $customMetricFactory->getCustomMetrics();
@@ -23,9 +21,7 @@ class CustomMetricController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/custommetrics/add", name="addCustomMetric")
-   */
+  #[Route('/dashboard/custommetrics/add', name: 'addCustomMetric')]
   public function add(Request $req, CustomMetricFactory $customMetricFactory)
   {
     //create metric object
@@ -38,8 +34,7 @@ class CustomMetricController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $customMetricFactory->createCustomMetric($metric);
 
       $this->addFlash('success', 'Metric created');
@@ -52,9 +47,7 @@ class CustomMetricController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/custommetrics/{hashId}", name="editCustomMetric")
-   */
+  #[Route('/dashboard/custommetrics/{hashId}', name: 'editCustomMetric')]
   public function edit($hashId, Request $req, CustomMetricFactory $customMetricFactory)
   {
     //get metric from database

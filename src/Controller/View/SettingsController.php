@@ -12,9 +12,7 @@ use App\Form\SettingType;
 
 class SettingsController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/settings")
-   */
+  #[Route('/dashboard/settings')]
   public function update(Request $req, AppConfig $appConfig)
   {
     $form = $this->createForm(SettingType::class, $appConfig);

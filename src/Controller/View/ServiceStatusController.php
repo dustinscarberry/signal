@@ -11,9 +11,7 @@ use App\Service\Factory\ServiceStatusFactory;
 
 class ServiceStatusController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/statuses/service", name="viewServiceStatuses")
-   */
+  #[Route('/dashboard/statuses/service', name: 'viewServiceStatuses')]
   public function viewall(ServiceStatusFactory $serviceStatusFactory)
   {
     $statuses = $serviceStatusFactory->getServiceStatuses();
@@ -23,9 +21,7 @@ class ServiceStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/service/add", name="addServiceStatus")
-   */
+  #[Route('/dashboard/statuses/service/add', name: 'addServiceStatus')]
   public function add(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     //create status object
@@ -52,9 +48,7 @@ class ServiceStatusController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/statuses/service/{hashId}", name="editServiceStatus")
-   */
+  #[Route('/dashboard/statuses/service/{hashId}', name: 'editServiceStatus')]
   public function edit($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     //get status from database

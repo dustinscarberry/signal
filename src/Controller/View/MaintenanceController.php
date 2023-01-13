@@ -11,9 +11,7 @@ use App\Service\Factory\MaintenanceFactory;
 
 class MaintenanceController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/maintenance", name="viewAllMaintenance")
-   */
+  #[Route('/dashboard/maintenance', name: 'viewAllMaintenance')]
   public function viewall(MaintenanceFactory $maintenanceFactory)
   {
     $maintenance = $maintenanceFactory->getMaintenances();
@@ -23,9 +21,7 @@ class MaintenanceController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/maintenance/add", name="addMaintenance")
-   */
+  #[Route('/dashboard/maintenance/add', name: 'addMaintenance')]
   public function add(Request $req, MaintenanceFactory $maintenanceFactory)
   {
     //create maintenance object
@@ -55,9 +51,7 @@ class MaintenanceController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/maintenance/{hashId}", name="editMaintenance")
-   */
+  #[Route('/dashboard/maintenance/{hashId}', name: 'editMaintenance')]
   public function edit($hashId, Request $req, MaintenanceFactory $maintenanceFactory)
   {
     //get maintenance from database

@@ -7,9 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FAQController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/faq", name="dashboardFAQ")
-   */
+  #[Route('/dashboard/faq', name: 'dashboardFAQ')]
   public function faq()
   {
     return $this->render('dashboard/faq/view.html.twig');

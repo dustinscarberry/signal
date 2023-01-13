@@ -11,9 +11,7 @@ use App\Service\Factory\IncidentFactory;
 
 class IncidentController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/incidents", name="viewIncidents")
-   */
+  #[Route('/dashboard/incidents', name: 'viewIncidents')]
   public function viewall(IncidentFactory $incidentFactory)
   {
     $incidents = $incidentFactory->getIncidents();
@@ -23,9 +21,7 @@ class IncidentController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/incidents/add", name="addIncident")
-   */
+  #[Route('/dashboard/incidents/add', name: 'addIncident')]
   public function add(Request $req, IncidentFactory $incidentFactory)
   {
     //create incident object
@@ -52,9 +48,7 @@ class IncidentController extends AbstractController
     ]);
   }
 
-  /**
-   * @Route("/dashboard/incidents/{hashId}", name="editIncident")
-   */
+  #[Route('/dashboard/incidents/{hashId}', name: 'editIncident')]
   public function edit($hashId, Request $req, IncidentFactory $incidentFactory)
   {
     //get incident from database

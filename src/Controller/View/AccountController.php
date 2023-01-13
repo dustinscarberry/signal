@@ -10,9 +10,7 @@ use App\Service\Factory\UserFactory;
 
 class AccountController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/account", name="viewAccount")
-   */
+  #[Route('/dashboard/account', name: 'viewAccount')]
   public function view(Request $req, UserFactory $userFactory)
   {
     $user = $this->getUser();

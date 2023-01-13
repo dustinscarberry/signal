@@ -13,9 +13,7 @@ use Symfony\Form\Exception\InvalidPropertyException;
 
 class SamlLoginController extends AbstractController
 {
-  /**
-   * @Route("/dashboard/samllogin", name="dashboardSamlLogin")
-   */
+  #[Route('/dashboard/samllogin', name: 'dashboardSamlLogin')]
   public function login(AppConfig $appConfig)
   {
     //check if user already logged in
@@ -36,16 +34,13 @@ class SamlLoginController extends AbstractController
     return $this->redirect($redirectURL);
   }
 
-  /**
-   * @Route("/dashboard/samlvalidate", name="dashboardSamlValidate")
-   */
+  #[Route('/dashboard/samlvalidate', name: 'dashboardSamlValidate')]
   public function samlValidate(
     Request $req,
     UserFactory $userFactory,
     SSOLoginGenerator $ssoLoginGenerator,
     AppConfig $appConfig
-  )
-  {
+  ) {
     $samlResponseData = base64_decode($req->request->get('SAMLResponse'));
 
     if (!$samlResponseData)

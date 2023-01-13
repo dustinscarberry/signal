@@ -2,51 +2,47 @@
 
 namespace App\Security;
 
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use App\Repository\UserRepository;
 
-class DashboardAuthenticator extends AbstractFormLoginAuthenticator
+class DashboardAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
   use TargetPathTrait;
 
-  private $em;
-  private $csrfTokenManager;
-  private $passwordEncoder;
+  private $userRepository;
   private $router;
   private $isAPICall = false;
 
   public function __construct(
-    EntityManagerInterface $em,
-    CsrfTokenManagerInterface $csrfTokenManager,
-    UserPasswordHasherInterface $passwordEncoder,
+    UserRepository $userRepository,
     RouterInterface $router
-  )
-  {
-    $this->em = $em;
-    $this->csrfTokenManager = $csrfTokenManager;
-    $this->passwordEncoder = $passwordEncoder;
+  ) {
+    $this->userRepository = $userRepository;
     $this->router = $router;
   }
 
-  //check if authenticator should be used - true or false
-  public function supports(Request $request)
+  /**
+   * Does the authenticator support the given Request?
+   *
+   * If this returns false, the authenticator will be skipped.
+   *
+   * Returning null means authenticate() can be called lazily when accessing the token storage.
+   */
+  public function supports(Request $request): ?bool
   {
     $this->isAPICall = $request->headers->has('X-API-TOKEN');
 
@@ -56,118 +52,116 @@ class DashboardAuthenticator extends AbstractFormLoginAuthenticator
       || $this->isAPICall;
   }
 
-  //get credentials of user or api to check later - user credentials
-  public function getCredentials(Request $request)
+  /**
+   * Create a passport for the current request.
+   *
+   * The passport contains the user, credentials and any additional information
+   * that has to be checked by the Symfony Security system. For example, a login
+   * form authenticator will probably return a passport containing the user, the
+   * presented password and the CSRF token value.
+   *
+   * You may throw any AuthenticationException in this method in case of error (e.g.
+   * a UserNotFoundException when the user cannot be found).
+   *
+   * @throws AuthenticationException
+   */
+  public function authenticate(Request $request): Passport
   {
-    if ($this->isAPICall)
-    {
-      return [
+    if ($this->isAPICall) {
+      $credentials = [
         'apiToken' => $request->headers->get('X-API-TOKEN')
       ];
-    }
-    else
-    {
+
+      return new SelfValidatingPassport(
+        new UserBadge($credentials['apiToken'], function (string $apiToken) {
+          $user = $this->userRepository->findOneBy(['apiToken' => $apiToken]);
+
+          if ($user && !$user->getApiEnabled())
+            throw new AuthenticationException('User not found or api enabled');
+
+          return $user;
+        })
+      );
+    } else {
       $credentials = [
         'username' => $request->request->get('username'),
         'password' => $request->request->get('password'),
         'csrf_token' => $request->request->get('_csrf_token')
       ];
-
-      $request->getSession()->set(
-        Security::LAST_USERNAME,
-        $credentials['username']
+  
+      return new Passport(
+        new UserBadge($credentials['username']),
+        new PasswordCredentials($credentials['password']),
+        [new CsrfTokenBadge('authenticate', $credentials['csrf_token'])]
       );
-
-      return $credentials;
     }
+    
   }
 
-  public function getUser($credentials, UserProviderInterface $userProvider)
-  {
-    if ($this->isAPICall)
-    {
-      $apiToken = $credentials['apiToken'];
-
-      // if a User object, checkCredentials() is called
-      $user = $this->em->getRepository(User::class)
-        ->findOneBy(['apiToken' => $apiToken]);
-
-      //check if api is enabled for user
-      if ($user && !$user->getApiEnabled())
-        return null;
-
-      return $user;
-    }
-    else
-    {
-      //check if crsf token is valid
-      $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-      if (!$this->csrfTokenManager->isTokenValid($token))
-        throw new InvalidCsrfTokenException();
-
-      //get user from database
-      $user = $this->em
-        ->getRepository(User::class)
-        ->findOneBy(['username' => $credentials['username']]);
-
-      //check for matched user
-      if (!$user)
-        throw new CustomUserMessageAuthenticationException('Email could not be found.');
-    }
-
-    return $user;
-  }
-
-  public function checkCredentials($credentials, UserInterface $user)
-  {
-    //return valid if user is populated and api call
-    if ($this->isAPICall)
-    {
-      if ($user && $user->getApiEnabled())
-        return true;
-
-      return false;
-    }
-
-    //return valid if username and password match and not api call
-    return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
-  }
-
-  public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+  /**
+   * Called when authentication executed and was successful!
+   *
+   * This should return the Response sent back to the user, like a
+   * RedirectResponse to the last page they visited.
+   *
+   * If you return null, the current request will continue, and the user
+   * will be authenticated. This makes sense, for example, with an API.
+   */
+  public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
   {
     //bypass success redirect if api call
-    if ($this->isAPICall)
-      return;
+    if ($this->isAPICall) return null;
 
-    if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey))
+    if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName))
       return new RedirectResponse($targetPath);
 
     return new RedirectResponse($this->router->generate('dashboardHome'));
   }
 
-  public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+  /**
+   * Called when authentication executed, but failed (e.g. wrong username password).
+   *
+   * This should return the Response sent back to the user, like a
+   * RedirectResponse to the login page or a 403 response.
+   *
+   * If you return null, the request will continue, but the user will
+   * not be authenticated. This is probably not what you want to do.
+   */
+  public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
   {
-    if ($this->isAPICall)
-    {
+    if ($this->isAPICall) {
       $response = new \stdClass();
       $response->errors = 'Not authorized!';
       return new \Symfony\Component\HttpFoundation\JsonResponse($response, 401);
     }
 
-    if ($request->getSession() instanceof SessionInterface)
-      $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
-
-    $url = $this->getLoginUrl();
-    return new RedirectResponse($url);
+    return new RedirectResponse($this->router->generate('dashboardLogin'));
   }
 
-  protected function getLoginUrl()
+  /**
+   * Returns a response that directs the user to authenticate.
+   *
+   * This is called when an anonymous request accesses a resource that
+   * requires authentication. The job of this method is to return some
+   * response that "helps" the user start into the authentication process.
+   *
+   * Examples:
+   *
+   * - For a form login, you might redirect to the login page
+   *
+   *     return new RedirectResponse('/login');
+   *
+   * - For an API token authentication system, you return a 401 response
+   *
+   *     return new Response('Auth header required', 401);
+   *
+   * @return Response
+   */
+  public function start(Request $request, AuthenticationException $authException = null)
   {
-    //return null if api call
-    if ($this->isAPICall)
-      return null;
+    // return null if api call
+    if ($this->isAPICall) return null;
 
-    //return login page if normal login
-    return $this->router->generate('dashboardLogin');
-  }
+    return new RedirectResponse($this->router->generate('dashboardLogin'));
+  }  
 }
