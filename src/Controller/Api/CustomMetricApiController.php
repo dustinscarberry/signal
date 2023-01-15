@@ -4,17 +4,16 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\CustomMetric;
 use App\Form\CustomMetricType;
 use App\Service\Factory\CustomMetricFactory;
 
 class CustomMetricApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/custommetrics", name="getCustomMetrics", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetrics', name: 'getCustomMetrics', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getCustomMetrics(CustomMetricFactory $customMetricFactory)
   {
     try
@@ -28,10 +27,8 @@ class CustomMetricApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/custommetrics/{hashId}", name="getCustomMetric", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetrics/{hashId}', name: 'getCustomMetric', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
     try
@@ -52,10 +49,8 @@ class CustomMetricApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/custommetrics", name="createCustomMetric", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetrics', name: 'createCustomMetric', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createCustomMetric(Request $req, CustomMetricFactory $customMetricFactory)
   {
     try
@@ -88,10 +83,8 @@ class CustomMetricApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/custommetrics/{hashId}", name="updateCustomMetric", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetrics/{hashId}', name: 'updateCustomMetric', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateCustomMetric($hashId, Request $req, CustomMetricFactory $customMetricFactory)
   {
     try
@@ -129,10 +122,8 @@ class CustomMetricApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/custommetrics/{hashId}", name="deleteCustomMetric", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetrics/{hashId}', name: 'deleteCustomMetric', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
     try

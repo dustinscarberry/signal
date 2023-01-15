@@ -5,98 +5,65 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\MaintenanceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\MaintenanceRepository")
-* @ORM\Table(indexes={@ORM\Index(name="maintenance_hashid_idx", columns={"hash_id"})})
-* @ORM\HasLifecycleCallbacks
-*/
+#[ORM\Entity(repositoryClass: MaintenanceRepository::class)]
+#[ORM\Index(name: 'maintenance_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class Maintenance implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-  * @ORM\Column(type="string", length=255)
-  */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-  * @ORM\Column(type="text")
-  */
+  #[ORM\Column(type: 'text')]
   private $purpose;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\MaintenanceStatus", inversedBy="maintenances")
-  * @ORM\JoinColumn(nullable=false)
-  */
+  #[ORM\ManyToOne(targetEntity: MaintenanceStatus::class, inversedBy: 'maintenances')]
+  #[ORM\JoinColumn(nullable: false)]
   private $status;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $scheduledFor;
 
-  /**
-  * @ORM\Column(type="boolean")
-  */
+  #[ORM\Column(type: 'boolean')]
   private $visibility;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-  * @ORM\OneToMany(targetEntity="App\Entity\MaintenanceUpdate", mappedBy="maintenance", cascade={"persist"})
-  */
+  #[ORM\OneToMany(targetEntity: MaintenanceUpdate::class, mappedBy: 'maintenance', cascade: ['persist'])]
   private $maintenanceUpdates;
 
-  /**
-  * @ORM\OneToMany(targetEntity="App\Entity\MaintenanceService", mappedBy="maintenance", cascade={"persist"})
-  */
+  #[ORM\OneToMany(targetEntity: MaintenanceService::class, mappedBy: 'maintenance', cascade: ['persist'])]
   private $maintenanceServices;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $anticipatedEnd;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="maintenances")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'maintenances')]
+  #[ORM\JoinColumn(nullable: false)]
   private $createdBy;
 
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $googleCalendarEventId;
 
   public function __construct()
@@ -105,10 +72,8 @@ class Maintenance implements JsonSerializable
     $this->maintenanceServices = new ArrayCollection();
   }
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -118,9 +83,7 @@ class Maintenance implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

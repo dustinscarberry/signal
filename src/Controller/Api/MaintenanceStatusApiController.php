@@ -4,17 +4,16 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\MaintenanceStatus;
 use App\Form\MaintenanceStatusType;
 use App\Service\Factory\MaintenanceStatusFactory;
 
 class MaintenanceStatusApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/maintenancestatuses", name="getMaintenanceStatuses", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/maintenancestatuses', name: 'getMaintenanceStatuses', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenanceStatuses(MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
@@ -29,10 +28,8 @@ class MaintenanceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenancestatuses/{hashId}", name="getMaintenanceStatus", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/maintenancestatuses/{hashId}', name: 'getMaintenanceStatus', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
@@ -53,10 +50,8 @@ class MaintenanceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenancestatuses", name="createMaintenanceStatus", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/maintenancestatuses', name: 'createMaintenanceStatus', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createMaintenanceStatus(Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
@@ -92,10 +87,8 @@ class MaintenanceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenancestatuses/{hashId}", name="updateMaintenanceStatus", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/maintenancestatuses/{hashId}', name: 'updateMaintenanceStatus', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateMaintenanceStatus($hashId, Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try
@@ -134,10 +127,8 @@ class MaintenanceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenancestatuses/{hashId}", name="deleteMaintenanceStatus", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/maintenancestatuses/{hashId}', name: 'deleteMaintenanceStatus', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
     try

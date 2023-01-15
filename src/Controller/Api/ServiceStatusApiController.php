@@ -4,17 +4,16 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\ServiceStatus;
 use App\Form\ServiceStatusType;
 use App\Service\Factory\ServiceStatusFactory;
 
 class ServiceStatusApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/servicestatuses", name="getServiceStatuses", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicestatuses', name: 'getServiceStatuses', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceStatuses(ServiceStatusFactory $serviceStatusFactory)
   {
     try
@@ -28,10 +27,8 @@ class ServiceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/servicestatuses/{hashId}", name="getServiceStatus", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicestatuses/{hashId}', name: 'getServiceStatus', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
     try
@@ -52,10 +49,8 @@ class ServiceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/servicestatuses", name="createServiceStatus", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicestatuses', name: 'createServiceStatus', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createServiceStatus(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     try
@@ -88,10 +83,8 @@ class ServiceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/servicestatuses/{hashId}", name="updateServiceStatus", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicestatuses/{hashId}', name: 'updateServiceStatus', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateServiceStatus($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
     try
@@ -129,10 +122,8 @@ class ServiceStatusApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/servicestatuses/{hashId}", name="deleteServiceStatus", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicestatuses/{hashId}', name: 'deleteServiceStatus', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
     try

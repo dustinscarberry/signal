@@ -4,16 +4,15 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Form\WidgetOrderAPIType;
 use App\Model\WidgetOrder;
 
 class WidgetOrderApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/widgetsorder", name="updateWidgetsOrder", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/widgetsorder', name: 'updateWidgetsOrder', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateWidgetsOrder(Request $req, WidgetOrder $widgetOrder)
   {
     $form = $this->createForm(WidgetOrderAPIType::class, $widgetOrder);

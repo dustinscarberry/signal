@@ -3,30 +3,23 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\SubscriptionServiceRepository;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\SubscriptionServiceRepository")
-*/
+#[ORM\Entity(repositoryClass: SubscriptionServiceRepository::class)]
 class SubscriptionService implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\Subscription", inversedBy="blacklistedSubscriptionServices", fetch="EAGER")
-  * @ORM\JoinColumn(nullable=false)
-  */
+  #[ORM\ManyToOne(targetEntity: Subscription::class, inversedBy: 'blacklistedSubscriptionServices', fetch: 'EAGER')]
+  #[ORM\JoinColumn(nullable: false)]
   private $subscription;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="subscriptionServices", fetch="EAGER")
-  * @ORM\JoinColumn(nullable=false)
-  */
+  #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'subscriptionServices', fetch: 'EAGER')]
+  #[ORM\JoinColumn(nullable: false)]
   private $service;
 
   public function getId(): ?int

@@ -4,15 +4,14 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Service\Factory\UserFactory;
 
 class UserApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/users/{hashId}", name="deleteUser", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/users/{hashId}', name: 'deleteUser', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteUser($hashId, UserFactory $userFactory)
   {
     //get user

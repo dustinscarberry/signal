@@ -4,15 +4,14 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Service\Factory\SubscriptionFactory;
 
 class SubscriptionApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/subscriptions", name="getSubscriptions", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/subscriptions', name: 'getSubscriptions', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getSubscriptions(SubscriptionFactory $subscriptionFactory)
   {
     try
@@ -27,10 +26,8 @@ class SubscriptionApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/subscriptions/{hashId}", name="getSubscription", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/subscriptions/{hashId}', name: 'getSubscription', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getSubscription($hashId, SubscriptionFactory $subscriptionFactory)
   {
     try
@@ -51,10 +48,8 @@ class SubscriptionApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/subscriptions/{hashId}", name="deleteSubscription", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/subscriptions/{hashId}', name: 'deleteSubscription', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteSubscription($hashId, SubscriptionFactory $subscriptionFactory)
   {
     try

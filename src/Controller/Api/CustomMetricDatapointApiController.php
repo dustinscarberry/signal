@@ -4,17 +4,16 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\CustomMetricDatapoint;
 use App\Form\CustomMetricDatapointType;
 use App\Service\Factory\CustomMetricDatapointFactory;
 
 class CustomMetricDatapointApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/custommetricdatapoints", name="createCustomMetricDatapoint", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetricdatapoints', name: 'createCustomMetricDatapoint', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createCustomMetricDatapoint(Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
     try
@@ -47,10 +46,8 @@ class CustomMetricDatapointApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/custommetricdatapoints/{hashId}", name="deleteCustomMetricDatapoint", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/custommetricdatapoints/{hashId}', name: 'deleteCustomMetricDatapoint', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteCustomMetricDatapoint($hashId, Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
     try

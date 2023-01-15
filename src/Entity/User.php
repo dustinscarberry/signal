@@ -5,108 +5,73 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\Table(indexes={@ORM\Index(name="user_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Index(name: 'user_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=180, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 180, unique: true)]
   private $username;
 
-  /**
-   * @ORM\Column(type="json")
-   */
+  #[ORM\Column(type: 'json')]
   private $roles = [];
 
   /**
    * @var string The hashed password
-   * @ORM\Column(type="string")
    */
+  #[ORM\Column(type: 'string')]
   private $password;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $email;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $firstName;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $lastName;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\Incident", mappedBy="createdBy")
-   */
+  #[ORM\OneToMany(targetEntity: Incident::class, mappedBy: 'createdBy')]
   private $incidents;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\Maintenance", mappedBy="createdBy")
-   */
+  #[ORM\OneToMany(targetEntity: Maintenance::class, mappedBy: 'createdBy')]
   private $maintenances;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\IncidentUpdate", mappedBy="createdBy")
-   */
+  #[ORM\OneToMany(targetEntity: IncidentUpdate::class, mappedBy: 'createdBy')]
   private $incidentUpdates;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\MaintenanceUpdate", mappedBy="createdBy")
-   */
+  #[ORM\OneToMany(targetEntity: MaintenanceUpdate::class, mappedBy: 'createdBy')]
   private $maintenanceUpdates;
 
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $apiToken;
 
-  /**
-   * @ORM\Column(type="boolean")
-   */
+  #[ORM\Column(type: 'boolean')]
   private $deletable;
 
   public function __construct()
@@ -117,10 +82,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     $this->maintenanceUpdates = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -130,19 +93,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       $this->setCreated($currentTime);
   }
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function ensureDefaults()
   {
     if ($this->deletable === null)
       $this->deletable = true;
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

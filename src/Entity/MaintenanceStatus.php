@@ -5,71 +5,48 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\MaintenanceStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\MaintenanceStatusRepository")
-* @ORM\Table(indexes={@ORM\Index(name="maintenancestatus_hashid_idx", columns={"hash_id"})})
-* @ORM\HasLifecycleCallbacks
-*/
+#[ORM\Entity(repositoryClass: MaintenanceStatusRepository::class)]
+#[ORM\Index(name: 'maintenancestatus_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class MaintenanceStatus implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-  * @ORM\Column(type="string", length=255)
-  */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-  * @ORM\Column(type="boolean")
-  */
+  #[ORM\Column(type: 'boolean')]
   private $deletable;
 
-  /**
-  * @ORM\Column(type="boolean")
-  */
+  #[ORM\Column(type: 'boolean')]
   private $editable;
 
-  /**
-  * @ORM\OneToMany(targetEntity="App\Entity\Maintenance", mappedBy="status")
-  */
+  #[ORM\OneToMany(targetEntity: Maintenance::class, mappedBy: 'status')]
   private $maintenances;
 
-  /**
-  * @ORM\Column(type="string", length=255)
-  */
+  #[ORM\Column(type: 'string', length: 255)]
   private $type;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
   public function __construct()
@@ -77,10 +54,8 @@ class MaintenanceStatus implements JsonSerializable
     $this->maintenances = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -90,10 +65,8 @@ class MaintenanceStatus implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function ensureDefaults()
   {
     if ($this->deletable === null)
@@ -103,9 +76,7 @@ class MaintenanceStatus implements JsonSerializable
     $this->editable = true;
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

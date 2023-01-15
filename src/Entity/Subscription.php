@@ -5,52 +5,37 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\SubscriptionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\SubscriptionRepository")
-* @ORM\Table(indexes={@ORM\Index(name="subscription_hashid_idx", columns={"hash_id"})})
-* @ORM\HasLifecycleCallbacks
-*/
+#[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
+#[ORM\Index(name: 'subscription_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class Subscription implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-  * @ORM\Column(type="string", length=255)
-  */
+  #[ORM\Column(type: 'string', length: 255)]
   private $email;
 
-  /**
-  * @ORM\OneToMany(targetEntity="App\Entity\SubscriptionService", mappedBy="subscription", cascade={"persist"}, fetch="EAGER", orphanRemoval=true)
-  */
+  #[ORM\OneToMany(targetEntity: SubscriptionService::class, mappedBy: 'subscription', cascade: ['persist'], fetch: 'EAGER', orphanRemoval: true)]
   private $blacklistedSubscriptionServices;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -60,9 +45,7 @@ class Subscription implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

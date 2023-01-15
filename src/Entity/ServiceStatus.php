@@ -5,76 +5,51 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\ServiceStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ServiceStatusRepository")
- * @ORM\Table(indexes={@ORM\Index(name="servicestatus_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: ServiceStatusRepository::class)]
+#[ORM\Index(name: 'servicestatus_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class ServiceStatus implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-   * @ORM\Column(type="boolean")
-   */
+  #[ORM\Column(type: 'boolean')]
   private $deletable;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\Service", mappedBy="status")
-   */
+  #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'status')]
   private $services;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $type;
 
-  /**
-   * @ORM\Column(type="boolean")
-   */
+  #[ORM\Column(type: 'boolean')]
   private $editable;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $metricValue;
 
   public function __construct()
@@ -82,10 +57,8 @@ class ServiceStatus implements JsonSerializable
     $this->services = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -95,10 +68,8 @@ class ServiceStatus implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function ensureDefaults()
   {
     if ($this->deletable === null)
@@ -108,9 +79,7 @@ class ServiceStatus implements JsonSerializable
       $this->editable = true;
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

@@ -6,7 +6,7 @@ apt-get update
 
 # install needed packages
 apt-get install -y php8.1-fpm
-apt-get install -y nginx php8.1 php8.1-cli php8.1-mysql php8.1-gd php8.1-gmp php8.1-bcmath php8.1-imagick php8.1-xml php8.1-curl php8.1-mbstring php8.1-intl mariadb-server mariadb-client
+apt-get install -y nginx php8.1 php8.1-cli php8.1-mysql php8.1-gd php8.1-gmp php8.1-bcmath php8.1-imagick php8.1-xml php8.1-curl php8.1-mbstring php8.1-intl unzip mariadb-server mariadb-client
 apt-get upgrade -y
 
 # write out nginx config files

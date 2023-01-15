@@ -3,60 +3,43 @@
 namespace App\Entity;
 
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\IncidentServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\IncidentServiceRepository")
-* @ORM\Table(indexes={@ORM\Index(name="incidentservice_hashid_idx", columns={"hash_id"})})
-* @ORM\HasLifecycleCallbacks
-*/
+#[ORM\Entity(repositoryClass: IncidentServiceRepository::class)]
+#[ORM\Index(name: 'incidentservice_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class IncidentService implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\Service")
-  * @ORM\JoinColumn(nullable=false)
-  */
+  #[ORM\ManyToOne(targetEntity: Service::class)]
+  #[ORM\JoinColumn(nullable: false)]
   private $service;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\ServiceStatus")
-  * @ORM\JoinColumn(nullable=false)
-  */
-  private $status;
+  #[ORM\ManyToOne(targetEntity: ServiceStatus::class)]
+  #[ORM\JoinColumn(nullable: false)]
+  private $status; 
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-  * @ORM\ManyToOne(targetEntity="App\Entity\Incident", inversedBy="incidentServices")
-  * @ORM\JoinColumn(nullable=false)
-  */
+  #[ORM\ManyToOne(targetEntity: Incident::class, inversedBy: 'incidentServices')]
+  #[ORM\JoinColumn(nullable: false)]
   private $incident;
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -66,9 +49,7 @@ class IncidentService implements JsonSerializable
     $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

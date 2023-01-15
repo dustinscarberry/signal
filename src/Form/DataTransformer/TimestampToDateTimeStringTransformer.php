@@ -14,7 +14,7 @@ class TimestampToDateTimeStringTransformer implements DataTransformerInterface
     $this->timezone = $timezone;
   }
 
-  public function transform($timestamp)
+  public function transform($timestamp): mixed
   {
     if (!$timestamp)
       return '';
@@ -24,7 +24,7 @@ class TimestampToDateTimeStringTransformer implements DataTransformerInterface
     return date('m/d/Y g:i A', $timestamp);
   }
 
-  public function reverseTransform($datetimeString)
+  public function reverseTransform($datetimeString): mixed
   {
     if (is_numeric($datetimeString))
       return $datetimeString;

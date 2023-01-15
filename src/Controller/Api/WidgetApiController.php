@@ -4,27 +4,23 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Form\WidgetAPIType;
 use App\Entity\Widget;
 use App\Service\Factory\WidgetFactory;
 
 class WidgetApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/widgets", name="readWidgets", methods={"GET"})
-   * @Security("is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/widgets', name: 'readWidgets', methods: ['GET'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function readWidgets(WidgetFactory $widgetFactory)
   {
     $widgets = $widgetFactory->getWidgets();
     return $this->respond($widgets);
   }
 
-  /**
-   * @Route("/api/v1/widgets/{hashId}", name="readWidget", methods={"GET"})
-   * @Security("is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/widgets/{hashId}', name: 'readWidget', methods: ['GET'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function readWidget($hashId, WidgetFactory $widgetFactory)
   {
     $widget = $widgetFactory->getWidget($hashId);
@@ -32,10 +28,10 @@ class WidgetApiController extends ApiController
   }
 
   /**
-   * @Route("/api/v1/widgets", name="createWidget", methods={"POST"})
-   * @Security("is_granted('ROLE_ADMIN')")
    * Pass {type, sortorder, attributes}
    */
+  #[Route('/api/v1/widgets', name: 'createWidget', methods: ['POST'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function createWidget(Request $req, WidgetFactory $widgetFactory)
   {
     $widget = new Widget();
@@ -59,10 +55,8 @@ class WidgetApiController extends ApiController
     ]);
   }
 
-  /**
-   * @Route("/api/v1/widgets/{hashId}", name="updateWidget", methods={"PATCH"})
-   * @Security("is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/widgets/{hashId}', name: 'updateWidget', methods: ['PATCH'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function updateWidget($hashId, Request $req, WidgetFactory $widgetFactory)
   {
     $widget = $widgetFactory->getWidget($hashId);
@@ -81,8 +75,7 @@ class WidgetApiController extends ApiController
     $form->submit($data);
 
     //save widget updates to database if valid
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $widgetFactory->updateWidget();
       
       return $this->respond($widget);
@@ -93,10 +86,8 @@ class WidgetApiController extends ApiController
     ]);
   }
 
-  /**
-   * @Route("/api/v1/widgets/{hashId}", name="deleteWidget", methods={"DELETE"})
-   * @Security("is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/widgets/{hashId}', name: 'deleteWidget', methods: ['DELETE'])]
+  #[IsGranted('ROLE_ADMIN')]
   public function deleteWidget($hashId, WidgetFactory $widgetFactory)
   {
     $widget = $widgetFactory->getWidget($hashId);

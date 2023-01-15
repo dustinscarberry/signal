@@ -6,16 +6,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Model\AppConfig;
 use App\Form\SettingType;
 
 class SettingApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/settings", name="updateSettings", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/settings', name: 'updateSettings', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateSettings(Request $req, AppConfig $appConfig)
   {
     $form = $this->createForm(SettingType::class, $appConfig);
@@ -23,12 +22,10 @@ class SettingApiController extends ApiController
     $data = json_decode($req->getContent(), true);
     $form->submit($data, false);
 
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $logo = $appConfig->getLogo();
 
-      if ($logo instanceof UploadedFile)
-      {
+      if ($logo instanceof UploadedFile) {
         $fileName = 'custom-logo.' . $logo->guessExtension();
         $appConfig->setLogo($fileName);
 

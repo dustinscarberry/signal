@@ -4,38 +4,31 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\Service;
 use App\Form\ServiceType;
 use App\Service\Factory\ServiceFactory;
 
 class ServiceApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/services", name="getServices", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/services', name: 'getServices', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServices(ServiceFactory $serviceFactory)
   {
-    try
-    {
+    try {
       $services = $serviceFactory->getServices();
       return $this->respond($services);
-    }
-    catch (\Exception $e)
-    {
+    } catch (\Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
 
-  /**
-   * @Route("/api/v1/services/{hashId}", name="getService", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/services/{hashId}', name: 'getService', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getService($hashId, ServiceFactory $serviceFactory)
   {
-    try
-    {
+    try {
       //get service
       $service = $serviceFactory->getService($hashId);
 
@@ -45,17 +38,13 @@ class ServiceApiController extends ApiController
 
       //respond with object
       return $this->respond($service);
-    }
-    catch (\Exception $e)
-    {
+    } catch (\Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
 
-  /**
-   * @Route("/api/v1/services", name="createService", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/services', name: 'createService', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createService(Request $req, ServiceFactory $serviceFactory)
   {
     try
@@ -87,10 +76,8 @@ class ServiceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/services/{hashId}", name="updateService", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/services/{hashId}', name: 'updateService', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateService($hashId, Request $req, ServiceFactory $serviceFactory)
   {
     try
@@ -128,10 +115,8 @@ class ServiceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/services/{hashId}", name="deleteService", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/services/{hashId}', name: 'deleteService', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteService($hashId, ServiceFactory $serviceFactory)
   {
     try

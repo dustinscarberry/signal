@@ -43,7 +43,7 @@ class SubscriptionGroupType extends AbstractType
     return 'subscription_group';
   }
 
-  public function getBlockPrefix()
+  public function getBlockPrefix(): string
   {
     return 'subscription_group';
   }

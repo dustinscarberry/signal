@@ -4,34 +4,28 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\Incident;
 use App\Form\IncidentType;
 use App\Service\Factory\IncidentFactory;
 
 class IncidentApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/incidents", name="getIncidents", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/incidents', name: 'getIncidents', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getIncidents(IncidentFactory $incidentFactory)
   {
-    try
-    {
+    try {
       $incidents = $incidentFactory->getIncidents();
       return $this->respond($incidents);
-    }
-    catch (\Exception $e)
-    {
+    } catch (\Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
 
-  /**
-   * @Route("/api/v1/incidents/{hashId}", name="getIncident", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/incidents/{hashId}', name: 'getIncident', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getIncident($hashId, IncidentFactory $incidentFactory)
   {
     try
@@ -51,10 +45,8 @@ class IncidentApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/incidents", name="createIncident", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/incidents', name: 'createIncident', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createIncident(Request $req, IncidentFactory $incidentFactory)
   {
     try
@@ -89,10 +81,8 @@ class IncidentApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/incidents/{hashId}", name="updateIncident", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/incidents/{hashId}', name: 'updateIncident', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateIncident($hashId, Request $req, IncidentFactory $incidentFactory)
   {
     try
@@ -140,10 +130,8 @@ class IncidentApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/incidents/{hashId}", name="deleteIncident", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/incidents/{hashId}', name: 'deleteIncident', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteIncident($hashId, IncidentFactory $incidentFactory)
   {
     try

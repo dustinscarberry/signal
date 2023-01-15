@@ -4,17 +4,16 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\Maintenance;
 use App\Form\MaintenanceType;
 use App\Service\Factory\MaintenanceFactory;
 
 class MaintenanceApiController extends ApiController
 {
-  /**
-   * @Route("/api/v1/maintenance", name="getMaintenances", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/maintenance', name: 'getMaintenances', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenances(MaintenanceFactory $maintenanceFactory)
   {
     try
@@ -29,10 +28,8 @@ class MaintenanceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenance/{hashId}", name="getMaintenance", methods={"GET"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/maintenance/{hashId}', name: 'getMaintenance', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenance($hashId, MaintenanceFactory $maintenanceFactory)
   {
     try
@@ -53,10 +50,8 @@ class MaintenanceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenance", name="createMaintenance", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/maintenance', name: 'createMaintenance', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createMaintenance(Request $req, MaintenanceFactory $maintenanceFactory)
   {
     try
@@ -95,10 +90,8 @@ class MaintenanceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenance/{hashId}", name="updateMaintenance", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/maintenance/{hashId}', name: 'updateMaintenance', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateMaintenance($hashId, Request $req, MaintenanceFactory $maintenanceFactory)
   {
     try
@@ -145,10 +138,8 @@ class MaintenanceApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/maintenance/{hashId}", name="deleteMaintenance", methods={"DELETE"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/maintenance/{hashId}', name: 'deleteMaintenance', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteMaintenance($hashId, MaintenanceFactory $maintenanceFactory)
   {
     try

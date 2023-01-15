@@ -5,77 +5,52 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
- * @ORM\Table(indexes={@ORM\Index(name="service_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: ServiceRepository::class)]
+#[ORM\Index(name: 'service_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class Service implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-   * @ORM\Column(type="string", length=255, nullable=true)
-   */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $description;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\ServiceCategory", inversedBy="services")
-   */
+  #[ORM\ManyToOne(targetEntity: ServiceCategory::class, inversedBy: 'services')]
   private $serviceCategory;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\ServiceStatusHistory", mappedBy="service")
-   */
+  #[ORM\OneToMany(targetEntity: ServiceStatusHistory::class, mappedBy: 'service')]
   private $serviceStatusHistories;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\ServiceStatus", inversedBy="services")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: ServiceStatus::class, inversedBy: 'services')]
+  #[ORM\JoinColumn(nullable: false)]
   private $status;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\SubscriptionService", mappedBy="service")
-   */
+  #[ORM\OneToMany(targetEntity: SubscriptionService::class, mappedBy: 'service')]
   private $subscriptionServices;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
   public function __construct()
@@ -84,10 +59,8 @@ class Service implements JsonSerializable
     $this->subscriptionServices = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -97,9 +70,7 @@ class Service implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

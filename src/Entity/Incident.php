@@ -5,99 +5,66 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\IncidentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\IncidentRepository")
- * @ORM\Table(indexes={@ORM\Index(name="incident_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: IncidentRepository::class)]
+#[ORM\Index(name: 'incident_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class Incident implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-   * @ORM\Column(type="boolean")
-   */
+  #[ORM\Column(type: 'boolean')]
   private $visibility;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $occurred;
 
-  /**
-   * @ORM\Column(type="text", nullable=true)
-   */
+  #[ORM\Column(type: 'text', nullable: true)]
   private $message;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\IncidentStatus", inversedBy="incidents")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: IncidentStatus::class, inversedBy: 'incidents')]
+  #[ORM\JoinColumn(nullable: false)]
   private $status;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\IncidentService", mappedBy="incident", cascade={"persist"}, fetch="EAGER")
-   */
+  #[ORM\OneToMany(targetEntity: IncidentService::class, mappedBy: 'incident', cascade: ['persist'], fetch: 'EAGER')]
   private $incidentServices;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\IncidentUpdate", mappedBy="incident", cascade={"persist"}, fetch="EAGER")
-   */
+  #[ORM\OneToMany(targetEntity: IncidentUpdate::class, mappedBy: 'incident', cascade: ['persist'], fetch: 'EAGER')]
   private $incidentUpdates;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\IncidentType", inversedBy="incidents")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: IncidentType::class, inversedBy: 'incidents')]
+  #[ORM\JoinColumn(nullable: false)]
   private $type;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $anticipatedResolution;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="incidents")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'incidents')]
+  #[ORM\JoinColumn(nullable: false)]
   private $createdBy;
 
   public function __construct()
@@ -106,10 +73,8 @@ class Incident implements JsonSerializable
     $this->incidentUpdates = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -119,9 +84,7 @@ class Incident implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

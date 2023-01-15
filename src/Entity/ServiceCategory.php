@@ -4,72 +4,49 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\ServiceCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
 
-/**
-* @ORM\Entity(repositoryClass="App\Repository\ServiceCategoryRepository")
-* @ORM\Table(indexes={@ORM\Index(name="servicecategory_hashid_idx", columns={"hash_id"})})
-* @ORM\HasLifecycleCallbacks
-*/
+#[ORM\Entity(repositoryClass: ServiceCategoryRepository::class)]
+#[ORM\Index(name: 'servicecategory_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class ServiceCategory implements JsonSerializable
 {
-  /**
-  * @ORM\Id()
-  * @ORM\GeneratedValue()
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-  * @ORM\Column(type="string", length=255)
-  */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-  * @ORM\Column(type="string", length=255, nullable=true)
-  */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $hint;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-  * @ORM\Column(type="integer")
-  */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-  * @ORM\OneToMany(targetEntity="App\Entity\Service", mappedBy="serviceCategory", fetch="EAGER")
-  */
+  #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'serviceCategory', fetch: 'EAGER')]
   private $services;
 
-  /**
-  * @ORM\Column(type="boolean")
-  */
+  #[ORM\Column(type: 'boolean')]
   private $deletable;
 
-  /**
-   * @ORM\Column(type="integer", nullable=true)
-   */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $deletedOn;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   */
+  #[ORM\ManyToOne(targetEntity: User::class)]
   private $deletedBy;
 
-  /**
-   * @ORM\Column(type="boolean")
-   */
+  #[ORM\Column(type: 'boolean')]
   private $editable;
 
   public function __construct()
@@ -77,10 +54,8 @@ class ServiceCategory implements JsonSerializable
     $this->services = new ArrayCollection();
   }
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -90,10 +65,8 @@ class ServiceCategory implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-  * @ORM\PrePersist
-  * @ORM\PreUpdate
-  */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function ensureDefaults()
   {
     if ($this->deletable === null)
@@ -103,9 +76,7 @@ class ServiceCategory implements JsonSerializable
       $this->editable = true;
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

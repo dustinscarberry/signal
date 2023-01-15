@@ -4,27 +4,24 @@ namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\ExpressionLanguage\Expression;
 use App\Entity\ServiceCategory;
 use App\Form\ServiceCategoryType;
 use App\Service\Factory\ServiceCategoryFactory;
 
 class ServiceCategoryApiController extends ApiController
 {
-  /**
-  * @Route("/api/v1/servicecategories", name="getServiceCategories", methods={"GET"})
-  * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/servicecategories', name: 'getServiceCategories', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceCategories(ServiceCategoryFactory $serviceCategoryFactory)
   {
     $serviceCategories = $serviceCategoryFactory->getServiceCategories();
     return $this->respond($serviceCategories);
   }
 
-  /**
-  * @Route("/api/v1/servicecategories/{hashId}", name="getServiceCategory", methods={"GET"})
-  * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/servicecategories/{hashId}', name: 'getServiceCategory', methods: ['GET'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceCategory($hashId, ServiceCategoryFactory $serviceCategoryFactory)
   {
     //get service category
@@ -38,10 +35,8 @@ class ServiceCategoryApiController extends ApiController
     return $this->respond($serviceCategory);
   }
 
-  /**
-   * @Route("/api/v1/servicecategories", name="createServiceCategory", methods={"POST"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicecategories', name: 'createServiceCategory', methods: ['POST'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createServiceCategory(Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
     try
@@ -77,10 +72,8 @@ class ServiceCategoryApiController extends ApiController
     }
   }
 
-  /**
-   * @Route("/api/v1/servicecategories/{hashId}", name="updateServiceCategory", methods={"PATCH"})
-   * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-   */
+  #[Route('/api/v1/servicecategories/{hashId}', name: 'updateServiceCategory', methods: ['PATCH'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateServiceCategory($hashId, Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
     try
@@ -115,10 +108,8 @@ class ServiceCategoryApiController extends ApiController
     }
   }
 
-  /**
-  * @Route("/api/v1/servicecategories/{hashId}", name="deleteServiceCategory", methods={"DELETE"})
-  * @Security("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')")
-  */
+  #[Route('/api/v1/servicecategories/{hashId}', name: 'deleteServiceCategory', methods: ['DELETE'])]
+  #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteServiceCategory($hashId, ServiceCategoryFactory $serviceCategoryFactory)
   {
     try

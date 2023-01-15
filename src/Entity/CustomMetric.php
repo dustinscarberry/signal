@@ -5,61 +5,42 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\CustomMetricRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CustomMetricRepository")
- * @ORM\Table(indexes={@ORM\Index(name="custommetric_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: CustomMetricRepository::class)]
+#[ORM\Index(name: 'custommetric_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class CustomMetric implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $name;
 
-  /**
-   * @ORM\Column(type="text", nullable=true)
-   */
+  #[ORM\Column(type: 'text', nullable: true)]
   private $description;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $updated;
 
-  /**
-   * @ORM\OneToMany(targetEntity="App\Entity\CustomMetricDatapoint", mappedBy="metric", orphanRemoval=true)
-   */
+  #[ORM\OneToMany(targetEntity: CustomMetricDatapoint::class, mappedBy: 'metric', orphanRemoval: true)]
   private $customMetricDatapoints;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $scaleStart;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $scaleEnd;
 
   public function __construct()
@@ -67,10 +48,8 @@ class CustomMetric implements JsonSerializable
     $this->customMetricDatapoints = new ArrayCollection();
   }
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();
@@ -80,9 +59,7 @@ class CustomMetric implements JsonSerializable
       $this->setCreated($currentTime);
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

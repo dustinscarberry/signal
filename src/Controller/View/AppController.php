@@ -16,7 +16,7 @@ use App\Model\SubscriptionManagement;
 
 class AppController extends AbstractController
 {
-  #[Route('/')]
+  #[Route('/', name: 'home')]
   public function home(
     Request $req,
     SubscriptionFactory $subscriptionFactory,

@@ -3,41 +3,30 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ServiceStatusHistoryRepository;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ServiceStatusHistoryRepository")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: ServiceStatusHistoryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ServiceStatusHistory
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="serviceStatusHistories")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'serviceStatusHistories')]
+  #[ORM\JoinColumn(nullable: false)]
   private $service;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\ServiceStatus")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: ServiceStatus::class)]
+  #[ORM\JoinColumn(nullable: false)]
   private $status;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     $currentTime = time();

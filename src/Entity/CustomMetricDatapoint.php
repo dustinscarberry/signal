@@ -3,57 +3,42 @@
 namespace App\Entity;
 
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\CustomMetricDatapointRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CustomMetricDatapointRepository")
- * @ORM\Table(indexes={@ORM\Index(name="custommetricdatapoint_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: CustomMetricDatapointRepository::class)]
+#[ORM\Index(name: 'custommetricdatapoint_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class CustomMetricDatapoint implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $created;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Column(type: 'integer')]
   private $value;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="App\Entity\CustomMetric", inversedBy="customMetricDatapoints")
-   * @ORM\JoinColumn(nullable=false)
-   */
+  #[ORM\ManyToOne(targetEntity: CustomMetric::class, inversedBy: 'customMetricDatapoints')]
+  #[ORM\JoinColumn(nullable: false)]
   private $metric;
 
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   */
+  #[ORM\PrePersist]
+  #[ORM\PreUpdate]
   public function updateTimestamps()
   {
     if ($this->getCreated() == null)
       $this->setCreated(time());
   }
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();

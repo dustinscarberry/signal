@@ -3,46 +3,33 @@
 namespace App\Entity;
 
 use App\Service\Generator\HashIdGenerator;
+use App\Repository\WidgetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\WidgetRepository")
- * @ORM\Table(indexes={@ORM\Index(name="widget_hashid_idx", columns={"hash_id"})})
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity(repositoryClass: WidgetRepository::class)]
+#[ORM\Index(name: 'widget_hashid_idx', columns: ['hash_id'])]
+#[ORM\HasLifecycleCallbacks]
 class Widget implements JsonSerializable
 {
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
+  #[ORM\Id]
+  #[ORM\GeneratedValue]
+  #[ORM\Column(type: 'integer')]
   private $id;
 
-  /**
-   * @ORM\Column(type="string", length=25, unique=true)
-   */
+  #[ORM\Column(type: 'string', length: 25, unique: true)]
   private $hashId;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
+  #[ORM\Column(type: 'string', length: 255)]
   private $type;
 
-  /**
-   * @ORM\Column(type="smallint")
-   */
+  #[ORM\Column(type: 'smallint')]
   private $sortorder;
 
-  /**
-   * @ORM\Column(type="text", nullable=true)
-   */
+  #[ORM\Column(type: 'text', nullable: true)]
   private $attributes;
 
-  /**
-   * @ORM\PrePersist
-   */
+  #[ORM\PrePersist]
   public function createHashId()
   {
     $this->hashId = HashIdGenerator::generate();
