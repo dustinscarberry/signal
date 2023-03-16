@@ -13,7 +13,4 @@ RUN apk add --no-cache yarn && \
   yarn prod && \
   apk del yarn
 
-# fix web permissions
-RUN chown -R www-data:www-data *
-
 EXPOSE 80
