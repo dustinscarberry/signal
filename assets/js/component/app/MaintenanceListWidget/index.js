@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class MaintenanceListWidget extends React.Component
+class MaintenanceListWidget extends Component
 {
   constructor(props)
   {
@@ -62,7 +62,7 @@ class MaintenanceListWidget extends React.Component
     if (!this.state.maintenance)
       return <Loader/>;
 
-    return <View {...this.state}/>;
+    return <View {...this.state}/>
   }
 }
 

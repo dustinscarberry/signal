@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { DragSource, DropTarget } from 'react-dnd';
 import { findDOMNode } from 'react-dom';
 import classnames from 'classnames';
@@ -6,10 +6,8 @@ import WidgetBlockActions from './WidgetBlockActions';
 
 const itemType = 'widgetblock';
 
-const rowSource =
-{
-  beginDrag(props)
-  {
+const rowSource = {
+  beginDrag(props) {
     return {
       index: props.index
     }
@@ -82,15 +80,13 @@ const rowTargetCollect = (connect, monitor) =>
   };
 }
 
-class WidgetBlock extends React.Component
+class WidgetBlock extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
   }
 
-  render()
-  {
+  render() {
     const boxClasses = ['widget-box'];
 
     if (this.props.isOpen)

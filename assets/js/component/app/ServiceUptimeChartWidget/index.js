@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class ServiceUptimeChartWidget extends React.Component
+class ServiceUptimeChartWidget extends Component
 {
   constructor(props)
   {
@@ -60,13 +60,13 @@ class ServiceUptimeChartWidget extends React.Component
   render()
   {
     if (!this.state.dataPoints)
-      return <Loader/>;
+      return <Loader/>
 
     return <View
       data={this.state.dataPoints}
       scale={this.state.scale}
       title={this.state.title}
-    />;
+    />
   }
 }
 

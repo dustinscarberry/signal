@@ -1,4 +1,3 @@
-import React from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { connect } from 'react-redux';
@@ -8,8 +7,7 @@ const mapStateToProps = (state) => {
   return {widgets: state.widgets};
 }
 
-const WidgetBlockList = (props) =>
-{
+const WidgetBlockList = (props) => {
   const widgetNodes = props.widgets.map((widget, i) =>
   {
     return <WidgetBlockContainer

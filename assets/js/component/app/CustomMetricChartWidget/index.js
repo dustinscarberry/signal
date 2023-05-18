@@ -1,13 +1,12 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class CustomMetricChartWidget extends React.Component
+class CustomMetricChartWidget extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -21,8 +20,7 @@ class CustomMetricChartWidget extends React.Component
     this.refreshInterval = undefined;
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.load();
   }
 

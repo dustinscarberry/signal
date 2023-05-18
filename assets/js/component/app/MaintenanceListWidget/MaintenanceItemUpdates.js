@@ -1,8 +1,6 @@
-import React from 'react';
 import MaintenanceItemUpdate from './MaintenanceItemUpdate';
 
-const MaintenanceItemUpdates = (props) =>
-{
+const MaintenanceItemUpdates = (props) => {
   let updateNodes = undefined;
   if (props.updates.length != 0)
   {
@@ -16,12 +14,10 @@ const MaintenanceItemUpdates = (props) =>
   else
     updateNodes = 'N/A';
 
-  return (
-    <div className="maintenance-updates">
-      <span className="maintenance-field-label">Updates:</span>
-      {updateNodes}
-    </div>
-  );
+  return <div className="maintenance-updates">
+    <span className="maintenance-field-label">Updates:</span>
+    {updateNodes}
+  </div>
 }
 
 export default MaintenanceItemUpdates;

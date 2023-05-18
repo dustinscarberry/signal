@@ -1,10 +1,7 @@
-import React from 'react';
-
 import ContentBlock from '../ContentBlock';
 import Link from './Link';
 
-const View = (props) =>
-{
+const View = (props) => {
   //set links based on configuration
   const linkNodes = [];
 
@@ -17,19 +14,17 @@ const View = (props) =>
   if (props.showPastIncidents)
     linkNodes.push(<Link key={2} href='/pastincidents' title='Past Incidents'/>);
 
-  return (
-    <ContentBlock>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="past-future-links-widget">
-              {linkNodes}
-            </div>
+  return <ContentBlock>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-12">
+          <div className="past-future-links-widget">
+            {linkNodes}
           </div>
         </div>
       </div>
-    </ContentBlock>
-  );
+    </div>
+  </ContentBlock>
 }
 
 View.defaultProps = {

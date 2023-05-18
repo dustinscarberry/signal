@@ -1,13 +1,12 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class IncidentsListWidget extends React.Component
+class IncidentsListWidget extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -20,8 +19,7 @@ class IncidentsListWidget extends React.Component
     this.refreshInterval = undefined;
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.load();
   }
 
@@ -58,12 +56,13 @@ class IncidentsListWidget extends React.Component
     }, this.state.refreshInterval * 1000);
   }
 
-  render()
-  {
-    if (!this.state.incidents)
-      return <Loader/>;
+  render() {
+    const { incidents } = this.state;
 
-    return <View {...this.state}/>;
+    if (!incidents)
+      return <Loader/>
+
+    return <View {...this.state}/>
   }
 }
 

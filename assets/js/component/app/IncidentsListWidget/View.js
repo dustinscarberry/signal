@@ -1,27 +1,23 @@
-import React from 'react';
 import ContentBlock from '../ContentBlock';
 import IncidentList from './IncidentList';
 
-const View = (props) =>
-{
-  let title = 'Issues';
-  if (props.title.trim() != '')
-    title = props.title;
+const View = ({title, incidents}) => {
+  let viewTitle = 'Issues';
+  if (title.trim() != '')
+    viewTitle = title;
 
-  return (
-    <ContentBlock>
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="incident-list-widget">
-              <h2 className="widget-header">{title}</h2>
-              <IncidentList incidents={props.incidents}/>
-            </div>
+  return <ContentBlock>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-12">
+          <div className="incident-list-widget">
+            <h2 className="widget-header">{viewTitle}</h2>
+            <IncidentList incidents={incidents}/>
           </div>
         </div>
       </div>
-    </ContentBlock>
-  );
+    </div>
+  </ContentBlock>
 }
 
 View.defaultProps = {

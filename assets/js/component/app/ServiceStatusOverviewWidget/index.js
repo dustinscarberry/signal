@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class ServiceStatusOverviewWidget extends React.Component
+class ServiceStatusOverviewWidget extends Component
 {
   constructor(props)
   {
@@ -111,14 +111,14 @@ class ServiceStatusOverviewWidget extends React.Component
   render()
   {
     if (!this.state.serviceStatuses)
-      return <Loader/>;
+      return <Loader/>
 
     const type = this.getMessageType();
 
     return <View
       message={this.getMessageText(type)}
       statusClasses={this.getStatusClasses(type)}
-    />;
+    />
   }
 }
 

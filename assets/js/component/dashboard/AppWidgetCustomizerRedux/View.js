@@ -1,5 +1,4 @@
-import React from 'react';
-import autobind from 'autobind-decorator';
+import { Component } from 'react';
 import WidgetCreator from './WidgetCreator';
 import WidgetBlockList from './WidgetBlockList';
 import WidgetSelector from './WidgetSelector';
@@ -22,10 +21,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class View extends React.Component
+class View extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -33,34 +31,26 @@ class View extends React.Component
     };
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.loadWidgets();
   }
 
-  async loadWidgets()
-  {
+  loadWidgets = async () => {
     const rsp = await axios.get('/api/v1/widgets');
 
     if (rsp.status == 200 && !rsp.data.error)
       this.props.dispatchInitializeWidgets(rsp.data.data);
   }
 
-  @autobind
-  handleModalToggle()
-  {
+  handleModalToggle = () => {
     this.setState({isOpenWidgetSelector: !this.state.isOpenWidgetSelector});
   }
 
-  @autobind
-  async addWidget()
-  {
+  addWidget = async () => {
     this.setState({isOpenWidgetSelector: !this.state.isOpenWidgetSelector});
   }
 
-  @autobind
-  handleAddWidgetType(type)
-  {
+  handleAddWidgetType = (type) => {
     const newWidget = WIDGET_BLOCK_DATA[type];
     newWidget.sortorder = this.props.widgets.length + 1;
     newWidget.isNew = true;
@@ -68,24 +58,21 @@ class View extends React.Component
     this.setState({isOpenWidgetSelector: false});
   }
 
-  render()
-  {
+  render() {
     if (!this.props.widgets)
-      return <Loader/>;
+      return <Loader/>
 
-    return (
-      <div>
-        <WidgetBlockList/>
-        <WidgetCreator
-          handleModalToggle={this.handleModalToggle}
-        />
-        <WidgetSelector
-          isOpenWidgetSelector={this.state.isOpenWidgetSelector}
-          handleAddWidgetType={this.handleAddWidgetType}
-          handleModalToggle={this.handleModalToggle}
-        />
-      </div>
-    );
+    return <div>
+      <WidgetBlockList/>
+      <WidgetCreator
+        handleModalToggle={this.handleModalToggle}
+      />
+      <WidgetSelector
+        isOpenWidgetSelector={this.state.isOpenWidgetSelector}
+        handleAddWidgetType={this.handleAddWidgetType}
+        handleModalToggle={this.handleModalToggle}
+      />
+    </div>
   }
 }
 

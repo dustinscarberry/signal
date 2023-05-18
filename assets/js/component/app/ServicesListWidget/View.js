@@ -1,12 +1,8 @@
-import React from 'react';
-
 import ContentBlock from '../ContentBlock';
-import Service from './Service';
 import ServicesGroup from './ServicesGroup';
 import ServicesList from './ServicesList';
 
-const View = (props) =>
-{
+const View = (props) => {
   //calculate nodes
   let serviceWidgetNodes = [];
   let serviceWidgetNodesOne = [];
@@ -83,21 +79,19 @@ const View = (props) =>
   }
   else if (props.layout == 'twocolumn')
   {
-    return (
-      <ContentBlock>
-        <div className="container-fluid">
-          <h2 className="widget-header">Services</h2>
-          <div className="row">
-            <div className="col-lg-6">
-              {serviceWidgetNodesOne}
-            </div>
-            <div className="col-lg-6">
-              {serviceWidgetNodesTwo}
-            </div>
+    return <ContentBlock>
+      <div className="container-fluid">
+        <h2 className="widget-header">Services</h2>
+        <div className="row">
+          <div className="col-lg-6">
+            {serviceWidgetNodesOne}
+          </div>
+          <div className="col-lg-6">
+            {serviceWidgetNodesTwo}
           </div>
         </div>
-      </ContentBlock>
-    );
+      </div>
+    </ContentBlock>
   }
 }
 

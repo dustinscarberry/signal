@@ -1,20 +1,15 @@
-import React from 'react';
+const SelectBox = ({name, value, options, useBlank, handleChange}) => {
+  let newOptions = options;
+  if (useBlank)
+    newOptions.unshift({key: '', value: ''});
 
-const SelectBox = (props) =>
-{
-  let options = props.options;
-  if (props.useBlank)
-    options.unshift({key: '', value: ''});
-
-  const optionNodes = options.map(option => {
+  const optionNodes = newOptions.map(option => {
     return <option key={option.key} value={option.key}>{option.value}</option>
   });
 
-  return (
-    <select className="form-control" onChange={props.handleChange} value={props.value} name={props.name}>
-      {optionNodes}
-    </select>
-  );
+  return <select className="form-control" onChange={handleChange} value={value} name={name}>
+    {optionNodes}
+  </select>
 }
 
 SelectBox.defaultProps = {

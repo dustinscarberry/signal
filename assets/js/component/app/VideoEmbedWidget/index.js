@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse, getYouTubeSourceURL, getVimeoSourceURL } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class VideoEmbedWidget extends React.Component
+class VideoEmbedWidget extends Component
 {
   constructor(props)
   {
@@ -48,12 +48,11 @@ class VideoEmbedWidget extends React.Component
       return '';
   }
 
-  render()
-  {
+  render() {
     if (!this.state.source || !this.state.sourceID)
-      return <Loader/>;
+      return <Loader/>
 
-    return <View sourceURL={this.getSourceURL()}/>;
+    return <View sourceURL={this.getSourceURL()}/>
   }
 }
 

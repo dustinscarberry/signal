@@ -1,19 +1,14 @@
-import React from 'react';
-
-const Toggle = (props) =>
-{
-  return (
-    <div className="ui toggle checkbox">
-      <input type="checkbox" name={props.name} checked={props.value} onChange={props.handleChange}/>
-      <label></label>
-    </div>
-  );
+const Toggle = ({name, value, handleChange}) => {
+  return <div className="ui toggle checkbox">
+    <input type="checkbox" name={name} checked={value} onChange={handleChange}/>
+    <label></label>
+  </div>
 }
 
 Toggle.defaultProps = {
+  name: undefined,
   value: false,
-  handleChange: undefined,
-  name: undefined
+  handleChange: undefined
 };
 
 export default Toggle;

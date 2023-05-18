@@ -1,5 +1,4 @@
-import React from 'react';
-import classnames from 'classnames';
+import { Component } from 'react';
 import {
   dispatchUpdateWidget,
   dispatchDeleteWidget,
@@ -8,7 +7,6 @@ import {
 } from './redux/actions';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import autoBind from 'react-autobind';
 import { WIDGET_BLOCK_TYPE, WIDGET_BLOCK_ATTRIBUTES } from '../constants';
 import WidgetBlock from './WidgetBlock';
 import VideoEmbedWidgetBlock from './blocks/VideoEmbedWidgetBlock';
@@ -34,32 +32,26 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-class WidgetBlockContainer extends React.Component
+class WidgetBlockContainer extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
       isOpen: props.widget.isNew ? true : false,
       isSaved: true
     };
-
-    autoBind(this);
   }
 
-  toggleOpenClose()
-  {
+  toggleOpenClose = () => {
     this.setState({isOpen: !this.state.isOpen});
   }
 
-  toggleIsSaved(isSaved)
-  {
+  toggleIsSaved = (isSaved) => {
     this.setState({isSaved});
   }
 
-  createWidgetInDB(widget)
-  {
+  createWidgetInDB = (widget) => {
     return axios.post(
       '/api/v1/widgets',
       {
@@ -70,8 +62,7 @@ class WidgetBlockContainer extends React.Component
     );
   }
 
-  updateWidgetInDB(widget)
-  {
+  updateWidgetInDB = (widget) => {
     return axios.patch(
       '/api/v1/widgets/' + widget.id,
       {
@@ -82,23 +73,20 @@ class WidgetBlockContainer extends React.Component
     );
   }
 
-  deleteWidgetInDB(widgetID)
-  {
+  deleteWidgetInDB = (widgetID) => {
     return axios.delete(
       '/api/v1/widgets/' + widgetID
     );
   }
 
-  updateWidgetOrderInDB(widgetIDs)
-  {
+  updateWidgetOrderInDB = (widgetIDs) => {
     return axios.patch(
       '/api/v1/widgetsorder',
       {widgetIDs: widgetIDs}
     );
   }
 
-  updateAttributes(attributes)
-  {
+  updateAttributes = (attributes) => {
     if (attributes) {
       let { widget } = this.props;
       widget.attributes = Object.assign(widget.attributes, attributes);
@@ -106,8 +94,7 @@ class WidgetBlockContainer extends React.Component
     }
   }
 
-  async saveWidget()
-  {
+  saveWidget = async () => {
     let { widget } = this.props;
 
     //save widget
@@ -132,24 +119,20 @@ class WidgetBlockContainer extends React.Component
     return false;
   }
 
-  async deleteWidget()
-  {
+  deleteWidget = async () => {
     const { widget, index } = this.props;
 
-    if (widget.id !== undefined)
-    {
+    if (widget.id !== undefined) {
       const rsp = await this.deleteWidgetInDB(widget.id)
 
       if (rsp.status == 200 && !rsp.data.error)
         this.props.dispatchDeleteWidget(index);
-    }
-    else
+    } else
       this.props.dispatchDeleteWidget(index);
   }
 
   //change table row order
-  async moveWidget(dragIndex, hoverIndex)
-  {
+  moveWidget = async (dragIndex, hoverIndex) => {
     if (dragIndex >= 0 && hoverIndex >= 0)
     {
       this.props.dispatchMoveWidget(dragIndex, hoverIndex);
@@ -157,14 +140,12 @@ class WidgetBlockContainer extends React.Component
     }
   }
 
-  async saveWidgetsOrder()
-  {
+  saveWidgetsOrder = async () => {
     const widgetIDs = this.props.widgets.map(widget => widget.id);
     this.updateWidgetOrderInDB(widgetIDs);
   }
 
-  getBlockTitle()
-  {
+  getBlockTitle = () => {
     const { widget } = this.props;
     let title = undefined;
 
@@ -177,8 +158,7 @@ class WidgetBlockContainer extends React.Component
     return title;
   }
 
-  getBlockType()
-  {
+  getBlockType = () => {
     const { widget } = this.props;
 
     if (widget.type == WIDGET_BLOCK_TYPE.VIDEO_EMBED)
@@ -248,22 +228,19 @@ class WidgetBlockContainer extends React.Component
       return null;
   }
 
-  render()
-  {
-    return (
-      <WidgetBlock
-        title={this.getBlockTitle()}
-        saveWidget={this.saveWidget}
-        deleteWidget={this.deleteWidget}
-        toggleOpenClose={this.toggleOpenClose}
-        moveWidget={this.moveWidget}
-        saveWidgetsOrder={this.saveWidgetsOrder}
-        {...this.props}
-        {...this.state}
-      >
-        {this.getBlockType()}
-      </WidgetBlock>
-    );
+  render() {
+    return <WidgetBlock
+      title={this.getBlockTitle()}
+      saveWidget={this.saveWidget}
+      deleteWidget={this.deleteWidget}
+      toggleOpenClose={this.toggleOpenClose}
+      moveWidget={this.moveWidget}
+      saveWidgetsOrder={this.saveWidgetsOrder}
+      {...this.props}
+      {...this.state}
+    >
+      {this.getBlockType()}
+    </WidgetBlock>
   }
 }
 

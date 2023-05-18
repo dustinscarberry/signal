@@ -1,14 +1,11 @@
-import React from 'react';
-
-const NumberInput = (props) =>
-{
-  return <input className="form-control" type="number" onChange={props.handleChange} value={props.value} name={props.name}/>
+const NumberInput = ({name, value, handleChange}) => {
+  return <input className="form-control" type="number" onChange={handleChange} value={value} name={name}/>
 }
 
 NumberInput.defaultProps = {
+  name: undefined,
   value: undefined,
-  handleChange: undefined,
-  name: undefined
+  handleChange: undefined
 };
 
 export default NumberInput;

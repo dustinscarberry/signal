@@ -1,14 +1,13 @@
 import '../css/dashboard.scss';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import axios from 'axios';
-const moment = require('moment');
+import moment from 'moment';
 import AppWidgetCustomizer from './component/dashboard/AppWidgetCustomizerRedux';
 
 //render app widget customizer
 const appWidgetCustomizerRoot = document.getElementById('app-widget-customizer-root');
 if (appWidgetCustomizerRoot)
-  ReactDOM.render(<AppWidgetCustomizer/>, appWidgetCustomizerRoot);
+  createRoot(appWidgetCustomizerRoot).render(<AppWidgetCustomizer/>);
 
 $(window).on('load', function() {
   $("body").removeClass("preload");

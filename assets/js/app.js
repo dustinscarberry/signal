@@ -1,6 +1,6 @@
 import '../css/app.scss';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+
 import VideoEmbedWidget from './component/app/VideoEmbedWidget';
 import ServicesListWidget from './component/app/ServicesListWidget';
 import IncidentsListWidget from './component/app/IncidentsListWidget';
@@ -23,45 +23,45 @@ const pastFutureLinks = document.querySelectorAll('.past-future-links-widget-roo
 
 if (videoEmbeds)
   Array.prototype.forEach.call(videoEmbeds, videoEmbed => {
-    ReactDOM.render(<VideoEmbedWidget id={videoEmbed.getAttribute('data-id')}/>, videoEmbed);
+    createRoot(videoEmbed).render(<VideoEmbedWidget id={videoEmbed.getAttribute('data-id')}/>);
   });
 
 if (servicesLists)
   Array.prototype.forEach.call(servicesLists, servicesList => {
-    ReactDOM.render(<ServicesListWidget id={servicesList.getAttribute('data-id')}/>, servicesList);
+    createRoot(servicesList).render(<ServicesListWidget id={servicesList.getAttribute('data-id')}/>);
   });
 
 if (incidentsLists)
   Array.prototype.forEach.call(incidentsLists, incidentsList => {
-    ReactDOM.render(<IncidentsListWidget id={incidentsList.getAttribute('data-id')}/>, incidentsList);
+    createRoot(incidentsList).render(<IncidentsListWidget id={incidentsList.getAttribute('data-id')}/>);
   });
 
 if (maintenanceLists)
   Array.prototype.forEach.call(maintenanceLists, maintenanceList => {
-    ReactDOM.render(<MaintenanceListWidget id={maintenanceList.getAttribute('data-id')}/>, maintenanceList);
+    createRoot(maintenanceList).render(<MaintenanceListWidget id={maintenanceList.getAttribute('data-id')}/>);
   });
 
 if (serviceStatusOverviews)
   Array.prototype.forEach.call(serviceStatusOverviews, serviceStatusOverview => {
-    ReactDOM.render(<ServiceStatusOverviewWidget id={serviceStatusOverview.getAttribute('data-id')}/>, serviceStatusOverview);
+    createRoot(serviceStatusOverview).render(<ServiceStatusOverviewWidget id={serviceStatusOverview.getAttribute('data-id')}/>);
   });
 
 if (metricsOverviews)
   Array.prototype.forEach.call(metricsOverviews, metricsOverview => {
-    ReactDOM.render(<MetricsOverviewWidget id={metricsOverview.getAttribute('data-id')}/>, metricsOverview);
+    createRoot(metricsOverview).render(<MetricsOverviewWidget id={metricsOverview.getAttribute('data-id')}/>);
   });
 
 if (serviceUptimeCharts)
   Array.prototype.forEach.call(serviceUptimeCharts, serviceUptimeChart => {
-    ReactDOM.render(<ServiceUptimeChartWidget id={serviceUptimeChart.getAttribute('data-id')}/>, serviceUptimeChart);
+    createRoot(serviceUptimeChart).render(<ServiceUptimeChartWidget id={serviceUptimeChart.getAttribute('data-id')}/>);
   });
 
 if (customMetricCharts)
   Array.prototype.forEach.call(customMetricCharts, customMetricChart => {
-    ReactDOM.render(<CustomMetricChartWidget id={customMetricChart.getAttribute('data-id')}/>, customMetricChart);
+    createRoot(customMetricChart).render(<CustomMetricChartWidget id={customMetricChart.getAttribute('data-id')}/>);
   });
 
 if (pastFutureLinks)
   Array.prototype.forEach.call(pastFutureLinks, pastFutureLink => {
-    ReactDOM.render(<PastFutureLinksWidget id={pastFutureLink.getAttribute('data-id')}/>, pastFutureLink);
+    createRoot(pastFutureLink).render(<PastFutureLinksWidget id={pastFutureLink.getAttribute('data-id')}/>);
   });

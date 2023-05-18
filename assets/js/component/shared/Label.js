@@ -1,12 +1,9 @@
-import React from 'react';
-
-const Label = (props) =>
-{
+const Label = ({title, hint}) => {
   let hintNode = undefined;
-  if (props.hint)
-    hintNode = <span className="label-hint">- {props.hint}</span>;
+  if (hint)
+    hintNode = <span className="label-hint">- {hint}</span>;
 
-  return <label>{props.title}{hintNode}</label>;
+  return <label>{title}{hintNode}</label>
 }
 
 export default Label;

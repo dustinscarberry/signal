@@ -1,12 +1,7 @@
-import React from 'react';
-
-const FormGroup = (props) =>
-{
-  return (
-    <div className="form-group">
-      {props.children}
-    </div>
-  );
+const FormGroup = ({children}) => {
+  return <div className="form-group">
+    {children}
+  </div>
 }
 
 export default FormGroup;

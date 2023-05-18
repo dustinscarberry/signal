@@ -1,6 +1,4 @@
-import React from 'react';
-import autobind from 'autobind-decorator';
-import WidgetBlock from '../WidgetBlock';
+import { Component } from 'react';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
 import TextInput from '../../../shared/TextInput';
@@ -9,10 +7,9 @@ import SelectBox from '../../../shared/SelectBox';
 import Loader from '../../../shared/Loader';
 import axios from 'axios';
 
-class CustomMetricChartWidgetBlock extends React.Component
+class CustomMetricChartWidgetBlock extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -25,9 +22,7 @@ class CustomMetricChartWidgetBlock extends React.Component
     this.loadSelectionData();
   }
 
-  @autobind
-  changeValue(e)
-  {
+  changeValue = (e) => {
     this.props.updateAttributes({
       [e.target.name]: e.target.value
     });
@@ -48,62 +43,59 @@ class CustomMetricChartWidgetBlock extends React.Component
     }
   }
 
-  render()
-  {
+  render() {
     if (!this.state.metrics)
-      return <Loader/>;
+      return <Loader/>
 
-    return (
-      <div>
-        <FormGroup>
-          <Label title="Title"/>
-          <TextInput
-            value={this.props.widget.attributes.title}
-            handleChange={this.changeValue}
-            name="title"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label title="Y Axis Legend"/>
-          <TextInput
-            value={this.props.widget.attributes.yLegend}
-            handleChange={this.changeValue}
-            name="yLegend"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label title="Scale" hint="Time Scale"/>
-          <SelectBox
-            value={this.props.widget.attributes.scale}
-            options={[
-              {key: 'day', value: 'Day'},
-              {key: 'hour', value: 'Hour'},
-              {key: 'minute', value: 'Minute'}
-            ]}
-            handleChange={this.changeValue}
-            name="scale"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label title="Metric"/>
-          <SelectBox
-            value={this.props.widget.attributes.metric}
-            options={this.state.metrics}
-            handleChange={this.changeValue}
-            useBlank={false}
-            name="metric"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label title="Refresh Interval" hint="in seconds"/>
-          <NumberInput
-            value={this.props.widget.attributes.refreshInterval}
-            handleChange={this.changeValue}
-            name="refreshInterval"
-          />
-        </FormGroup>
-      </div>
-    );
+    return <div>
+      <FormGroup>
+        <Label title="Title"/>
+        <TextInput
+          value={this.props.widget.attributes.title}
+          handleChange={this.changeValue}
+          name="title"
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label title="Y Axis Legend"/>
+        <TextInput
+          value={this.props.widget.attributes.yLegend}
+          handleChange={this.changeValue}
+          name="yLegend"
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label title="Scale" hint="Time Scale"/>
+        <SelectBox
+          value={this.props.widget.attributes.scale}
+          options={[
+            {key: 'day', value: 'Day'},
+            {key: 'hour', value: 'Hour'},
+            {key: 'minute', value: 'Minute'}
+          ]}
+          handleChange={this.changeValue}
+          name="scale"
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label title="Metric"/>
+        <SelectBox
+          value={this.props.widget.attributes.metric}
+          options={this.state.metrics}
+          handleChange={this.changeValue}
+          useBlank={false}
+          name="metric"
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label title="Refresh Interval" hint="in seconds"/>
+        <NumberInput
+          value={this.props.widget.attributes.refreshInterval}
+          handleChange={this.changeValue}
+          name="refreshInterval"
+        />
+      </FormGroup>
+    </div>
   }
 }
 

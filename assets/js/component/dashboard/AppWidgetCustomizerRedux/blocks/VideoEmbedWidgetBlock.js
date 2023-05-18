@@ -1,21 +1,17 @@
-import React from 'react';
-import autobind from 'autobind-decorator';
-import WidgetBlock from '../WidgetBlock';
+import { Component } from 'react';
 import ResponsiveIframe from '../../../shared/ResponsiveIframe';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
 import TextInput from '../../../shared/TextInput';
 
-class VideoEmbedWidgetBlock extends React.Component
+class VideoEmbedWidgetBlock extends Component
 {
   constructor(props)
   {
     super(props);
   }
 
-  @autobind
-  changeURL(e)
-  {
+  changeURL = (e) => {
     let url = e.target.value.trim();
 
     this.props.updateAttributes({
@@ -91,22 +87,19 @@ class VideoEmbedWidgetBlock extends React.Component
     return src;
   }
 
-  render()
-  {
-    return (
-      <div>
-        <FormGroup>
-          <Label title="Video URL" hint="Embed address"/>
-          <TextInput
-            handleChange={this.changeURL}
-            value={this.props.widget.attributes.url}
-          />
-        </FormGroup>
-        <div className="video-embed-widget-preview-wrapper">
-          <ResponsiveIframe src={this.getVideoPreview()}/>
-        </div>
+  render() {
+    return <div>
+      <FormGroup>
+        <Label title="Video URL" hint="Embed address"/>
+        <TextInput
+          handleChange={this.changeURL}
+          value={this.props.widget.attributes.url}
+        />
+      </FormGroup>
+      <div className="video-embed-widget-preview-wrapper">
+        <ResponsiveIframe src={this.getVideoPreview()}/>
       </div>
-    );
+    </div>
   }
 }
 

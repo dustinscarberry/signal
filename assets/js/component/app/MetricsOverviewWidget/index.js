@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import axios from 'axios';
 import { isValidResponse } from './actions';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class MetricsOverviewWidget extends React.Component
+class MetricsOverviewWidget extends Component
 {
   constructor(props)
   {
@@ -57,16 +57,15 @@ class MetricsOverviewWidget extends React.Component
     }, this.state.refreshInterval * 1000);
   }
 
-  render()
-  {
+  render() {
     if (
       this.state.activeIncidents == undefined ||
       this.state.scheduledMaintenance == undefined ||
       this.state.daysSinceLastIncident == undefined
     )
-      return <Loader/>;
+      return <Loader/>
 
-    return <View {...this.state}/>;
+    return <View {...this.state}/>
   }
 }
 
