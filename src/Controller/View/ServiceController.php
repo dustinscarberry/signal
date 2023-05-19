@@ -24,25 +24,18 @@ class ServiceController extends AbstractController
   #[Route('/dashboard/services/add', name: 'addService')]
   public function add(Request $req, ServiceFactory $serviceFactory)
   {
-    //create service object
     $service = new Service();
-
-    //create form object for service
     $form = $this->createForm(ServiceType::class, $service);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $serviceFactory->createService($service);
 
       $this->addFlash('success', 'Service created');
       return $this->redirectToRoute('viewServices');
     }
 
-    //render service add page
     return $this->render('dashboard/service/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -57,22 +50,17 @@ class ServiceController extends AbstractController
     //get previous status
     $currentServiceStatus = $serviceFactory->getCurrentServiceStatus($service);
 
-    //create form object for service
     $form = $this->createForm(ServiceType::class, $service);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $serviceFactory->updateService($service, $currentServiceStatus);
 
       $this->addFlash('success', 'Service updated');
       return $this->redirectToRoute('viewServices');
     }
 
-    //render service add page
     return $this->render('dashboard/service/edit.html.twig', [
       'form' => $form->createView()
     ]);

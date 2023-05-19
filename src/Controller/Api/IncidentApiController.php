@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\Incident;
 use App\Form\IncidentType;
 use App\Service\Factory\IncidentFactory;
@@ -19,7 +20,7 @@ class IncidentApiController extends ApiController
     try {
       $incidents = $incidentFactory->getIncidents();
       return $this->respond($incidents);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -28,8 +29,7 @@ class IncidentApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getIncident($hashId, IncidentFactory $incidentFactory)
   {
-    try
-    {
+    try {
       //get incident
       $incident = $incidentFactory->getIncident($hashId);
 
@@ -38,9 +38,7 @@ class IncidentApiController extends ApiController
         return $this->respondWithErrors(['Invalid data']);
 
       return $this->respond($incident);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -49,8 +47,7 @@ class IncidentApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createIncident(Request $req, IncidentFactory $incidentFactory)
   {
-    try
-    {
+    try {
       //create incident object
       $incident = new Incident();
 
@@ -66,17 +63,13 @@ class IncidentApiController extends ApiController
       $form->submit($data);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $incidentFactory->createIncident($incident);
-
         return $this->respond($incident);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -85,8 +78,7 @@ class IncidentApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateIncident($hashId, Request $req, IncidentFactory $incidentFactory)
   {
-    try
-    {
+    try {
       //get incident from database
       $incident = $this->getDoctrine()
         ->getRepository(Incident::class)
@@ -111,8 +103,7 @@ class IncidentApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $incidentFactory->updateIncident(
           $incident,
           $originalServices,
@@ -123,9 +114,7 @@ class IncidentApiController extends ApiController
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -134,8 +123,7 @@ class IncidentApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteIncident($hashId, IncidentFactory $incidentFactory)
   {
-    try
-    {
+    try {
       //get incident
       $incident = $incidentFactory->getIncident($hashId);
 
@@ -148,9 +136,7 @@ class IncidentApiController extends ApiController
 
       //respond with object
       return $this->respond($incident);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

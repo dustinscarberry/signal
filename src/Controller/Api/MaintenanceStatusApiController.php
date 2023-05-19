@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\MaintenanceStatus;
 use App\Form\MaintenanceStatusType;
 use App\Service\Factory\MaintenanceStatusFactory;
@@ -16,14 +17,11 @@ class MaintenanceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenanceStatuses(MaintenanceStatusFactory $maintenanceStatusFactory)
   {
-    try
-    {
+    try {
       //get maintenance statuses
       $maintenanceStatuses = $maintenanceStatusFactory->getMaintenanceStatuses();
       return $this->respond($maintenanceStatuses);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -32,8 +30,7 @@ class MaintenanceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
-    try
-    {
+    try {
       //get maintenance status
       $maintenanceStatus = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
@@ -43,9 +40,7 @@ class MaintenanceStatusApiController extends ApiController
 
       //respond with object
       return $this->respond($maintenanceStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -54,8 +49,7 @@ class MaintenanceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createMaintenanceStatus(Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
-    try
-    {
+    try {
       //create status object
       $status = new MaintenanceStatus();
 
@@ -71,18 +65,13 @@ class MaintenanceStatusApiController extends ApiController
       $form->submit($data);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $maintenanceStatusFactory->createMaintenanceStatus($status);
-
-        //respond with object
         return $this->respond($status);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -91,8 +80,7 @@ class MaintenanceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateMaintenanceStatus($hashId, Request $req, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
-    try
-    {
+    try {
       //get status from database
       $status = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
@@ -111,18 +99,13 @@ class MaintenanceStatusApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $maintenanceStatusFactory->updateMaintenanceStatus();
-
-        //respond with object
         return $this->respond($status);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -131,8 +114,7 @@ class MaintenanceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteMaintenanceStatus($hashId, MaintenanceStatusFactory $maintenanceStatusFactory)
   {
-    try
-    {
+    try {
       //get maintenance status
       $maintenanceStatus = $maintenanceStatusFactory->getMaintenanceStatus($hashId);
 
@@ -145,9 +127,7 @@ class MaintenanceStatusApiController extends ApiController
 
       //respond with object
       return $this->respond($maintenanceStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

@@ -26,23 +26,17 @@ class IncidentController extends AbstractController
   {
     //create incident object
     $incident = new Incident();
-
-    //create form object for incident
     $form = $this->createForm(IncidentType::class, $incident);
 
     //handle form request if posted
     $form->handleRequest($req);
-
-    //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $incidentFactory->createIncident($incident);
 
       $this->addFlash('success', 'Incident created');
       return $this->redirectToRoute('viewIncidents');
     }
 
-    //render incident add page
     return $this->render('dashboard/incident/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -68,8 +62,7 @@ class IncidentController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $incidentFactory->updateIncident(
         $incident,
         $originalServices,
@@ -80,7 +73,6 @@ class IncidentController extends AbstractController
       return $this->redirectToRoute('viewIncidents');
     }
 
-    //render incident add page
     return $this->render('dashboard/incident/edit.html.twig', [
       'form' => $form->createView()
     ]);

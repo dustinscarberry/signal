@@ -21,12 +21,10 @@ class SettingsController extends AbstractController
 
     $form->handleRequest($req);
 
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $logo = $appConfig->getLogo();
 
-      if ($logo)
-      {
+      if ($logo) {
         $fileName = 'custom-logo.' . $logo->guessExtension();
         $appConfig->setLogo($fileName);
 
@@ -38,13 +36,11 @@ class SettingsController extends AbstractController
         } catch(FileException $e) {
           $this->addFlash('error', $e->getMessage());
         }
-      }
-      else
+      } else
         $appConfig->setLogo($previousLogo);
 
       //strip last slash off of siteUrl
       $appConfig->setSiteUrl(rtrim($appConfig->getSiteUrl(), '\\'));
-
       $appConfig->save();
 
       $this->addFlash('success', 'App settings updated');

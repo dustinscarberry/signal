@@ -22,23 +22,19 @@ class AccountController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $action = $req->request->get('regenerateApiToken')
         ? 'regenerateApiToken'
         : 'updateUser';
 
-      if ($action == 'regenerateApiToken')
-      {
+      if ($action == 'regenerateApiToken') {
         $user = $userFactory->regenerateApiToken($user);
 
         //refresh form with new api token included for user
         $form = $this->createForm(UserType::class, $user);
 
         $this->addFlash('success', 'API Token Regenerated');
-      }
-      else if ($action == 'updateUser')
-      {
+      } else if ($action == 'updateUser') {
         //get new password field and update user
         $newPassword = $form->get('password')->getData();
         $userFactory->updateUser($user, $newPassword);
@@ -47,7 +43,6 @@ class AccountController extends AbstractController
       }
     }
 
-    //render acccount page
     return $this->render('dashboard/account/view.html.twig', [
       'form' => $form->createView()
     ]);

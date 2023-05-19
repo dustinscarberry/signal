@@ -24,18 +24,12 @@ class MaintenanceController extends AbstractController
   #[Route('/dashboard/maintenance/add', name: 'addMaintenance')]
   public function add(Request $req, MaintenanceFactory $maintenanceFactory)
   {
-    //create maintenance object
     $maintenance = new Maintenance();
-
-    //create form object for maintenance
     $form = $this->createForm(MaintenanceType::class, $maintenance);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $maintenanceFactory->createMaintenance(
         $maintenance,
         $form->get('updateServiceStatuses')->getData()
@@ -45,7 +39,6 @@ class MaintenanceController extends AbstractController
       return $this->redirectToRoute('viewAllMaintenance');
     }
 
-    //render maintenance add page
     return $this->render('dashboard/maintenance/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -63,15 +56,11 @@ class MaintenanceController extends AbstractController
     $originalServices = MaintenanceFactory::getCurrentServices($maintenance);
     $originalUpdates = MaintenanceFactory::getCurrentUpdates($maintenance);
 
-    //create form object for maintenance
     $form = $this->createForm(MaintenanceType::class, $maintenance);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $maintenanceFactory->updateMaintenance(
         $maintenance,
         $form->get('updateServiceStatuses')->getData(),

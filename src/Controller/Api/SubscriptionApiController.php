@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Service\Factory\SubscriptionFactory;
 
 class SubscriptionApiController extends ApiController
@@ -14,14 +15,10 @@ class SubscriptionApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getSubscriptions(SubscriptionFactory $subscriptionFactory)
   {
-    try
-    {
-      //get subscriptions
+    try {
       $subscriptions = $subscriptionFactory->getSubscriptions();
       return $this->respond($subscriptions);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -30,20 +27,16 @@ class SubscriptionApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getSubscription($hashId, SubscriptionFactory $subscriptionFactory)
   {
-    try
-    {
+    try {
       //get subscription
       $subscription = $subscriptionFactory->getSubscription($hashId);
 
       //check for valid subscription
       if (!$subscription)
         return $this->respondWithErrors(['Invalid data']);
-
-      //respond with object
+      
       return $this->respond($subscription);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -52,8 +45,7 @@ class SubscriptionApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteSubscription($hashId, SubscriptionFactory $subscriptionFactory)
   {
-    try
-    {
+    try {
       //get subscription
       $subscription = $subscriptionFactory->getSubscription($hashId);
 
@@ -66,9 +58,7 @@ class SubscriptionApiController extends ApiController
 
       //respond with object
       return $this->respond($subscription);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

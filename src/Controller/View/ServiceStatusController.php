@@ -24,25 +24,18 @@ class ServiceStatusController extends AbstractController
   #[Route('/dashboard/statuses/service/add', name: 'addServiceStatus')]
   public function add(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
-    //create status object
     $status = new ServiceStatus();
-
-    //create form object for status
     $form = $this->createForm(ServiceStatusType::class, $status);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $serviceStatusFactory->createServiceStatus($status);
 
       $this->addFlash('success', 'Service Status created');
       return $this->redirectToRoute('viewServiceStatuses');
     }
 
-    //render service status add page
     return $this->render('dashboard/servicestatus/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -51,25 +44,18 @@ class ServiceStatusController extends AbstractController
   #[Route('/dashboard/statuses/service/{hashId}', name: 'editServiceStatus')]
   public function edit($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
-    //get status from database
     $status = $serviceStatusFactory->getServiceStatus($hashId);
-
-    //create form object for status
     $form = $this->createForm(ServiceStatusType::class, $status);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $serviceStatusFactory->updateServiceStatus();
 
       $this->addFlash('success', 'Service Status updated');
       return $this->redirectToRoute('viewServiceStatuses');
     }
 
-    //render service status edit page
     return $this->render('dashboard/servicestatus/edit.html.twig', [
       'form' => $form->createView()
     ]);

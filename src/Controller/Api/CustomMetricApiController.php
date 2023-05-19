@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\CustomMetric;
 use App\Form\CustomMetricType;
 use App\Service\Factory\CustomMetricFactory;
@@ -16,13 +17,10 @@ class CustomMetricApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getCustomMetrics(CustomMetricFactory $customMetricFactory)
   {
-    try
-    {
+    try {
       $metrics = $customMetricFactory->getCustomMetrics();
       return $this->respond($metrics);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -31,8 +29,7 @@ class CustomMetricApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
-    try
-    {
+    try {
       //get item
       $metric = $customMetricFactory->getCustomMetric($hashId);
 
@@ -42,9 +39,7 @@ class CustomMetricApiController extends ApiController
 
       //respond with object
       return $this->respond($metric);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -53,8 +48,7 @@ class CustomMetricApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createCustomMetric(Request $req, CustomMetricFactory $customMetricFactory)
   {
-    try
-    {
+    try {
       $metric = new CustomMetric();
 
       $form = $this->createForm(
@@ -68,17 +62,13 @@ class CustomMetricApiController extends ApiController
       $form->submit($data);
 
       //save new widget to database if valid
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $customMetricFactory->createCustomMetric($metric);
-
         return $this->respond($metric);
       }
 
       return $this->respondWithErrors(['Invalid Data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -87,8 +77,7 @@ class CustomMetricApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateCustomMetric($hashId, Request $req, CustomMetricFactory $customMetricFactory)
   {
-    try
-    {
+    try {
       //get metric from database
       $metric = $customMetricFactory->getCustomMetric($hashId);
 
@@ -107,17 +96,13 @@ class CustomMetricApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $customMetricFactory->updateCustomMetric();
-
         return $this->respond($metric);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -126,8 +111,7 @@ class CustomMetricApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteCustomMetric($hashId, CustomMetricFactory $customMetricFactory)
   {
-    try
-    {
+    try {
       //get metric
       $metric = $customMetricFactory->getCustomMetric($hashId);
 
@@ -140,9 +124,7 @@ class CustomMetricApiController extends ApiController
       
       //respond with object
       return $this->respond($metric);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

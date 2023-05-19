@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\ServiceStatus;
 use App\Form\ServiceStatusType;
 use App\Service\Factory\ServiceStatusFactory;
@@ -16,13 +17,10 @@ class ServiceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceStatuses(ServiceStatusFactory $serviceStatusFactory)
   {
-    try
-    {
+    try {
       $serviceStatuses = $serviceStatusFactory->getServiceStatuses();
       return $this->respond($serviceStatuses);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -31,8 +29,7 @@ class ServiceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
-    try
-    {
+    try {
       //get service status
       $serviceStatus = $serviceStatusFactory->getServiceStatus($hashId);
 
@@ -42,9 +39,7 @@ class ServiceStatusApiController extends ApiController
 
       //respond with object
       return $this->respond($serviceStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -53,8 +48,7 @@ class ServiceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createServiceStatus(Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
-    try
-    {
+    try {
       $serviceStatus = new ServiceStatus();
 
       $form = $this->createForm(
@@ -68,17 +62,13 @@ class ServiceStatusApiController extends ApiController
       $form->submit($data);
 
       //save new widget to database if valid
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceStatusFactory->createServiceStatus($serviceStatus);
-
         return $this->respond($serviceStatus);
       }
 
       return $this->respondWithErrors(['Invalid Data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -87,8 +77,7 @@ class ServiceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateServiceStatus($hashId, Request $req, ServiceStatusFactory $serviceStatusFactory)
   {
-    try
-    {
+    try {
       //get status from database
       $status = $serviceStatusFactory->getServiceStatus($hashId);
 
@@ -107,17 +96,13 @@ class ServiceStatusApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceStatusFactory->updateServiceStatus();
-
         return $this->respond($status);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -126,8 +111,7 @@ class ServiceStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteServiceStatus($hashId, ServiceStatusFactory $serviceStatusFactory)
   {
-    try
-    {
+    try {
       //get service status
       $serviceStatus = $serviceStatusFactory->getServiceStatus($hashId);
 
@@ -140,9 +124,7 @@ class ServiceStatusApiController extends ApiController
       
       //respond with object
       return $this->respond($serviceStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

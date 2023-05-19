@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\ServiceCategory;
 use App\Form\ServiceCategoryType;
 use App\Service\Factory\ServiceCategoryFactory;
@@ -16,31 +17,38 @@ class ServiceCategoryApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceCategories(ServiceCategoryFactory $serviceCategoryFactory)
   {
-    $serviceCategories = $serviceCategoryFactory->getServiceCategories();
-    return $this->respond($serviceCategories);
+    try {
+      $serviceCategories = $serviceCategoryFactory->getServiceCategories();
+      return $this->respond($serviceCategories);
+    } catch (Exception $e) {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 
   #[Route('/api/v1/servicecategories/{hashId}', name: 'getServiceCategory', methods: ['GET'])]
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getServiceCategory($hashId, ServiceCategoryFactory $serviceCategoryFactory)
   {
-    //get service category
-    $serviceCategory = $serviceCategoryFactory->getServiceCategory($hashId);
+    try {
+      //get service category
+      $serviceCategory = $serviceCategoryFactory->getServiceCategory($hashId);
 
-    //check for valid service category
-    if (!$serviceCategory)
-      return $this->respondWithErrors(['Invalid data']);
+      //check for valid service category
+      if (!$serviceCategory)
+        return $this->respondWithErrors(['Invalid data']);
 
-    //respond with object
-    return $this->respond($serviceCategory);
+      //respond with object
+      return $this->respond($serviceCategory);
+    } catch (Exception $e) {
+      return $this->respondWithErrors([$e->getMessage()]);
+    }
   }
 
   #[Route('/api/v1/servicecategories', name: 'createServiceCategory', methods: ['POST'])]
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createServiceCategory(Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
-    try
-    {
+    try {
       //create service category object
       $serviceCategory = new ServiceCategory();
 
@@ -56,18 +64,13 @@ class ServiceCategoryApiController extends ApiController
       $form->submit($data);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceCategoryFactory->createServiceCategory($serviceCategory);
-
-        //respond with object
         return $this->respond($serviceCategory);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -76,8 +79,7 @@ class ServiceCategoryApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateServiceCategory($hashId, Request $req, ServiceCategoryFactory $serviceCategoryFactory)
   {
-    try
-    {
+    try {
       //get service from database
       $serviceCategory = $serviceCategoryFactory->getServiceCategory($hashId);
 
@@ -92,18 +94,13 @@ class ServiceCategoryApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceCategoryFactory->updateServiceCategory();
-
-        //respond with object
         return $this->respond($serviceCategory);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -112,8 +109,7 @@ class ServiceCategoryApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteServiceCategory($hashId, ServiceCategoryFactory $serviceCategoryFactory)
   {
-    try
-    {
+    try {
       //get service category
       $serviceCategory = $serviceCategoryFactory->getServiceCategory($hashId);
 
@@ -125,9 +121,7 @@ class ServiceCategoryApiController extends ApiController
 
       //respond with object
       return $this->respond($serviceCategory);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

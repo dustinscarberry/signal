@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\CustomMetricDatapoint;
 use App\Form\CustomMetricDatapointType;
 use App\Service\Factory\CustomMetricDatapointFactory;
@@ -16,8 +17,7 @@ class CustomMetricDatapointApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createCustomMetricDatapoint(Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
-    try
-    {
+    try {
       $datapoint = new CustomMetricDatapoint();
 
       $form = $this->createForm(
@@ -31,17 +31,13 @@ class CustomMetricDatapointApiController extends ApiController
       $form->submit($data);
 
       //save new widget to database if valid
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $customMetricDatapointFactory->createCustomMetricDatapoint($datapoint);
-
         return $this->respond($datapoint);
       }
 
       return $this->respondWithErrors(['Invalid Data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -50,8 +46,7 @@ class CustomMetricDatapointApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteCustomMetricDatapoint($hashId, Request $req, CustomMetricDatapointFactory $customMetricDatapointFactory)
   {
-    try
-    {
+    try {
       //get datapoint
       $datapoint = $customMetricDatapointFactory->getCustomMetricDatapoint($hashId);
 
@@ -64,9 +59,7 @@ class CustomMetricDatapointApiController extends ApiController
 
       //respond with object
       return $this->respond($datapoint);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

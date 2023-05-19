@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\IncidentStatus;
 use App\Form\IncidentStatusType;
 use App\Service\Factory\IncidentStatusFactory;
@@ -16,16 +17,13 @@ class IncidentStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getIncidentStatuses(IncidentStatusFactory $incidentStatusFactory)
   {
-    try
-    {
+    try {
       //get incident statuses
       $incidentStatuses = $incidentStatusFactory->getIncidentStatuses();
 
       //respond with object
       return $this->respond($incidentStatuses);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -34,8 +32,7 @@ class IncidentStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function getIncidentStatus($hashId, IncidentStatusFactory $incidentStatusFactory)
   {
-    try
-    {
+    try {
       //get incident status
       $incidentStatus = $incidentStatusFactory->getIncidentStatus($hashId);
 
@@ -45,9 +42,7 @@ class IncidentStatusApiController extends ApiController
 
       //respond with object
       return $this->respond($incidentStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -56,8 +51,7 @@ class IncidentStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createIncidentStatus(Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
-    try
-    {
+    try {
       //create status object
       $status = new IncidentStatus();
 
@@ -73,8 +67,7 @@ class IncidentStatusApiController extends ApiController
       $form->submit($data);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $incidentStatusFactory->createIncidentStatus($status);
 
         //respond with object
@@ -82,9 +75,7 @@ class IncidentStatusApiController extends ApiController
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -93,8 +84,7 @@ class IncidentStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateIncidentStatus($hashId, Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
-    try
-    {
+    try {
       //get status from database
       $status = $incidentStatusFactory->getIncidentStatus($hashId);
 
@@ -113,8 +103,7 @@ class IncidentStatusApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $incidentStatusFactory->updateIncidentStatus();
 
         //respond with object
@@ -125,9 +114,7 @@ class IncidentStatusApiController extends ApiController
       return $this->render('dashboard/incidentstatus/edit.html.twig', [
         'form' => $form->createView()
       ]);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -136,8 +123,7 @@ class IncidentStatusApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteIncidentStatus($hashId, IncidentStatusFactory $incidentStatusFactory)
   {
-    try
-    {
+    try {
       //get incident status
       $incidentStatus = $incidentStatusFactory->getIncidentStatus($hashId);
 
@@ -150,9 +136,7 @@ class IncidentStatusApiController extends ApiController
 
       //respond with object
       return $this->respond($incidentStatus);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

@@ -24,25 +24,18 @@ class UserController extends AbstractController
   #[Route('/dashboard/users/add')]
   public function add(Request $req, UserFactory $userFactory)
   {
-    //create user object
     $user = new User();
-
-    //create form object for user
     $form = $this->createForm(UserType::class, $user);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $userFactory->createUser($user);
 
       $this->addFlash('success', 'User added');
       return $this->redirectToRoute('viewUsers');
     }
 
-    //render user add page
     return $this->render('dashboard/user/add.html.twig', [
       'userForm' => $form->createView()
     ]);
@@ -51,33 +44,24 @@ class UserController extends AbstractController
   #[Route('/dashboard/users/{hashId}', name: 'editUser')]
   public function edit($hashId, Request $req, UserFactory $userFactory)
   {
-    //get user from database
     $user = $userFactory->getUser($hashId);
-
-    //create form object for user
     $form = $this->createForm(UserType::class, $user);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $action = $req->request->get('regenerateApiToken')
         ? 'regenerateApiToken'
         : 'updateUser';
 
-      if ($action == 'regenerateApiToken')
-      {
+      if ($action == 'regenerateApiToken') {
         $user = $userFactory->regenerateApiToken($user);
 
         //refresh form with new api token included for user
         $form = $this->createForm(UserType::class, $user);
 
         $this->addFlash('success', 'API Token Regenerated');
-      }
-      else if ($action == 'updateUser')
-      {
+      } else if ($action == 'updateUser') {
         //get new password field and update user
         $newPassword = $form->get('password')->getData();
         $userFactory->updateUser($user, $newPassword);
@@ -87,7 +71,6 @@ class UserController extends AbstractController
       }
     }
 
-    //render service add page
     return $this->render('dashboard/user/edit.html.twig', [
       'userForm' => $form->createView()
     ]);

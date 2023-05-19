@@ -41,7 +41,6 @@ class CustomMetricController extends AbstractController
       return $this->redirectToRoute('viewCustomMetrics');
     }
 
-    //render custom metric add page
     return $this->render('dashboard/custommetric/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -60,15 +59,13 @@ class CustomMetricController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $customMetricFactory->updateCustomMetric();
 
       $this->addFlash('success', 'Metric updated');
       return $this->redirectToRoute('viewCustomMetrics');
     }
 
-    //render incident status edit page
     return $this->render('dashboard/custommetric/edit.html.twig', [
       'form' => $form->createView()
     ]);

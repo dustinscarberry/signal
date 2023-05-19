@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
+use Exception;
 use App\Entity\Service;
 use App\Form\ServiceType;
 use App\Service\Factory\ServiceFactory;
@@ -19,7 +20,7 @@ class ServiceApiController extends ApiController
     try {
       $services = $serviceFactory->getServices();
       return $this->respond($services);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -36,9 +37,8 @@ class ServiceApiController extends ApiController
       if (!$service)
         return $this->respondWithErrors(['Invalid data']);
 
-      //respond with object
       return $this->respond($service);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -47,8 +47,7 @@ class ServiceApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function createService(Request $req, ServiceFactory $serviceFactory)
   {
-    try
-    {
+    try {
       //create service object
       $service = new Service();
 
@@ -60,18 +59,13 @@ class ServiceApiController extends ApiController
       $form->submit($data);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceFactory->createService($service);
-
-        //respond with object
         return $this->respond($service);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -80,8 +74,7 @@ class ServiceApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function updateService($hashId, Request $req, ServiceFactory $serviceFactory)
   {
-    try
-    {
+    try {
       //get service from database
       $service = $serviceFactory->getService($hashId);
 
@@ -99,18 +92,13 @@ class ServiceApiController extends ApiController
       $form->submit($data, false);
 
       //save form data to database if posted and validated
-      if ($form->isSubmitted() && $form->isValid())
-      {
+      if ($form->isSubmitted() && $form->isValid()) {
         $serviceFactory->updateService($service, $currentServiceStatus);
-
-        //respond with object
         return $this->respond($service);
       }
 
       return $this->respondWithErrors(['Invalid data']);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }
@@ -119,8 +107,7 @@ class ServiceApiController extends ApiController
   #[IsGranted(new Expression("is_granted('ROLE_APIUSER') or is_granted('ROLE_ADMIN')"))]
   public function deleteService($hashId, ServiceFactory $serviceFactory)
   {
-    try
-    {
+    try {
       //get service
       $service = $serviceFactory->getService($hashId);
 
@@ -131,11 +118,8 @@ class ServiceApiController extends ApiController
       //delete service
       $serviceFactory->deleteService($service);
 
-      //respond with object
       return $this->respond($service);
-    }
-    catch (\Exception $e)
-    {
+    } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
     }
   }

@@ -34,8 +34,7 @@ class AppController extends AbstractController
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $subscriptionFactory->createSubscription($subscription);
 
       $this->addFlash('success', 'Congrats! Your subscribed');

@@ -24,25 +24,18 @@ class IncidentStatusController extends AbstractController
   #[Route('/dashboard/statuses/incident/add', name: 'addIncidentStatus')]
   public function add(Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
-    //create status object
     $status = new IncidentStatus();
-
-    //create form object for status
     $form = $this->createForm(IncidentStatusType::class, $status);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $incidentStatusFactory->createIncidentStatus($status);
 
       $this->addFlash('success', 'Incident Status created');
       return $this->redirectToRoute('viewIncidentStatuses');
     }
 
-    //render incident status add page
     return $this->render('dashboard/incidentstatus/add.html.twig', [
       'form' => $form->createView()
     ]);
@@ -51,25 +44,18 @@ class IncidentStatusController extends AbstractController
   #[Route('/dashboard/statuses/incident/{hashId}', name: 'editIncidentStatus')]
   public function edit($hashId, Request $req, IncidentStatusFactory $incidentStatusFactory)
   {
-    //get status from database
     $status = $incidentStatusFactory->getIncidentStatus($hashId);
-
-    //create form object for status
     $form = $this->createForm(IncidentStatusType::class, $status);
-
-    //handle form request if posted
     $form->handleRequest($req);
 
     //save form data to database if posted and validated
-    if ($form->isSubmitted() && $form->isValid())
-    {
+    if ($form->isSubmitted() && $form->isValid()) {
       $incidentStatusFactory->updateIncidentStatus();
 
       $this->addFlash('success', 'Incident Status updated');
       return $this->redirectToRoute('viewIncidentStatuses');
     }
 
-    //render incident status edit page
     return $this->render('dashboard/incidentstatus/edit.html.twig', [
       'form' => $form->createView()
     ]);
