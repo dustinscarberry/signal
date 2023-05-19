@@ -1,59 +1,31 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse, getYouTubeSourceURL, getVimeoSourceURL } from './actions';
+import { useState, useEffect } from 'react';
+import { isValidResponse, fetchWidgetData, getSourceURL } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class VideoEmbedWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const VideoEmbedWidget = ({id}) => {
+  const [source, setSource] = useState();
+  const [sourceId, setSourceId] = useState();
 
-    this.state = {
-      source: undefined,
-      sourceID: undefined
-    };
-  }
+  useEffect(() => {
+    loadVideo();
+  }, []);
 
-  componentDidMount()
-  {
-    this.load();
-  }
+  const loadVideo = async () => {
+    const rsp = await fetchWidgetData(id);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
-
-    if (isValidResponse(rsp))
-    {
+    if (isValidResponse(rsp)) {
       const attributes = rsp.data.data.options.attributes;
 
-      this.setState({
-        source: attributes.source,
-        sourceID: attributes.sourceID
-      });
+      setSource(attributes.source);
+      setSourceId(attributes.sourceID);
     }
   }
 
-  getSourceURL()
-  {
-    if (this.state.source == 'youtube')
-      return getYouTubeSourceURL(this.state);
-    else if (this.state.source == 'vimeo')
-      return getVimeoSourceURL(this.state);
-    else
-      return '';
-  }
+  if (!source || !sourceId)
+    return <Loader/>
 
-  render() {
-    if (!this.state.source || !this.state.sourceID)
-      return <Loader/>
-
-    return <View sourceURL={this.getSourceURL()}/>
-  }
+  return <View sourceURL={getSourceURL(source, sourceId)}/>
 }
 
 VideoEmbedWidget.defaultProps = {

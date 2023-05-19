@@ -6,8 +6,7 @@ import View from './View';
 
 class ServicesListWidget extends Component
 {
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -20,13 +19,11 @@ class ServicesListWidget extends Component
     this.refreshInterval = undefined;
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
     this.load();
   }
 
-  async load()
-  {
+  async load() {
     const rsp = await axios.get(
       '/api/v1/widgetsdata/' + this.props.id
     );
@@ -47,8 +44,7 @@ class ServicesListWidget extends Component
     }
   }
 
-  setRefresh()
-  {
+  setRefresh() {
     if (this.refreshInterval)
       clearInterval(this.refreshInterval);
 
@@ -57,8 +53,7 @@ class ServicesListWidget extends Component
     }, this.state.refreshInterval * 1000);
   }
 
-  render()
-  {
+  render() {
     if (!this.state.layout)
       return <Loader/>
 
