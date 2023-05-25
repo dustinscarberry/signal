@@ -1,71 +1,105 @@
-import { ResponsiveLine } from '@nivo/line'
+import { Line } from 'react-chartjs-2';
+import 'chartjs-adapter-luxon';
 import {
-  getChartScaleFormat,
-  getChartLegendFormat
-} from './actions';
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  Filler,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  Filler,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Chart = (props) => {
-  let scaleFormat = getChartScaleFormat(props.scale);
-  let legendFormat = getChartLegendFormat(props.scale);
+  let dataFormat;
+  if (props.scale == 'minute')
+    dataFormat = 'yyyy-LL-dd HH:mm';
+  else if (props.scale == 'hour')
+    dataFormat = 'yyyy-LL-dd HH';
+  else if (props.scale == 'day')
+    dataFormat = 'yyyy-LL-dd';
 
-  return <ResponsiveLine
-    data={props.data}
-    margin={{
-      top: 50,
-      right: 50,
-      bottom: 50,
-      left: 75
+  return <Line
+    options={{
+      responsive: true,
+      layout: {
+        padding: 20
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          interaction: {
+            mode: 'nearest',
+            intersect: false
+          },
+          callbacks: {
+            title: (tooltipItems) => {
+              return tooltipItems[0].dataset.label;
+            },
+            label: (tooltipItem) => {
+              return tooltipItem.raw;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 15
+          },
+          time: {
+            unit: props.scale,
+            parser: dataFormat
+          }
+        },
+        y: {
+          type: 'linear',
+          min: 0,
+          max: 110,
+          ticks: {
+            stepSize: 10
+          },
+          title: {
+            text: 'Uptime %',
+            display: true
+          }
+        }
+      }
     }}
-    enableArea={true}
-    curve='linear'
-    xScale={{
-      type: 'time',
-      format: scaleFormat,
-      precision: props.scale
+    data={{
+      labels: props.data[0].data.map(x => x.x),
+      datasets: props.data.map(i => {
+        return {
+          label: i.id,
+          data: i.data.map(x => x.y),
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          lineTension: 0.4,
+          pointHitRadius: 6,
+          pointRadius: 0,
+          fill: 'origin'
+        }
+      })
     }}
-    yScale={{
-      type: 'linear',
-      stacked: false,
-      min: 0,
-      max: 110
-    }}
-    axisBottom={{
-        "orient": "bottom",
-        "tickSize": 5,
-        "tickPadding": 5,
-        "tickRotation": 0,
-        format: legendFormat
-    }}
-    axisLeft={{
-        "orient": "left",
-        "tickSize": 5,
-        "tickPadding": 5,
-        "tickRotation": 0,
-        "legend": "Uptime %",
-        "legendOffset": -40,
-        "legendPosition": "middle"
-    }}
-    colors={{
-        "scheme": "dark2"
-    }}
-    pointSize={10}
-    pointColor={{
-        from: 'color'
-    }}
-    pointBorderWidth={2}
-    pointBorderColor={{
-        "from": "color"
-    }}
-    enablePoints={false}
-    enablePointLabel={false}
-    pointLabel="y"
-    pointLabelYOffset={-12}
-    animate={true}
-    motionStiffness={90}
-    motionDamping={15}
-    enableGridX={true}
-    enableGridY={true}
-    enableSlices="x"
   />
 }
 

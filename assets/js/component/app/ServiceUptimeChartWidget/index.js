@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import axios from 'axios';
-import { isValidResponse } from './actions';
+import { isValidResponse } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
