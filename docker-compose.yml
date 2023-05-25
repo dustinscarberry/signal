@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - ./logs/server:/var/log/nginx/
-      - ./logs/app:/var/www/html/var/log/
+      - ./docker/logs/server:/var/log/nginx/
+      - ./docker/logs/app:/var/www/html/var/log/
 networks:
   default:
     external: true
