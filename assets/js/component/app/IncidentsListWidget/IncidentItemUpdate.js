@@ -1,5 +1,5 @@
-import { getFormattedDateTime, getStatusIconClasses, nl2br } from './actions';
 import classnames from 'classnames';
+import { getFormattedDateTime, getStatusIconClasses, nl2br } from './logic';
 
 const IncidentItemUpdate = ({update}) => {
   const updateStatusClass = getStatusIconClasses(update.statusType);

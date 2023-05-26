@@ -21,7 +21,8 @@ const View = ({title, incidents}) => {
 }
 
 View.defaultProps = {
-  title: ''
-};
+  title: '',
+  incidents: []
+}
 
 export default View;

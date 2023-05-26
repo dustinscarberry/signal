@@ -1,12 +1,10 @@
 import IncidentItem from './IncidentItem';
 
-const IncidentList = (props) => {
-  const incidentNodes = props.incidents.map(incident => {
-    return <IncidentItem key={incident.id} incident={incident}/>
-  });
-
+const IncidentList = ({incidents}) => {
   return <div className="incident-list">
-    {incidentNodes}
+    {incidents.map(incident => {
+      return <IncidentItem key={incident.id} incident={incident}/>
+    })}
   </div>
 }
 

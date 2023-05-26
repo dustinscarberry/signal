@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import axios from 'axios';
-import { isValidResponse } from './actions';
+import { isOk } from '../../../logic/utils';
 import Loader from '../../shared/Loader';
 import View from './View';
 
@@ -29,7 +29,7 @@ class IncidentsListWidget extends Component
       '/api/v1/widgetsdata/' + this.props.id
     );
 
-    if (isValidResponse(rsp))
+    if (isOk(rsp))
     {
       const data = rsp.data.data;
       const attributes = data.options.attributes;

@@ -23,10 +23,6 @@ export const getStatusIconClasses = (iconType) => {
   return classes;
 }
 
-export const isValidResponse = (rsp) => {
-  return rsp && rsp.status == 200 && !rsp.data.error;
-}
-
 //convert new lines to html breaks
 export const nl2br = (text) => {
   return text.split('\n').map((item, key) => {
