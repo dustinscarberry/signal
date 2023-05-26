@@ -1,125 +1,55 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData, getMessageType, getMessageText, getStatusClasses } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class ServiceStatusOverviewWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const ServiceStatusOverviewWidget = (props) => {
+  const [serviceStatuses, setServiceStatuses] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      serviceStatuses: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, [])
 
-  componentDidMount()
-  {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
+  const load = async () => {
+    const rsp = await fetchWidgetData(props.id);
 
-    if (isValidResponse(rsp))
-    {
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        serviceStatuses: data.serviceStatuses,
-        refreshInterval: attributes.refreshInterval || 120
-      });
-
-      this.setRefresh();
+      setServiceStatuses(data.serviceStatuses);
+      setRefreshInterval(attributes.refreshInterval || 120);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  getMessageType()
-  {
-    const typeRanking = [
-      'ok',
-      'offline',
-      'issue',
-      'error'
-    ];
+  if (!serviceStatuses)
+    return <Loader/>
 
-    var typeRank = 0;
+  const type = getMessageType(serviceStatuses);
 
-    for (status of this.state.serviceStatuses)
-    {
-      let newRank = typeRanking.indexOf(status);
-      if (newRank > typeRank)
-        typeRank = newRank;
-
-      if (typeRank == this.state.serviceStatuses.length - 1)
-        break;
-    }
-
-    return typeRanking[typeRank];
-  }
-
-  getMessageText(type)
-  {
-    let messageText = '';
-
-    if (type == 'ok')
-      messageText = 'All Services Operational';
-    else if (type == 'issue')
-      messageText = 'Some Services Experiencing Issues';
-    else if (type == 'error')
-      messageText = 'Some Services Experiencing Major Outages';
-    else if (type == 'offline')
-      messageText = 'Some Services Are Offline';
-
-    return messageText;
-  }
-
-  getStatusClasses(type)
-  {
-    const classes = [''];
-
-    if (type == 'ok')
-      classes.push('status-overview-ok');
-    else if (type == 'issue')
-      classes.push('status-overview-issue');
-    else if (type == 'error')
-      classes.push('status-overview-error');
-    else if (type == 'offline')
-      classes.push('status-overview-offline');
-
-    return classes;
-  }
-
-  render()
-  {
-    if (!this.state.serviceStatuses)
-      return <Loader/>
-
-    const type = this.getMessageType();
-
-    return <View
-      message={this.getMessageText(type)}
-      statusClasses={this.getStatusClasses(type)}
-    />
-  }
+  return <View
+    message={getMessageText(type)}
+    statusClasses={getStatusClasses(type)}
+  />
 }
 
 export default ServiceStatusOverviewWidget;

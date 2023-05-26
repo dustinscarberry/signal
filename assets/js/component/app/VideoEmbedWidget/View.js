@@ -13,4 +13,8 @@ const View = ({sourceURL}) => {
   </ContentBlock>
 }
 
+View.defaultProps = {
+  sourceURL: ''
+}
+
 export default View;

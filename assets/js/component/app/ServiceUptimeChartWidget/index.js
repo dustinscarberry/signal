@@ -1,73 +1,58 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './logic';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class ServiceUptimeChartWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const ServiceUptimeChartWidget = (props) => {
+  const [dataPoints, setDataPoints] = useState();
+  const [title, setTitle] = useState();
+  const [scale, setScale] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      dataPoints: undefined,
-      title: undefined,
-      scale: undefined,
-      refreshInterval: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount()
-  {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
+  const load = async () => {
+    const rsp = await fetchWidgetData(props.id);
 
-    if (isValidResponse(rsp))
-    {
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        dataPoints: data.dataPoints,
-        title: attributes.title,
-        scale: attributes.scale,
-        refreshInterval: attributes.refreshInterval || 60
-      });
-
-      this.setRefresh();
+      setDataPoints(data.dataPoints);
+      setTitle(attributes.title);
+      setScale(attributes.scale);
+      setRefreshInterval(attributes.refreshInterval || 60);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render()
-  {
-    if (!this.state.dataPoints)
-      return <Loader/>
+  if (!dataPoints)
+    return <Loader/>
 
-    return <View
-      data={this.state.dataPoints}
-      scale={this.state.scale}
-      title={this.state.title}
-    />
-  }
+  return <View
+    data={dataPoints}
+    scale={scale}
+    title={title}
+  />
 }
 
 export default ServiceUptimeChartWidget;

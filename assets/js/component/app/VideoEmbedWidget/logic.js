@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-export const isValidResponse = (rsp) => {
-  return rsp && rsp.status == 200 && !rsp.data.error;
-}
-
 export const fetchWidgetData = async (id) => {
   return await axios.get('/api/v1/widgetsdata/' + id);
 }

@@ -1,5 +1,10 @@
-export const getStatusBubbleClasses = (statusType) =>
-{
+import axios from 'axios';
+
+export const fetchWidgetData = async (id) => {
+  return await axios.get('/api/v1/widgetsdata/' + id);
+}
+
+export const getStatusBubbleClasses = (statusType) => {
   const classes = ['status-bubble'];
 
   if (statusType == 'ok')
@@ -12,9 +17,4 @@ export const getStatusBubbleClasses = (statusType) =>
     classes.push('status-bubble-offline')
 
   return classes;
-}
-
-export const isValidResponse = (rsp) =>
-{
-  return rsp && rsp.status == 200 && !rsp.data.error;
 }

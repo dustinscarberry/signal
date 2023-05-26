@@ -1,12 +1,10 @@
 import Service from './Service';
 
-const ServicesList = (props) => {
-  const serviceNodes = props.services.map((service, index) => {
-    return <Service service={service} key={index}/>;
-  });
-
+const ServicesList = ({services}) => {
   return <div className="service-list">
-    {serviceNodes}
+    {services.map((service, i) => {
+      return <Service key={i} service={service}/>
+    })}
   </div>
 }
 

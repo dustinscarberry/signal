@@ -652,3 +652,8 @@ button.close{
   opacity: .5;
   cursor: pointer;
 }
+
+// react tooltip overrides
+.__react_component_tooltip.place-top::before {
+  height: 10px!important;
+}

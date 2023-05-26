@@ -1,64 +1,58 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class ServicesListWidget extends Component
-{
-  constructor(props) {
-    super(props);
+const ServicesListWidget = (props) => {
+  const [layout, setLayout] = useState();
+  const [useGroups, setUseGroups] = useState();
+  const [services, setServices] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      layout: undefined,
-      useGroups: undefined,
-      loading: true,
-      services: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount() {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load() {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
-
-    if (isValidResponse(rsp))
-    {
+  const load =  async () => {
+    const rsp = await fetchWidgetData(props.id);
+    
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        layout: attributes.layout,
-        useGroups: attributes.useGroups,
-        services: data.services,
-        refreshInterval: attributes.refreshInterval || 120
-      });
-
-      this.setRefresh();
+      setLayout(attributes.layout);
+      setUseGroups(attributes.useGroups);
+      setServices(data.services);
+      setRefreshInterval(attributes.refreshInterval || 120);
     }
   }
 
-  setRefresh() {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render() {
-    if (!this.state.layout)
-      return <Loader/>
+  if (!layout)
+    return <Loader/>
 
-    return <View {...this.state}/>
-  }
+  return <View
+    layout={layout}
+    useGroups={useGroups}
+    services={services}
+  />
 }
 
 export default ServicesListWidget;

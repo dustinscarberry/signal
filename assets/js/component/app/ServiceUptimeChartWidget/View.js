@@ -24,7 +24,9 @@ const View = (props) => {
 }
 
 View.defaultProps = {
-  title: ''
+  title: '',
+  scale: 'day',
+  data: undefined
 }
 
 export default View;
