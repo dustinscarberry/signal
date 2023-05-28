@@ -145,6 +145,5 @@ export const WIDGET_BLOCK_DATA = {
       showFutureMaintenance: true,
       showPastIncidents: true
     }
-  },
-
+  }
 }
