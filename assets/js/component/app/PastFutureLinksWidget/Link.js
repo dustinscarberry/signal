@@ -5,6 +5,6 @@ const Link = ({href, title}) => {
 Link.defaultProps = {
   href: '',
   title: ''
-};
+}
 
 export default Link;

@@ -1,54 +1,41 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class PastFutureLinksWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
-
-    this.state = {
-      loading: true,
-      showPastMaintenance: undefined,
-      showFutureMaintenance: undefined,
-      showPastIncidents: undefined
-    };
-  }
-
-  componentDidMount()
-  {
-    this.load();
-  }
-
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
-
-    if (isValidResponse(rsp))
-    {
+const PastFutureLinksWidget = ({id}) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [showPastMaintenance, setShowPastMainteance] = useState();
+  const [showFutureMaintenance, setShowFutureMaintenance] = useState();
+  const [showPastIncidents, setShowPastIncidents] = useState();
+  
+  useEffect(() => {
+    load();
+  }, []);
+ 
+  const load = async () => {
+    const rsp = await fetchWidgetData(id);
+    
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        showPastMaintenance: attributes.showPastMaintenance,
-        showFutureMaintenance: attributes.showFutureMaintenance,
-        showPastIncidents: attributes.showPastIncidents,
-        loading: false
-      });
+      setShowPastMainteance(attributes.showPastMaintenance);
+      setShowFutureMaintenance(attributes.showFutureMaintenance);
+      setShowPastIncidents(attributes.showPastIncidents);
+      setIsLoading(false);
     }
   }
 
-  render() {
-    if (this.state.loading)
-      return <Loader/>
+  if (isLoading)
+    return <Loader/>
 
-    return <View {...this.state}/>
-  }
+  return <View
+    showPastMaintenance={showPastMaintenance}
+    showFutureMaintenance={showFutureMaintenance}
+    showPastIncidents={showPastIncidents}
+  /> 
 }
 
 export default PastFutureLinksWidget;

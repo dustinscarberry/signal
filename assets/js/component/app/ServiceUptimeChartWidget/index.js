@@ -4,7 +4,7 @@ import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-const ServiceUptimeChartWidget = (props) => {
+const ServiceUptimeChartWidget = ({id}) => {
   const [dataPoints, setDataPoints] = useState();
   const [title, setTitle] = useState();
   const [scale, setScale] = useState();
@@ -21,7 +21,7 @@ const ServiceUptimeChartWidget = (props) => {
   }, [refreshInterval]);
 
   const load = async () => {
-    const rsp = await fetchWidgetData(props.id);
+    const rsp = await fetchWidgetData(id);
 
     if (isOk(rsp)) {
       const data = rsp.data.data;

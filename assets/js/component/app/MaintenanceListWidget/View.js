@@ -1,18 +1,18 @@
 import ContentBlock from '../ContentBlock';
 import MaintenanceList from './MaintenanceList';
 
-const View = (props) => {
-  let title = 'Maintenance';
-  if (props.title.trim() != '')
-    title = props.title;
+const View = ({title, maintenance}) => {
+  let formattedTitle = 'Maintenance';
+  if (title.trim() != '')
+    formattedTitle = title;
 
   return <ContentBlock>
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-12">
           <div className="maintenance-list-widget">
-            <h2 className="widget-header">{title}</h2>
-            <MaintenanceList maintenance={props.maintenance}/>
+            <h2 className="widget-header">{formattedTitle}</h2>
+            <MaintenanceList maintenance={maintenance}/>
           </div>
         </div>
       </div>
@@ -21,7 +21,8 @@ const View = (props) => {
 }
 
 View.defaultProps = {
-  title: ''
+  title: '',
+  maintenance: undefined
 };
 
 export default View;

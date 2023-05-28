@@ -1,5 +1,5 @@
-const MaintenanceItemServices = (props) => {
-  const serviceList = props.services.map(service => service.serviceName);
+const MaintenanceItemServices = ({services}) => {
+  const serviceList = services.map(service => service.serviceName);
 
   return <div className="maintenance-field">
     <span className="maintenance-field-label">Affected Services:</span>

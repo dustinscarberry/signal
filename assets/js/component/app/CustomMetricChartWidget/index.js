@@ -1,78 +1,67 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class CustomMetricChartWidget extends Component
-{
-  constructor(props) {
-    super(props);
+const CustomMetricChartWidget = (props) => {
+  const [dataPoints, setDataPoints] = useState();
+  const [title, setTitle] = useState();
+  const [yLegend, setYLegend] = useState();
+  const [scale, setScale] = useState();
+  const [scaleStart, setScaleStart] = useState();
+  const [scaleEnd, setScaleEnd] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      dataPoints: undefined,
-      title: undefined,
-      yLegend: undefined,
-      scale: undefined,
-      refreshInterval: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount() {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
+  const load = async () => {
+    const rsp = await fetchWidgetData(props.id);
 
-    if (isValidResponse(rsp))
-    {
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        dataPoints: data.dataPoints,
-        title: attributes.title,
-        yLegend: attributes.yLegend,
-        scale: attributes.scale,
-        refreshInterval: attributes.refreshInterval || 60,
-        scaleStart: data.scaleStart,
-        scaleEnd: data.scaleEnd
-      });
-
-      this.setRefresh();
+      setDataPoints(data.dataPoints);
+      setTitle(attributes.title);
+      setYLegend(attributes.yLegend);
+      setScale(attributes.scale);
+      setScaleStart(data.scaleStart);
+      setScaleEnd(data.scaleEnd);
+      setRefreshInterval(attributes.refreshInterval || 60);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render()
-  {
-    if (!this.state.dataPoints)
-      return <Loader/>;
+  if (!dataPoints)
+    return <Loader/>
 
-    return <View
-      data={this.state.dataPoints}
-      scale={this.state.scale}
-      title={this.state.title}
-      yLegend={this.state.yLegend}
-      scaleStart={this.state.scaleStart}
-      scaleEnd={this.state.scaleEnd}
-    />;
-  }
+  return <View
+    data={dataPoints}
+    scale={scale}
+    title={title}
+    yLegend={yLegend}
+    scaleStart={scaleStart}
+    scaleEnd={scaleEnd}
+  />
 }
 
 export default CustomMetricChartWidget;

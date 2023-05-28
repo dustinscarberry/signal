@@ -1,69 +1,58 @@
-import { Component } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class IncidentsListWidget extends Component
-{
-  constructor(props) {
-    super(props);
+const IncidentsListWidget = ({id}) => {
+  const [overviewOnly, setOverviewOnly] = useState();
+  const [title, setTitle] = useState();
+  const [incidents, setIncidents] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      loading: true,
-      overviewOnly: undefined,
-      title: undefined,
-      incidents: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount() {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
+  const load = async () => {
+    const rsp = await fetchWidgetData(id);
 
-    if (isOk(rsp))
-    {
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState(
-      {
-        overviewOnly: attributes.overviewOnly,
-        title: attributes.title,
-        incidents: data.incidents,
-        refreshInterval: attributes.refreshInterval || 120
-      });
-
-      this.setRefresh();
+      setOverviewOnly(attributes.overviewOnly);
+      setTitle(attributes.title);
+      setIncidents(data.incidents);
+      setRefreshInterval(attributes.refreshInterval || 120);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render() {
-    const { incidents } = this.state;
+  if (!incidents)
+    return <Loader/>
 
-    if (!incidents)
-      return <Loader/>
-
-    return <View {...this.state}/>
-  }
+  return <View
+    overviewOnly={overviewOnly}
+    title={title}
+    incidents={incidents}
+  />
 }
 
 export default IncidentsListWidget;

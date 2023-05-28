@@ -1,72 +1,62 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class MetricsOverviewWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const MetricsOverviewWidget = (props) => {
+  const [activeIncidents, setActiveIncidents] = useState();
+  const [scheduledMaintenance, setScheduledMaintenance] = useState();
+  const [daysSinceLastIncident, setDaysSinceLastIncident] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      activeIncidents: undefined,
-      scheduledMaintenance: undefined,
-      daysSinceLastIncident: undefined,
-      refreshInterval: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount()
-  {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
+  const load = async () => {
+    const rsp = await fetchWidgetData(props.id);
 
-    if (isValidResponse(rsp))
-    {
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        activeIncidents: data.activeIncidents,
-        scheduledMaintenance: data.scheduledMaintenance,
-        daysSinceLastIncident: data.daysSinceLastIncident,
-        refreshInterval: attributes.refreshInterval || 120
-      });
-
-      this.setRefresh();
+      setActiveIncidents(data.activeIncidents);
+      setScheduledMaintenance(data.scheduledMaintenance);
+      setDaysSinceLastIncident(data.daysSinceLastIncident);
+      setRefreshInterval(attributes.refreshInterval || 120);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render() {
-    if (
-      this.state.activeIncidents == undefined ||
-      this.state.scheduledMaintenance == undefined ||
-      this.state.daysSinceLastIncident == undefined
-    )
-      return <Loader/>
+  if (
+    activeIncidents == undefined ||
+    scheduledMaintenance == undefined ||
+    daysSinceLastIncident == undefined
+  )
+    return <Loader/>
 
-    return <View {...this.state}/>
-  }
+  return <View
+    activeIncidents={activeIncidents}
+    scheduledMaintenance={scheduledMaintenance}
+    daysSinceLastIncident={daysSinceLastIncident}
+  />
 }
 
 export default MetricsOverviewWidget;

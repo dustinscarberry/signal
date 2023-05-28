@@ -1,17 +1,17 @@
 import ContentBlock from '../ContentBlock';
 import Link from './Link';
 
-const View = (props) => {
-  //set links based on configuration
+const View = ({showPastMaintenance, showFutureMaintenance, showPastIncidents}) => {
+  // set links based on configuration
   const linkNodes = [];
 
-  if (props.showPastMaintenance)
+  if (showPastMaintenance)
     linkNodes.push(<Link key={0} href='/pastmaintenance' title='Past Maintenance'/>);
 
-  if (props.showFutureMaintenance)
+  if (showFutureMaintenance)
     linkNodes.push(<Link key={1} href='/scheduledmaintenance' title='Scheduled Maintenance'/>);
 
-  if (props.showPastIncidents)
+  if (showPastIncidents)
     linkNodes.push(<Link key={2} href='/pastincidents' title='Past Incidents'/>);
 
   return <ContentBlock>
@@ -31,6 +31,6 @@ View.defaultProps = {
   showPastMaintenance: false,
   showFutureMaintenance: false,
   showPastIncidents: false
-};
+}
 
 export default View;

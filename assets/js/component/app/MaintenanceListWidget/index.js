@@ -1,69 +1,58 @@
-import { Component } from 'react';
-import axios from 'axios';
-import { isValidResponse } from './actions';
+import { useState, useEffect } from 'react';
+import { isOk } from '../../../logic/utils';
+import { fetchWidgetData } from './logic';
 import Loader from '../../shared/Loader';
 import View from './View';
 
-class MaintenanceListWidget extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const MaintenanceListWidget = ({id}) => {
+  const [overviewOnly, setOverviewOnly] = useState();
+  const [title, setTitle] = useState();
+  const [maintenance, setMaintenance] = useState();
+  const [refreshInterval, setRefreshInterval] = useState();
 
-    this.state = {
-      loading: true,
-      overviewOnly: undefined,
-      title: undefined,
-      maintenance: undefined
-    };
+  let refreshTimer;
 
-    this.refreshInterval = undefined;
-  }
+  useEffect(() => {
+    load();
+  }, []);
 
-  componentDidMount()
-  {
-    this.load();
-  }
+  useEffect(() => {
+    setRefresh();
+  }, [refreshInterval]);
 
-  async load()
-  {
-    const rsp = await axios.get(
-      '/api/v1/widgetsdata/' + this.props.id
-    );
-
-    if (isValidResponse(rsp))
-    {
+  const load = async () => {
+    const rsp = await fetchWidgetData(id);
+    
+    if (isOk(rsp)) {
       const data = rsp.data.data;
       const attributes = data.options.attributes;
 
-      await this.setState({
-        overviewOnly: attributes.overviewOnly,
-        title: attributes.title,
-        maintenance: data.maintenance,
-        refreshInterval: attributes.refreshInterval || 120
-      });
-
-      this.setRefresh();
+      setOverviewOnly(attributes.overviewOnly);
+      setTitle(attributes.title);
+      setMaintenance(data.maintenance);
+      setRefreshInterval(attributes.refreshInterval || 120);
     }
   }
 
-  setRefresh()
-  {
-    if (this.refreshInterval)
-      clearInterval(this.refreshInterval);
+  const setRefresh = () => {
+    if (!refreshInterval * 1000) return;
+    
+    if (refreshTimer)
+      clearInterval(refreshTimer);
 
-    this.refreshInterval = setInterval(() => {
-      this.load();
-    }, this.state.refreshInterval * 1000);
+    refreshTimer = setInterval(() => {  
+      load();
+    }, refreshInterval * 1000);
   }
 
-  render()
-  {
-    if (!this.state.maintenance)
-      return <Loader/>;
+  if (!maintenance)
+    return <Loader/>
 
-    return <View {...this.state}/>
-  }
+  return <View
+    title={title}
+    maintenance={maintenance}
+    overviewOnly={overviewOnly}
+  />
 }
 
 export default MaintenanceListWidget;
