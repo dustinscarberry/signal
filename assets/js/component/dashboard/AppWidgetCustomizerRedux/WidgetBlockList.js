@@ -8,13 +8,12 @@ const mapStateToProps = (state) => {
 }
 
 const WidgetBlockList = (props) => {
-  const widgetNodes = props.widgets.map((widget, i) =>
-  {
+  const widgetNodes = props.widgets.map((widget, i) => {
     return <WidgetBlockContainer
-      widget={widget}
       key={widget.id}
+      widget={widget}
       index={i}
-    />;
+    />
   });
 
   return <DndProvider backend={HTML5Backend}>
