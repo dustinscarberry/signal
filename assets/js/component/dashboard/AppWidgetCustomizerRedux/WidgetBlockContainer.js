@@ -1,12 +1,6 @@
-import { Component } from 'react';
-import {
-  dispatchUpdateWidget,
-  dispatchDeleteWidget,
-  dispatchMoveWidget,
-  dispatchOrderWidgets
-} from './redux/actions';
-import { connect } from 'react-redux';
-import axios from 'axios';
+import { useState } from 'react';
+import { isOk } from '../../../logic/utils';
+import { createWidget, updateWidget, deleteWidget, updateWidgetOrder } from './logic';
 import { WIDGET_BLOCK_TYPE, WIDGET_BLOCK_ATTRIBUTES } from '../constants';
 import WidgetBlock from './WidgetBlock';
 import VideoEmbedWidgetBlock from './blocks/VideoEmbedWidgetBlock';
@@ -19,135 +13,64 @@ import ServiceUptimeChartWidgetBlock from './blocks/ServiceUptimeChartWidgetBloc
 import CustomMetricChartWidgetBlock from './blocks/CustomMetricChartWidgetBlock';
 import PastFutureLinksWidgetBlock from './blocks/PastFutureLinksWidgetBlock';
 
-const mapStateToProps = (state) => {
-  return {widgets: state.widgets};
-};
+const WidgetBlockContainer = ({widget, widgets, index, handleUpdateWidget, handleDeleteWidget, handleMoveWidget}) => {
+  const [isOpen, setIsOpen] = useState(widget.isNew ? true : false);
+  const [isSaved, setIsSaved] = useState(true);
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    dispatchUpdateWidget: (index, widget) => dispatch(dispatchUpdateWidget(index, widget)),
-    dispatchDeleteWidget: (index) => dispatch(dispatchDeleteWidget(index)),
-    dispatchMoveWidget: (fromIndex, toIndex) => dispatch(dispatchMoveWidget(fromIndex, toIndex)),
-    dispatchOrderWidgets: () => dispatch(dispatchOrderWidgets())
-  };
-};
-
-class WidgetBlockContainer extends Component
-{
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isOpen: props.widget.isNew ? true : false,
-      isSaved: true
-    };
+  const toggleOpenClose = () => {
+    setIsOpen(!isOpen);
   }
 
-  toggleOpenClose = () => {
-    this.setState({isOpen: !this.state.isOpen});
+  const toggleIsSaved = (isSaved) => {
+    setIsSaved(isSaved);
   }
 
-  toggleIsSaved = (isSaved) => {
-    this.setState({isSaved});
-  }
-
-  createWidgetInDB = (widget) => {
-    return axios.post(
-      '/api/v1/widgets',
-      {
-        type: widget.type,
-        sortorder: widget.sortorder,
-        attributes: widget.attributes
-      }
-    );
-  }
-
-  updateWidgetInDB = (widget) => {
-    return axios.patch(
-      '/api/v1/widgets/' + widget.id,
-      {
-        type: widget.type,
-        sortorder: widget.sortorder,
-        attributes: widget.attributes
-      }
-    );
-  }
-
-  deleteWidgetInDB = (widgetID) => {
-    return axios.delete(
-      '/api/v1/widgets/' + widgetID
-    );
-  }
-
-  updateWidgetOrderInDB = (widgetIDs) => {
-    return axios.patch(
-      '/api/v1/widgetsorder',
-      {widgetIDs: widgetIDs}
-    );
-  }
-
-  updateAttributes = (attributes) => {
+  const handleUpdateAttributes = (attributes) => {
     if (attributes) {
-      let { widget } = this.props;
       widget.attributes = Object.assign(widget.attributes, attributes);
-      this.props.dispatchUpdateWidget(this.props.index, widget);
+      handleUpdateWidget(index, widget);
     }
   }
 
-  saveWidget = async () => {
-    let { widget } = this.props;
-
-    //save widget
+  const handleSaveWidget = async () => {
+    // save widget
     if (widget.id !== undefined) {
-      const rsp = await this.updateWidgetInDB(widget);
+      const rsp = await updateWidget(widget);
 
-      if (rsp.status == 200 && !rsp.data.error)
-        this.toggleIsSaved(true);
+      if (isOk(rsp))
+        toggleIsSaved(true);
     }
-    //add widget
+    // add widget
     else {
-      const rsp = await this.createWidgetInDB(widget);
+      const rsp = await createWidget(widget);
 
-      if (rsp.status == 200 && !rsp.data.error && rsp.data.data.id !== undefined)
-      {
+      if (isOk(rsp) && rsp.data.data.id !== undefined) {
         widget.id = rsp.data.data.id;
-        this.props.dispatchUpdateWidget(this.props.index, widget);
-        this.toggleIsSaved(true);
+        handleUpdateWidget(index, widget);
+        toggleIsSaved(true);
       }
     }
 
     return false;
   }
 
-  deleteWidget = async () => {
-    const { widget, index } = this.props;
-
+  const handleRemoveWidget = async () => {
     if (widget.id !== undefined) {
-      const rsp = await this.deleteWidgetInDB(widget.id)
+      const rsp = await deleteWidget(widget.id);
 
-      if (rsp.status == 200 && !rsp.data.error)
-        this.props.dispatchDeleteWidget(index);
+      if (isOk(rsp))
+        handleDeleteWidget(index);
     } else
-      this.props.dispatchDeleteWidget(index);
+      handleDeleteWidget(index);
   }
 
-  //change table row order
-  moveWidget = async (dragIndex, hoverIndex) => {
-    if (dragIndex >= 0 && hoverIndex >= 0)
-    {
-      this.props.dispatchMoveWidget(dragIndex, hoverIndex);
-      this.props.dispatchOrderWidgets();
-    }
+  const handleSaveWidgetsOrder = async () => {
+    const widgetIDs = widgets.map(widget => widget.id);
+    updateWidgetOrder(widgetIDs);
   }
 
-  saveWidgetsOrder = async () => {
-    const widgetIDs = this.props.widgets.map(widget => widget.id);
-    this.updateWidgetOrderInDB(widgetIDs);
-  }
-
-  getBlockTitle = () => {
-    const { widget } = this.props;
-    let title = undefined;
+  const getBlockTitle = () => {
+    let title;
 
     if (widget.type)
       title = WIDGET_BLOCK_ATTRIBUTES[widget.type].title;
@@ -158,90 +81,70 @@ class WidgetBlockContainer extends Component
     return title;
   }
 
-  getBlockType = () => {
-    const { widget } = this.props;
+  const getBlockType = () => {
+    const blockProps = {
+      toggleIsSaved: toggleIsSaved,
+      handleUpdateAttributes: handleUpdateAttributes,
+      isOpen: isOpen,
+      isSaved: isSaved,
+      widget: widget,
+      index: index
+    };
 
     if (widget.type == WIDGET_BLOCK_TYPE.VIDEO_EMBED)
       return <VideoEmbedWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.SERVICES_LIST)
       return <ServicesListWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.INCIDENTS_LIST)
       return <IncidentsListWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.MAINTENANCE_LIST)
       return <MaintenanceListWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.SERVICE_STATUS_OVERVIEW)
       return <ServiceStatusOverviewWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.METRICS_OVERVIEW)
       return <MetricsOverviewWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.SERVICE_UPTIME_CHART)
       return <ServiceUptimeChartWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.CUSTOM_METRIC_CHART)
       return <CustomMetricChartWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else if (widget.type == WIDGET_BLOCK_TYPE.PAST_FUTURE_LINKS)
       return <PastFutureLinksWidgetBlock
-        toggleIsSaved={this.toggleIsSaved}
-        updateAttributes={this.updateAttributes}
-        {...this.state}
-        {...this.props}
-      />;
+        {...blockProps}
+      />
     else
       return null;
   }
 
-  render() {
-    return <WidgetBlock
-      title={this.getBlockTitle()}
-      saveWidget={this.saveWidget}
-      deleteWidget={this.deleteWidget}
-      toggleOpenClose={this.toggleOpenClose}
-      moveWidget={this.moveWidget}
-      saveWidgetsOrder={this.saveWidgetsOrder}
-      {...this.props}
-      {...this.state}
-    >
-      {this.getBlockType()}
-    </WidgetBlock>
-  }
+  return <WidgetBlock
+    title={getBlockTitle()}
+    handleSaveWidget={handleSaveWidget}
+    handleRemoveWidget={handleRemoveWidget}
+    toggleOpenClose={toggleOpenClose}
+    handleMoveWidget={handleMoveWidget}
+    handleSaveWidgetsOrder={handleSaveWidgetsOrder}
+    isOpen={isOpen}
+    isSaved={isSaved}
+    index={index}
+  >
+    {getBlockType()}
+  </WidgetBlock>
+  
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WidgetBlockContainer);
+export default WidgetBlockContainer;

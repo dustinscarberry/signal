@@ -1,38 +1,32 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 import FormGroup from '../../../shared/FormGroup';
 import Label from '../../../shared/Label';
 import NumberInput from '../../../shared/NumberInput';
 
-class ServiceStatusOverviewWidgetBlock extends Component
-{
-  constructor(props)
-  {
-    super(props);
+const ServiceStatusOverviewWidgetBlock = ({widget, handleUpdateAttributes, toggleIsSaved}) => {
+  useEffect(() => {
+    if (widget.isNew)
+      toggleIsSaved(false);
+  }, []);
 
-    if (this.props.widget.isNew)
-      this.props.toggleIsSaved(false);
-  }
-
-  changeValue = (e) => {
-    this.props.updateAttributes({
+  const changeValue = (e) => {
+    handleUpdateAttributes({
       [e.target.name]: e.target.value
     });
 
-    this.props.toggleIsSaved(false);
+    toggleIsSaved(false);
   }
 
-  render() {
-    return <div>
-      <FormGroup>
-        <Label title="Refresh Interval" hint="in seconds"/>
-        <NumberInput
-          value={this.props.widget.attributes.refreshInterval}
-          handleChange={this.changeValue}
-          name="refreshInterval"
-        />
-      </FormGroup>
-    </div>
-  }
+  return <div>
+    <FormGroup>
+      <Label title="Refresh Interval" hint="in seconds"/>
+      <NumberInput
+        value={widget.attributes.refreshInterval}
+        handleChange={changeValue}
+        name="refreshInterval"
+      />
+    </FormGroup>
+  </div>
 }
 
 export default ServiceStatusOverviewWidgetBlock;

@@ -2,19 +2,19 @@ import Modal from '../../shared/Modal';
 import WidgetSelection from './WidgetSelection';
 import { WIDGET_BLOCK_ATTRIBUTES } from '../constants';
 
-const WidgetSelector = (props) => {
+const WidgetSelector = ({isOpenWidgetSelector, handleAddWidgetType, handleModalToggle}) => {
   const widgetNodes = Object.keys(WIDGET_BLOCK_ATTRIBUTES).map((key, val) => {
     return <WidgetSelection
       key={key}
       attributes={WIDGET_BLOCK_ATTRIBUTES[key]}
       type={key}
-      handleAddWidgetType={props.handleAddWidgetType}
+      handleAddWidgetType={handleAddWidgetType}
     />
   });
 
   return <Modal
-    isOpen={props.isOpenWidgetSelector}
-    handleModalToggle={props.handleModalToggle}
+    isOpen={isOpenWidgetSelector}
+    handleModalToggle={handleModalToggle}
     title="Add Widget"
   >
     <div className="container-fluid widget-selector">

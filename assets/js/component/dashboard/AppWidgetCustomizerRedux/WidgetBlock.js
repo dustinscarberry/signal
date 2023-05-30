@@ -20,7 +20,7 @@ const WidgetBlock = (props) => {
   const [dropCollected, dropRef] = useDrop({
     accept: 'widgetblock',
     drop: (item, monitor) => {
-      props.saveWidgetsOrder();
+      props.handleSaveWidgetsOrder();
     },
     hover: (item, monitor) => {
       if (!item)
@@ -58,7 +58,7 @@ const WidgetBlock = (props) => {
         return;
   
       // Time to actually perform the action
-      props.moveWidget(dragIndex, hoverIndex);
+      props.handleMoveWidget(dragIndex, hoverIndex);
   
       // change monitor index for performance reasons
       monitor.getItem().index = hoverIndex;

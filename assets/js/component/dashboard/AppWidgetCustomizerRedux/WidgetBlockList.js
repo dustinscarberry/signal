@@ -1,26 +1,23 @@
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { connect } from 'react-redux';
 import WidgetBlockContainer from './WidgetBlockContainer';
 
-const mapStateToProps = (state) => {
-  return {widgets: state.widgets};
-}
-
-const WidgetBlockList = (props) => {
-  const widgetNodes = props.widgets.map((widget, i) => {
-    return <WidgetBlockContainer
-      key={widget.id}
-      widget={widget}
-      index={i}
-    />
-  });
-
+const WidgetBlockList = ({widgets, handleUpdateWidget, handleDeleteWidget, handleMoveWidget}) => {
   return <DndProvider backend={HTML5Backend}>
     <div>
-      {widgetNodes}
+      {widgets.map((widget, i) => {
+        return <WidgetBlockContainer
+          key={widget.id}
+          widget={widget}
+          widgets={widgets}
+          index={i}
+          handleUpdateWidget={handleUpdateWidget}
+          handleDeleteWidget={handleDeleteWidget}
+          handleMoveWidget={handleMoveWidget}
+        />
+      })}
     </div>
   </DndProvider>
 }
 
-export default connect(mapStateToProps)(WidgetBlockList);
+export default WidgetBlockList;
