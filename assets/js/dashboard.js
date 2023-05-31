@@ -2,7 +2,7 @@ import '../css/dashboard.scss';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
 import moment from 'moment';
-import AppWidgetCustomizer from './component/dashboard/AppWidgetCustomizerRedux';
+import AppWidgetCustomizer from './component/dashboard/AppWidgetCustomizer';
 
 //render app widget customizer
 const appWidgetCustomizerRoot = document.getElementById('app-widget-customizer-root');

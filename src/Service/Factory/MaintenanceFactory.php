@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Service\Mail\Mailer\MaintenanceCreatedMailer;
 use App\Service\Mail\Mailer\MaintenanceUpdatedMailer;
-use App\Service\Generator\ExchangeEventGenerator;
 use App\Entity\Maintenance;
 use App\Entity\ServiceStatusHistory;
 use App\Model\AppConfig;

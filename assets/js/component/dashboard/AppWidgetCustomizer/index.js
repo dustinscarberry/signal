@@ -4,7 +4,6 @@ import { isOk } from '../../../logic/utils';
 import { fetchWidgets } from './logic';
 import { WIDGET_BLOCK_DATA } from '../constants';
 import View from './View';
-import { clone } from 'lodash';
 
 const AppWidgetCustomizer = () => {
   const [widgets, setWidgets] = useState();
@@ -22,10 +21,6 @@ const AppWidgetCustomizer = () => {
   }
 
   const handleModalToggle = () => {
-    setIsOpenWidgetSelector(!isOpenWidgetSelector);
-  }
-
-  const addWidget = () => {
     setIsOpenWidgetSelector(!isOpenWidgetSelector);
   }
 
