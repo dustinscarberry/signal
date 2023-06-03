@@ -5,7 +5,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 ## Tech ##
 
 * [React] - JS framework for responsive apps
-* [Symfony 6.2] - PHP MVC Framework
+* [Symfony 6.3] - PHP MVC Framework
 * [Composer] - PHP Package Manager
 * [Yarn] - JS Package Manager
 * [jQuery] - More JS stuff
@@ -168,10 +168,7 @@ $ cp docker-compose.override.example.yml docker-compose.override.yml
 4. Run docker container
 
 ```sh
-# test
-$ docker-compose -p test up -d --build
-# production
-$ docker-compose -p prod up -d --build
+$ docker compose up -d --build
 ```
 
 5. Start server (nginx, if needed)
