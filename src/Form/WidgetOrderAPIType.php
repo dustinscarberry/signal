@@ -11,16 +11,15 @@ use App\Model\WidgetOrder;
 
 class WidgetOrderAPIType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
-    $builder
-    ->add('widgetIDs', CollectionType::class, [
+    $builder->add('widgetIDs', CollectionType::class, [
       'entry_type' => TextType::class,
       'allow_add' => true
     ]);
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'data_class' => WidgetOrder::class,

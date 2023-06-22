@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class SettingType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
       ->add('siteName', TextType::class)
@@ -78,7 +78,7 @@ class SettingType extends AbstractType
       ]);
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'data_class' => AppConfig::class,

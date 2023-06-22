@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CustomMetricType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
       ->add('name', TextType::class)
@@ -23,7 +23,7 @@ class CustomMetricType extends AbstractType
       ->add('scaleEnd', IntegerType::class);
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'data_class' => CustomMetric::class

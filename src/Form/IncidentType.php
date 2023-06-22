@@ -29,7 +29,7 @@ class IncidentType extends AbstractType
     $this->siteTimezone = $appConfig->getSiteTimezone();
   }
 
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $builder
       ->add('name', TextType::class)
@@ -74,13 +74,11 @@ class IncidentType extends AbstractType
       $builder->get('anticipatedResolution')
         ->addModelTransformer(new TimestampToDateTimeStringTransformer($this->siteTimezone));
 
-      $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event)
-      {
+      $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
         $incident = $event->getData();
         $form = $event->getForm();
 
-        if (!$incident || $incident->getId() == null)
-        {
+        if (!$incident || $incident->getId() == null) {
           $form
           ->add('visibility', CheckboxType::class, [
             'required' => false,
@@ -92,7 +90,7 @@ class IncidentType extends AbstractType
       });
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'data_class' => Incident::class

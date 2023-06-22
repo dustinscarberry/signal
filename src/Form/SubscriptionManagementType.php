@@ -19,14 +19,13 @@ class SubscriptionManagementType extends AbstractType
     $this->em = $em;
   }
 
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     $serviceCategories = $this->em
       ->getRepository(ServiceCategory::class)
       ->findAllNotDeleted();
 
-    foreach ($serviceCategories as $serviceCategory)
-    {
+    foreach ($serviceCategories as $serviceCategory) {
       //remove empty service categories
       if (count($serviceCategory->getServices()) == 0)
         continue;
@@ -39,7 +38,7 @@ class SubscriptionManagementType extends AbstractType
     }
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'data_class' => SubscriptionManagement::class
