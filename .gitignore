@@ -233,7 +233,6 @@ $RECYCLE.BIN/
 
 ### yarn ###
 # https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-
 .yarn/*
 !.yarn/releases
 !.yarn/patches
@@ -243,10 +242,10 @@ $RECYCLE.BIN/
 
 # if you are NOT using Zero-installs, then:
 # comment the following lines
-!.yarn/cache
+#!.yarn/cache
 
 # and uncomment the following lines
-# .pnp.*
+.pnp.*
 
 # End of https://www.gitignore.io/api/node,linux,macos,windows,symfony,vagrant,symphonycms
 
