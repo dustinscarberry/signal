@@ -249,12 +249,14 @@ class AppConfig
   // load settings from database
   private function load(): self
   {
-    $allSettings = $this->em
-      ->getRepository(Setting::class)
-      ->findAll();
+    try {
+      $allSettings = $this->em
+        ->getRepository(Setting::class)
+        ->findAll();
 
-    foreach ($allSettings as $setting)
-      $this->settingList[$setting->getName()] = $setting->getValue();
+      foreach ($allSettings as $setting)
+        $this->settingList[$setting->getName()] = $setting->getValue();
+    } catch (\Exception $e) {}
 
     return $this;
   }

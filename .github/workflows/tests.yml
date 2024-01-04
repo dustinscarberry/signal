@@ -74,7 +74,7 @@ jobs:
         run: mysql --host 127.0.0.1 --port 3306 -u vagrant -pvagrant -e "show variables where Variable_name = 'version';"
 
       - name: Setup database schema
-        run: php bin/console doctrine:migrations:migrate
+        run: php bin/console doctrine:migrations:migrate -v
 
       - name: Load Doctrine fixtures
         run: php bin/console doctrine:fixtures:load --group=DemoFixtures -n
