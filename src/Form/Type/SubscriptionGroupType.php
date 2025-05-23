@@ -13,7 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class SubscriptionGroupType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options)
+  public function buildForm(FormBuilderInterface $builder, array $options): void
   {
     foreach ($options['groupItems'] as $index => $item)
     {
@@ -24,7 +24,7 @@ class SubscriptionGroupType extends AbstractType
     }
   }
 
-  public function buildView(FormView $view, FormInterface $form, array $options)
+  public function buildView(FormView $view, FormInterface $form, array $options): void
   {
     parent::buildView($view, $form, $options);
 
@@ -48,7 +48,7 @@ class SubscriptionGroupType extends AbstractType
     return 'subscription_group';
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function configureOptions(OptionsResolver $resolver): void
   {
     $resolver->setDefaults([
       'groupName' => '',

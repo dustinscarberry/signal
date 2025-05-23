@@ -157,10 +157,13 @@ class DashboardAuthenticator extends AbstractAuthenticator implements Authentica
    *
    * @return Response
    */
-  public function start(Request $request, AuthenticationException $authException = null)
+  public function start(Request $request, AuthenticationException $authException = null): Response
   {
-    // return null if api call
-    if ($this->isAPICall) return null;
+    if ($this->isAPICall) {
+      $response = new \stdClass();
+      $response->errors = 'Not authorized!';
+      return new \Symfony\Component\HttpFoundation\JsonResponse($response, 401);
+    }
 
     return new RedirectResponse($this->router->generate('dashboardLogin'));
   }  

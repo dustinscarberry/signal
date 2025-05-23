@@ -1,4 +1,4 @@
-FROM dustinscarberry/symfony:php8.2
+FROM dustinscarberry/symfony:php8.4
 
 # set workdir
 WORKDIR /var/www/html
@@ -7,7 +7,7 @@ WORKDIR /var/www/html
 COPY --chown=www-data:www-data . /var/www/html
 
 # build app dependencies
-RUN apk add --no-cache yarn && \
+RUN apk upgrade && apk add --no-cache yarn && \
   composer i --no-scripts && \
   yarn install --immutable && \
   yarn prod && \

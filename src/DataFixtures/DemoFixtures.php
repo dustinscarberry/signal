@@ -29,7 +29,7 @@ class DemoFixtures extends Fixture
     $this->userFactory = $userFactory;
   }
 
-  public function load(ObjectManager $manager)
+  public function load(ObjectManager $manager): void
   {
     //create default service categories
     $serviceCategory = new ServiceCategory();
