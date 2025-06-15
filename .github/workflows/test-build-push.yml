@@ -1,28 +1,32 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Testing
+name: Test | Build | Push
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master, dev ]
-  pull_request:
-    branches: [ master, dev ]
+    tags:
+      - '*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: signal
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  run-tests:
     # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
+    if: github.event.base_ref == 'refs/heads/master'
     services:
       # https://docs.docker.com/samples/library/mysql/
       mysql:
-        image: mariadb:10.6.2
+        image: mariadb:11.2.2
         env:
           MARIADB_USER: vagrant
           MARIADB_PASSWORD: vagrant
@@ -30,11 +34,11 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       fail-fast: false
       matrix:
-        php-versions: [8.1]
+        php-versions: [8.2]
     env:
       APP_ENV: test
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -81,3 +85,38 @@ jobs:
 
       - name: Run functional and unit tests
         run: ./vendor/bin/phpunit --testsuite='main'
+
+
+  build-push-acr:
+    name: Build and push to AWS registry
+    runs-on: ubuntu-latest
+    needs:
+      - run-tests
+    steps:
+      # —— Setup Github actions 🐙 —————————————————————————————————————————————
+      - name: Checkout Git Repo
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.ref_name }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
