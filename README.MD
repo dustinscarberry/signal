@@ -4,7 +4,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 ## Tech ##
 
-* [Symfony 7.2] - PHP MVC Framework
+* [Symfony 7.3] - PHP MVC Framework
 * [Composer] - PHP Package Manager
 * [Yarn] - JS Package Manager
 * [React] - JS framework for responsive apps
@@ -125,12 +125,12 @@ server {
     }
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
-        fastcgi_split_path_info ^(.+\.php)(/.*)$;
-        include fastcgi_params;
-       fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-       fastcgi_param DOCUMENT_ROOT $realpath_root;
-       internal;
+      fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
+      fastcgi_split_path_info ^(.+\.php)(/.*)$;
+      include fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+      fastcgi_param DOCUMENT_ROOT $realpath_root;
+      internal;
    }
 
    location ~ \.php$ {
