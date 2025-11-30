@@ -4,14 +4,14 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 ## Tech ##
 
-* [Symfony 7.3] - PHP MVC Framework
+* [Symfony 7.4] - PHP MVC Framework
 * [Composer] - PHP Package Manager
 * [Yarn] - JS Package Manager
 * [React] - JS framework for responsive apps
 
 ## Requirements ##
 
-* [PHP 8.2 or higher](https://www.php.net/)
+* [PHP 8.4 or higher](https://www.php.net/)
 * [MariaDB 10.0+](https://mariadb.org/)
 * [Composer](https://getcomposer.org/)
 * [Yarn](https://yarnpkg.com/)
