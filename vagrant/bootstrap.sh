@@ -5,8 +5,8 @@ add-apt-repository ppa:ondrej/php
 apt-get update
 
 # install needed packages
-apt-get install -y php8.4-fpm
-apt-get install -y nginx php8.4 php8.4-cli php8.4-mysql php8.4-gd php8.4-gmp php8.4-bcmath php8.4-imagick php8.4-xml php8.4-curl php8.4-mbstring php8.4-intl unzip mariadb-server mariadb-client
+apt-get install -y php8.5-fpm
+apt-get install -y nginx php8.5 php8.5-cli php8.5-mysql php8.5-gd php8.5-gmp php8.5-bcmath php8.5-imagick php8.5-xml php8.5-curl php8.5-mbstring php8.5-intl unzip mariadb-server mariadb-client
 apt-get upgrade -y
 
 # write out nginx config files
@@ -34,7 +34,7 @@ server {
     }
 
     location ~ ^/index\.php(/|$) {
-        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.5-fpm.sock;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
@@ -94,8 +94,8 @@ mysql -e "CREATE DATABASE demo_test;"
 
 # change user accounts for web stack
 sed -i 's/www-data/vagrant/g' /etc/nginx/nginx.conf
-sed -i 's/www-data/vagrant/g' /etc/php/8.4/fpm/pool.d/www.conf
+sed -i 's/www-data/vagrant/g' /etc/php/8.5/fpm/pool.d/www.conf
 
 # restart services
-systemctl restart php8.4-fpm
+systemctl restart php8.5-fpm
 systemctl restart nginx
