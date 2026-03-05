@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Exception;
@@ -20,18 +20,18 @@ class WidgetOrderApiController extends ApiController
       $form = $this->createForm(WidgetOrderAPIType::class, $widgetOrder);
       $data = json_decode($req->getContent(), true);
       $form->submit($data);
-  
+
       //save widget updates to database if valid
       if ($form->isSubmitted() && $form->isValid()) {
         $widgetOrder->save();
         return $this->respond($widgetOrder);
       }
-  
+
       return $this->respondWithErrors([
         'Invalid Data'
       ]);
     } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);
-    } 
+    }
   }
 }

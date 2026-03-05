@@ -4,7 +4,7 @@ Signal is a open source system status dashboard inspired by Cachet and others, b
 
 ## Tech ##
 
-* [Symfony 7.4] - PHP MVC Framework
+* [Symfony 8.0] - PHP MVC Framework
 * [Composer] - PHP Package Manager
 * [Yarn] - JS Package Manager
 * [React] - JS framework for responsive apps

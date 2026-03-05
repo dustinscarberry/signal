@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Exception;
 use App\Service\Api\WidgetDataGenerator;
 use App\Service\Factory\WidgetFactory;
@@ -17,7 +17,7 @@ class WidgetDataApiController extends ApiController
       $widget = $widgetFactory->getWidget($hashId);
 
       if (!$widget) return $this->respondWithErrors(['Invalid data']);
-  
+
       $rsp = $widgetDataGenerator->getData($widget);
       return $this->respond($rsp);
     } catch (Exception $e) {

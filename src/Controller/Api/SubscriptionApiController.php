@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Exception;
@@ -34,7 +34,7 @@ class SubscriptionApiController extends ApiController
       //check for valid subscription
       if (!$subscription)
         return $this->respondWithErrors(['Invalid data']);
-      
+
       return $this->respond($subscription);
     } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);

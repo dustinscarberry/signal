@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Exception;
 use App\Form\WidgetAPIType;
@@ -47,18 +47,18 @@ class WidgetApiController extends ApiController
       $widget = new Widget();
       $form = $this->createForm(WidgetAPIType::class, $widget);
       $data = json_decode($req->getContent(), true);
-  
+
       if (isset($data['attributes']))
         $data['attributes'] = json_encode($data['attributes']);
-  
+
       $form->submit($data);
-  
+
       //save new widget to database if valid
       if ($form->isSubmitted() && $form->isValid()) {
         $widgetFactory->createWidget($widget);
         return $this->respond($widget);
       }
-  
+
       return $this->respondWithErrors([
         'Invalid Data'
       ]);
@@ -78,21 +78,21 @@ class WidgetApiController extends ApiController
         throw $this->createNotFoundException(
           'No widget found for id '. $hashId
         );
-  
+
       $form = $this->createForm(WidgetAPIType::class, $widget);
       $data = json_decode($req->getContent(), true);
-  
+
       if (isset($data['attributes']))
         $data['attributes'] = json_encode($data['attributes']);
-  
+
       $form->submit($data);
-  
+
       //save widget updates to database if valid
       if ($form->isSubmitted() && $form->isValid()) {
         $widgetFactory->updateWidget();
         return $this->respond($widget);
       }
-  
+
       return $this->respondWithErrors([
         'Invalid Data'
       ]);
@@ -112,10 +112,10 @@ class WidgetApiController extends ApiController
         throw $this->createNotFoundException(
           'No widget found for id '. $hashId
         );
-  
+
       //delete widget
       $widgetFactory->deleteWidget($widget);
-  
+
       return $this->respondWithNull();
     } catch (Exception $e) {
       return $this->respondWithErrors([$e->getMessage()]);

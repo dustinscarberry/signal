@@ -2,7 +2,7 @@
 
 namespace App\Controller\View;
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FAQController extends AbstractController

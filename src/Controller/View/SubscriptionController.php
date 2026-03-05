@@ -3,7 +3,7 @@
 namespace App\Controller\View;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Service\Factory\SubscriptionFactory;
 

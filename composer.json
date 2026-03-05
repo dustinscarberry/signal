@@ -1,108 +1,108 @@
 {
-    "name": "dustinscarberry/signal",
-    "description": "Signal is a open source system status dashboard inspired by Cachet and others, built on Symfony and React.",
-    "type": "project",
-    "license": "proprietary",
-    "require": {
-        "php": ">=8.4.0",
-        "ext-ctype": "*",
-        "ext-iconv": "*",
-        "doctrine/common": "^3.0",
-        "doctrine/dbal": "^3",
-        "doctrine/doctrine-bundle": "^2.4.2",
-        "doctrine/doctrine-migrations-bundle": "^3.1.1",
-        "doctrine/orm": "^3.5",
-        "hashids/hashids": "^5.0",
-        "litesaml/lightsaml": "^4.1",
-        "phpdocumentor/reflection-docblock": "^5.3",
-        "phpstan/phpdoc-parser": "^2.3",
-        "ramsey/uuid-doctrine": "^2.0",
-        "symfony/asset": "7.4.*",
-        "symfony/console": "7.4.*",
-        "symfony/dotenv": "7.4.*",
-        "symfony/event-dispatcher": "7.4.*",
-        "symfony/expression-language": "7.4.*",
-        "symfony/flex": "^2.3.1",
-        "symfony/form": "7.4.*",
-        "symfony/framework-bundle": "7.4.*",
-        "symfony/intl": "7.4.*",
-        "symfony/mailer": "7.4.*",
-        "symfony/monolog-bundle": "^4",
-        "symfony/process": "7.4.*",
-        "symfony/property-access": "7.4.*",
-        "symfony/property-info": "7.4.*",
-        "symfony/security-bundle": "7.4.*",
-        "symfony/serializer": "7.4.*",
-        "symfony/templating": "6.4.*",
-        "symfony/translation": "7.4.*",
-        "symfony/twig-bundle": "7.4.*",
-        "symfony/validator": "7.4.*",
-        "symfony/web-link": "7.4.*",
-        "symfony/webpack-encore-bundle": "^2.3",
-        "symfony/yaml": "7.4.*"
+  "name": "dustinscarberry/signal",
+  "description": "Signal is a open source system status dashboard inspired by Cachet and others, built on Symfony and React.",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.4.0",
+    "ext-ctype": "*",
+    "ext-iconv": "*",
+    "doctrine/common": "^3.0",
+    "doctrine/dbal": "^4",
+    "doctrine/doctrine-bundle": "^3",
+    "doctrine/doctrine-migrations-bundle": "^4.0",
+    "doctrine/orm": "^3.5",
+    "hashids/hashids": "^5.0",
+    "litesaml/lightsaml": "^4.1",
+    "phpdocumentor/reflection-docblock": "^5.3",
+    "phpstan/phpdoc-parser": "^2.3",
+    "ramsey/uuid-doctrine": "^2.0",
+    "symfony/asset": "8.0.*",
+    "symfony/console": "8.0.*",
+    "symfony/dotenv": "8.0.*",
+    "symfony/event-dispatcher": "8.0.*",
+    "symfony/expression-language": "8.0.*",
+    "symfony/flex": "^2.3.1",
+    "symfony/form": "8.0.*",
+    "symfony/framework-bundle": "8.0.*",
+    "symfony/intl": "8.0.*",
+    "symfony/mailer": "8.0.*",
+    "symfony/monolog-bundle": "^4",
+    "symfony/process": "8.0.*",
+    "symfony/property-access": "8.0.*",
+    "symfony/property-info": "8.0.*",
+    "symfony/security-bundle": "8.0.*",
+    "symfony/serializer": "8.0.*",
+    "symfony/templating": "6.4.*",
+    "symfony/translation": "8.0.*",
+    "symfony/twig-bundle": "8.0.*",
+    "symfony/validator": "8.0.*",
+    "symfony/web-link": "8.0.*",
+    "symfony/webpack-encore-bundle": "^2.3",
+    "symfony/yaml": "8.0.*"
+  },
+  "require-dev": {
+    "dama/doctrine-test-bundle": "^8.0",
+    "doctrine/doctrine-fixtures-bundle": "^4",
+    "phpunit/phpunit": "^12",
+    "symfony/browser-kit": "8.0.*",
+    "symfony/css-selector": "8.0.*",
+    "symfony/debug-bundle": "^8.0",
+    "symfony/maker-bundle": "^1.11",
+    "symfony/phpunit-bridge": "^8.0",
+    "symfony/stopwatch": "^8.0",
+    "symfony/web-profiler-bundle": "^8.0"
+  },
+  "config": {
+    "preferred-install": {
+      "*": "dist"
     },
-    "require-dev": {
-        "dama/doctrine-test-bundle": "^8.0",
-        "doctrine/doctrine-fixtures-bundle": "^4",
-        "phpunit/phpunit": "^12",
-        "symfony/browser-kit": "7.4.*",
-        "symfony/css-selector": "7.4.*",
-        "symfony/debug-bundle": "^7.4",
-        "symfony/maker-bundle": "^1.11",
-        "symfony/phpunit-bridge": "^7.4",
-        "symfony/stopwatch": "^7.4",
-        "symfony/web-profiler-bundle": "^7.4"
-    },
-    "config": {
-        "preferred-install": {
-            "*": "dist"
-        },
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "symfony/flex": true
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\Tests\\": "tests/"
-        }
-    },
-    "replace": {
-        "paragonie/random_compat": "2.*",
-        "symfony/polyfill-ctype": "*",
-        "symfony/polyfill-iconv": "*",
-        "symfony/polyfill-php71": "*",
-        "symfony/polyfill-php70": "*"
-    },
-    "scripts": {
-        "update-scripts": {
-            "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
-        "auto-scripts": {
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "cache:clear": "symfony-cmd"
-        },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
-        "post-update-cmd": [
-            "@update-scripts"
-        ]
-    },
-    "conflict": {
-        "symfony/symfony": "*"
-    },
-    "extra": {
-        "symfony": {
-            "allow-contrib": false,
-            "require": "7.4.*"
-        }
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "symfony/flex": true
     }
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
+  "replace": {
+    "paragonie/random_compat": "2.*",
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-iconv": "*",
+    "symfony/polyfill-php71": "*",
+    "symfony/polyfill-php70": "*"
+  },
+  "scripts": {
+    "update-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    },
+    "auto-scripts": {
+      "assets:install %PUBLIC_DIR%": "symfony-cmd",
+      "cache:clear": "symfony-cmd"
+    },
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@update-scripts"
+    ]
+  },
+  "conflict": {
+    "symfony/symfony": "*"
+  },
+  "extra": {
+    "symfony": {
+      "allow-contrib": false,
+      "require": "8.0.*"
+    }
+  }
 }
