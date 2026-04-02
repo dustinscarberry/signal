@@ -12,7 +12,7 @@
   },
   "author": "dustinscarberry",
   "license": "ISC",
-  "packageManager": "yarn@3.5.1",
+  "packageManager": "yarn@4.13.0",
   "dependencies": {
     "@babel/core": "^7.29.0",
     "@babel/preset-env": "^7.29.0",
