@@ -42,7 +42,7 @@
     "symfony/yaml": "*"
   },
   "require-dev": {
-    "dama/doctrine-test-bundle": "^*",
+    "dama/doctrine-test-bundle": "*",
     "doctrine/doctrine-fixtures-bundle": "^4",
     "phpunit/phpunit": "^12",
     "symfony/browser-kit": "*",
