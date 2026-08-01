@@ -88,14 +88,14 @@ class DashboardAuthenticator extends AbstractAuthenticator implements Authentica
         'password' => $request->request->get('password'),
         'csrf_token' => $request->request->get('_csrf_token')
       ];
-  
+
       return new Passport(
         new UserBadge($credentials['username']),
         new PasswordCredentials($credentials['password']),
         [new CsrfTokenBadge('authenticate', $credentials['csrf_token'])]
       );
     }
-    
+
   }
 
   /**
@@ -132,7 +132,7 @@ class DashboardAuthenticator extends AbstractAuthenticator implements Authentica
     if ($this->isAPICall) {
       $response = new \stdClass();
       $response->errors = 'Not authorized!';
-      return new \Symfony\Component\HttpFoundation\JsonResponse($response, 401);
+      return new JsonResponse($response, 401);
     }
 
     return new RedirectResponse($this->router->generate('dashboardLogin'));
@@ -157,7 +157,7 @@ class DashboardAuthenticator extends AbstractAuthenticator implements Authentica
    *
    * @return Response
    */
-  public function start(Request $request, AuthenticationException $authException = null): Response
+  public function start(Request $request, ?AuthenticationException $authException = null): Response
   {
     if ($this->isAPICall) {
       $response = new \stdClass();
@@ -166,5 +166,5 @@ class DashboardAuthenticator extends AbstractAuthenticator implements Authentica
     }
 
     return new RedirectResponse($this->router->generate('dashboardLogin'));
-  }  
+  }
 }
