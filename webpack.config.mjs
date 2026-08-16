@@ -1,4 +1,4 @@
-var Encore = require('@symfony/webpack-encore');
+import Encore from '@symfony/webpack-encore';
 
 Encore
     // directory where compiled assets will be stored
@@ -30,6 +30,6 @@ Encore
 
     // enables Sass/SCSS support
     .enableSassLoader()
-;
+  ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
