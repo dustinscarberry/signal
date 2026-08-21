@@ -11,7 +11,3 @@ services:
       - EXCHANGE_CALENDAR_USERNAME=example
       - EXCHANGE_CALENDAR_PASSWORD=example
       - EXCHANGE_CALENDAR_VERSION=2013
-networks:
-  default:
-    external: true
-    name: docker_default
